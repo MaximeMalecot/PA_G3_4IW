@@ -27,6 +27,22 @@ class Bet
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $better;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trial::class, inversedBy="bets")
+     */
+    private $trial;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Tournament::class, inversedBy="bets")
+     */
+    private $tournament;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +68,42 @@ class Bet
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getBetter(): ?User
+    {
+        return $this->better;
+    }
+
+    public function setBetter(?User $better): self
+    {
+        $this->better = $better;
+
+        return $this;
+    }
+
+    public function getTrial(): ?Trial
+    {
+        return $this->trial;
+    }
+
+    public function setTrial(?Trial $trial): self
+    {
+        $this->trial = $trial;
+
+        return $this;
+    }
+
+    public function getTournament(): ?Tournament
+    {
+        return $this->tournament;
+    }
+
+    public function setTournament(?Tournament $tournament): self
+    {
+        $this->tournament = $tournament;
 
         return $this;
     }

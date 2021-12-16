@@ -44,9 +44,42 @@ class Trial
      */
     private $tournament;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="trial")
+     */
+    private $bets;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trials")
+     */
+    private $adjudicate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trial::class, inversedBy="lastTrials")
+     */
+    private $nextTrial;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="nextTrial")
+     */
+    private $lastTrials;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="fightingTrials")
+     */
+    private $fighters;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wonTrials")
+     */
+    private $winner;
+
     public function __construct()
     {
         $this->trials = new ArrayCollection();
+        $this->bets = new ArrayCollection();
+        $this->lastTrials = new ArrayCollection();
+        $this->fighters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +144,126 @@ class Trial
     public function setTournament(?Tournament $tournament): self
     {
         $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Bet[]
+     */
+    public function getBets(): Collection
+    {
+        return $this->bets;
+    }
+
+    public function addBet(Bet $bet): self
+    {
+        if (!$this->bets->contains($bet)) {
+            $this->bets[] = $bet;
+            $bet->setTrial($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBet(Bet $bet): self
+    {
+        if ($this->bets->removeElement($bet)) {
+            // set the owning side to null (unless already changed)
+            if ($bet->getTrial() === $this) {
+                $bet->setTrial(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAdjudicate(): ?User
+    {
+        return $this->adjudicate;
+    }
+
+    public function setAdjudicate(?User $adjudicate): self
+    {
+        $this->adjudicate = $adjudicate;
+
+        return $this;
+    }
+
+    public function getNextTrial(): ?self
+    {
+        return $this->nextTrial;
+    }
+
+    public function setNextTrial(?self $nextTrial): self
+    {
+        $this->nextTrial = $nextTrial;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getLastTrials(): Collection
+    {
+        return $this->lastTrials;
+    }
+
+    public function addLastTrial(self $lastTrial): self
+    {
+        if (!$this->lastTrials->contains($lastTrial)) {
+            $this->lastTrials[] = $lastTrial;
+            $lastTrial->setNextTrial($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLastTrial(self $lastTrial): self
+    {
+        if ($this->lastTrials->removeElement($lastTrial)) {
+            // set the owning side to null (unless already changed)
+            if ($lastTrial->getNextTrial() === $this) {
+                $lastTrial->setNextTrial(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getFighters(): Collection
+    {
+        return $this->fighters;
+    }
+
+    public function addFighter(User $fighter): self
+    {
+        if (!$this->fighters->contains($fighter)) {
+            $this->fighters[] = $fighter;
+        }
+
+        return $this;
+    }
+
+    public function removeFighter(User $fighter): self
+    {
+        $this->fighters->removeElement($fighter);
+
+        return $this;
+    }
+
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?User $winner): self
+    {
+        $this->winner = $winner;
 
         return $this;
     }

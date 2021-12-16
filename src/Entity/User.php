@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -42,6 +44,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean", options={"default: true"})
      */
     private $isVerified = false;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $nickname;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="better", orphanRemoval=true)
+     */
+    private $bets;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="adjudicate")
+     */
+    private $adjudicatedTrials;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Trial::class, mappedBy="fighters")
+     */
+    private $fightingTrials;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="fighters")
+     */
+    private $tournaments;
+
+    /**
+     * @ORM\OneToOne(targetEntity=FightingStats::class, mappedBy="target", cascade={"persist", "remove"})
+     */
+    private $fightingStats;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Tournament::class, mappedBy="winner")
+     */
+    private $wonTournaments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="winner")
+     */
+    private $wonTrials;
+
+    public function __construct()
+    {
+        $this->bets = new ArrayCollection();
+        $this->adjudicatedTrials = new ArrayCollection();
+        $this->fightingTrials = new ArrayCollection();
+        $this->tournaments = new ArrayCollection();
+        $this->wonTournaments = new ArrayCollection();
+        $this->wonTrials = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -140,6 +197,221 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): self
+    {
+        $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Bet[]
+     */
+    public function getBets(): Collection
+    {
+        return $this->bets;
+    }
+
+    public function addBet(Bet $bet): self
+    {
+        if (!$this->bets->contains($bet)) {
+            $this->bets[] = $bet;
+            $bet->setBetter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBet(Bet $bet): self
+    {
+        if ($this->bets->removeElement($bet)) {
+            // set the owning side to null (unless already changed)
+            if ($bet->getBetter() === $this) {
+                $bet->setBetter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trial[]
+     */
+    public function getAdjudicatedTrials(): Collection
+    {
+        return $this->adjudicatedTrials;
+    }
+
+    public function addTrial(Trial $trial): self
+    {
+        if (!$this->adjudicatedTrials->contains($trial)) {
+            $this->adjudicatedTrials[] = $trial;
+            $trial->setAdjudicate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrial(Trial $trial): self
+    {
+        if ($this->adjudicatedTrials->removeElement($trial)) {
+            // set the owning side to null (unless already changed)
+            if ($trial->getAdjudicate() === $this) {
+                $trial->setAdjudicate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trial[]
+     */
+    public function getFightingTrials(): Collection
+    {
+        return $this->fightingTrials;
+    }
+
+    public function addFightingTrial(Trial $fightingTrial): self
+    {
+        if (!$this->fightingTrials->contains($fightingTrial)) {
+            $this->fightingTrials[] = $fightingTrial;
+            $fightingTrial->addFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFightingTrial(Trial $fightingTrial): self
+    {
+        if ($this->fightingTrials->removeElement($fightingTrial)) {
+            $fightingTrial->removeFighter($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tournament[]
+     */
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    public function addTournament(Tournament $tournament): self
+    {
+        if (!$this->tournaments->contains($tournament)) {
+            $this->tournaments[] = $tournament;
+            $tournament->addFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTournament(Tournament $tournament): self
+    {
+        if ($this->tournaments->removeElement($tournament)) {
+            $tournament->removeFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function getFightingStats(): ?FightingStats
+    {
+        return $this->fightingStats;
+    }
+
+    public function setFightingStats(FightingStats $fightingStats): self
+    {
+        // set the owning side of the relation if necessary
+        if ($fightingStats->getTarget() !== $this) {
+            $fightingStats->setTarget($this);
+        }
+
+        $this->fightingStats = $fightingStats;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tournament[]
+     */
+    public function getWonTournaments(): Collection
+    {
+        return $this->wonTournaments;
+    }
+
+    public function addWonTournament(Tournament $wonTournament): self
+    {
+        if (!$this->wonTournaments->contains($wonTournament)) {
+            $this->wonTournaments[] = $wonTournament;
+            $wonTournament->setWinner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWonTournament(Tournament $wonTournament): self
+    {
+        if ($this->wonTournaments->removeElement($wonTournament)) {
+            // set the owning side to null (unless already changed)
+            if ($wonTournament->getWinner() === $this) {
+                $wonTournament->setWinner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trial[]
+     */
+    public function getWonTrials(): Collection
+    {
+        return $this->wonTrials;
+    }
+
+    public function addWonTrial(Trial $wonTrial): self
+    {
+        if (!$this->wonTrials->contains($wonTrial)) {
+            $this->wonTrials[] = $wonTrial;
+            $wonTrial->setWinner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWonTrial(Trial $wonTrial): self
+    {
+        if ($this->wonTrials->removeElement($wonTrial)) {
+            // set the owning side to null (unless already changed)
+            if ($wonTrial->getWinner() === $this) {
+                $wonTrial->setWinner(null);
+            }
+        }
 
         return $this;
     }

@@ -44,9 +44,26 @@ class Tournament
      */
     private $trials;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="tournament")
+     */
+    private $bets;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="tournaments")
+     */
+    private $fighters;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wonTournaments")
+     */
+    private $winner;
+
     public function __construct()
     {
         $this->trials = new ArrayCollection();
+        $this->bets = new ArrayCollection();
+        $this->fighters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,7 +122,7 @@ class Tournament
     /**
      * @return Collection|Trial[]
      */
-    public function gettrials(): Collection
+    public function getTrials(): Collection
     {
         return $this->trials;
     }
@@ -128,6 +145,72 @@ class Tournament
                 $match->setTournament(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Bet[]
+     */
+    public function getBets(): Collection
+    {
+        return $this->bets;
+    }
+
+    public function addBet(Bet $bet): self
+    {
+        if (!$this->bets->contains($bet)) {
+            $this->bets[] = $bet;
+            $bet->setTournament($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBet(Bet $bet): self
+    {
+        if ($this->bets->removeElement($bet)) {
+            // set the owning side to null (unless already changed)
+            if ($bet->getTournament() === $this) {
+                $bet->setTournament(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getFighters(): Collection
+    {
+        return $this->fighters;
+    }
+
+    public function addFighter(User $fighter): self
+    {
+        if (!$this->fighters->contains($fighter)) {
+            $this->fighters[] = $fighter;
+        }
+
+        return $this;
+    }
+
+    public function removeFighter(User $fighter): self
+    {
+        $this->fighters->removeElement($fighter);
+
+        return $this;
+    }
+
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?User $winner): self
+    {
+        $this->winner = $winner;
 
         return $this;
     }

@@ -32,6 +32,12 @@ class FightingStats
      */
     private $defeats;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="fightingStats", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $target;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +75,18 @@ class FightingStats
     public function setDefeats(int $defeats): self
     {
         $this->defeats = $defeats;
+
+        return $this;
+    }
+
+    public function getTarget(): ?User
+    {
+        return $this->target;
+    }
+
+    public function setTarget(User $target): self
+    {
+        $this->target = $target;
 
         return $this;
     }
