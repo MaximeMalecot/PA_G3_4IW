@@ -5,6 +5,7 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     {% block stylesheets %}
         {#{{ encore_entry_link_tags('app') }}#}
     {% endblock %}
@@ -14,6 +15,16 @@
     {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+<nav class="red">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+    </div>
+</nav>
+
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
