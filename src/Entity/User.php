@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="boolean", options={"default: true"})
+     * @ORM\Column(type="boolean", options={"default": true})
      */
     private $isVerified = false;
 
@@ -56,9 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $description;
 
     /**
-     * @ORM\Column(type="integer", options={"default" : 0})
+     * @ORM\Column(type="integer", options={"default":0})
      */
-    private $credits;
+    private $credits = 0;
 
     /**
      * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="better", orphanRemoval=true)
@@ -100,6 +100,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $invoices;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="acceptedBy")
+     */
+    private $acceptedTrials;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -109,6 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->wonTournaments = new ArrayCollection();
         $this->wonTrials = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->acceptedTrials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -274,7 +280,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->adjudicatedTrials;
     }
 
-    public function addTrial(Trial $trial): self
+    public function addAdjudicatedTrial(Trial $trial): self
     {
         if (!$this->adjudicatedTrials->contains($trial)) {
             $this->adjudicatedTrials[] = $trial;
@@ -284,7 +290,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeTrial(Trial $trial): self
+    public function removeAdjudicatedTrial(Trial $trial): self
     {
         if ($this->adjudicatedTrials->removeElement($trial)) {
             // set the owning side to null (unless already changed)
@@ -463,6 +469,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($invoice->getBuyer() === $this) {
                 $invoice->setBuyer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trial[]
+     */
+    public function getAcceptedTrials(): Collection
+    {
+        return $this->acceptedTrials;
+    }
+
+    public function addAcceptedTrial(Trial $acceptedTrial): self
+    {
+        if (!$this->acceptedTrials->contains($acceptedTrial)) {
+            $this->acceptedTrials[] = $acceptedTrial;
+            $acceptedTrial->setAcceptedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAcceptedTrial(Trial $acceptedTrial): self
+    {
+        if ($this->acceptedTrials->removeElement($acceptedTrial)) {
+            // set the owning side to null (unless already changed)
+            if ($acceptedTrial->getAcceptedBy() === $this) {
+                $acceptedTrial->setAcceptedBy(null);
             }
         }
 

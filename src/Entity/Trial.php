@@ -20,14 +20,14 @@ class Trial
     private $id;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="string", length=30, options={"default": "NULL"})
      */
-    private $status;
+    private $status="CREATED";
 
     /**
      * @ORM\Column(type="smallint")
      */
-    private $betStatus;
+    private $betStatus = 0;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -74,6 +74,11 @@ class Trial
      */
     private $winner;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="acceptedTrials")
+     */
+    private $acceptedBy;
+
     public function __construct()
     {
         $this->trials = new ArrayCollection();
@@ -87,12 +92,12 @@ class Trial
         return $this->id;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -264,6 +269,18 @@ class Trial
     public function setWinner(?User $winner): self
     {
         $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getAcceptedBy(): ?User
+    {
+        return $this->acceptedBy;
+    }
+
+    public function setAcceptedBy(?User $acceptedBy): self
+    {
+        $this->acceptedBy = $acceptedBy;
 
         return $this;
     }
