@@ -56,6 +56,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $description;
 
     /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $credits;
+
+    /**
      * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="better", orphanRemoval=true)
      */
     private $bets;
@@ -90,6 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $wonTrials;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="buyer", orphanRemoval=true)
+     */
+    private $invoices;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -98,6 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tournaments = new ArrayCollection();
         $this->wonTournaments = new ArrayCollection();
         $this->wonTrials = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -410,6 +421,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($wonTrial->getWinner() === $this) {
                 $wonTrial->setWinner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): self
+    {
+        $this->credits = $credits;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Invoice[]
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): self
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
+            $invoice->setBuyer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getBuyer() === $this) {
+                $invoice->setBuyer(null);
             }
         }
 
