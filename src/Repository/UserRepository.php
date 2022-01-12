@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\DBAL\Statement;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -34,6 +35,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findByRole(string $role) {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT * FROM public.user WHERE roles::text LIKE :role";
+        $stmt = $conn->prepare($sql);
+        $res = $stmt->executeQuery(['role' => '%"' . $role . '"%']);
+        return $res->fetchAllAssociative();
     }
 
     // /**
