@@ -8,7 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Doctrine\DBAL\Statement;
+use Generator;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,44 +37,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    public function findByRole(string $role) {
+    public function findByRole(string $role): Generator {
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT * FROM public.user WHERE roles::text LIKE :role";
         $stmt = $conn->prepare($sql);
         $res = $stmt->executeQuery(['role' => '%"' . $role . '"%']);
-        return $res->fetchAllAssociative();
+        foreach($res->fetchAllAssociative() as $row){
+            yield User::fromArray($row);
+        }
     }
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
