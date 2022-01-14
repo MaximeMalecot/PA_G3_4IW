@@ -114,6 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->wonTrials = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->acceptedTrials = new ArrayCollection();
+        $this->adjudicatedTournaments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -340,7 +341,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tournaments->contains($tournament)) {
             $this->tournaments[] = $tournament;
-            $tournament->addFighter($this);
+            $tournament->addParticipants($this);
         }
 
         return $this;
@@ -349,7 +350,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTournament(Tournament $tournament): self
     {
         if ($this->tournaments->removeElement($tournament)) {
-            $tournament->removeFighter($this);
+            $tournament->removeParticipants($this);
         }
 
         return $this;
@@ -509,5 +510,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $obj->$property = $data[$property] ?? $default;
         }
         return $obj;
+    }
+
+    /**
+     * @return Collection|Tournament[]
+     */
+    public function getAdjudicatedTournaments(): Collection
+    {
+        return $this->adjudicatedTournaments;
+    }
+
+    public function addAdjudicatedTournament(Tournament $adjudicatedTournament): self
+    {
+        if (!$this->adjudicatedTournaments->contains($adjudicatedTournament)) {
+            $this->adjudicatedTournaments[] = $adjudicatedTournament;
+            $adjudicatedTournament->addAdjudicate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdjudicatedTournament(Tournament $adjudicatedTournament): self
+    {
+        if ($this->adjudicatedTournaments->removeElement($adjudicatedTournament)) {
+            $adjudicatedTournament->removeAdjudicate($this);
+        }
+
+        return $this;
     }
 }

@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
         $this->setReference(self::USER_ADMIN, $admin);
 
         /////////ADJUDICATE/////////
-        for($i=0;$i<5;$i++){
+        for($i=0;$i<20;$i++){
             $adjudicate = (new User())
                 ->setEmail("adjudicate{$i}@adjudicate")
                 ->setIsVerified(true)
@@ -52,7 +52,7 @@ class UserFixtures extends Fixture
 
         /////////FIGHTER/////////
 
-        for($i=0;$i<20;$i++){
+        for($i=0;$i<40;$i++){
             $fighter = (new User())
                 ->setEmail("fighter{$i}@fighter")
                 ->setIsVerified(true)

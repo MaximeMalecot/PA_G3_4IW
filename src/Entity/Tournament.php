@@ -37,7 +37,7 @@ class Tournament
     /**
      * @ORM\Column(type="integer")
      */
-    private $participants;
+    private $nbParticipants;
 
     /**
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="tournament")
@@ -52,7 +52,7 @@ class Tournament
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="tournaments")
      */
-    private $fighters;
+    private $participants;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wonTournaments")
@@ -63,7 +63,8 @@ class Tournament
     {
         $this->trials = new ArrayCollection();
         $this->bets = new ArrayCollection();
-        $this->fighters = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+        $this->adjudicates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,14 +108,14 @@ class Tournament
         return $this;
     }
 
-    public function getParticipants(): ?int
+    public function getNbParticipants(): ?int
     {
-        return $this->participants;
+        return $this->nbParticipants;
     }
 
-    public function setParticipants(int $participants): self
+    public function setNbParticipants(int $nbParticipants): self
     {
-        $this->participants = $participants;
+        $this->nbParticipants = $nbParticipants;
 
         return $this;
     }
@@ -182,25 +183,36 @@ class Tournament
     /**
      * @return Collection|User[]
      */
-    public function getFighters(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->fighters;
+        return $this->participants;
     }
 
-    public function addFighter(User $fighter): self
+    public function addParticipant(User $participant): self
     {
-        if (!$this->fighters->contains($fighter)) {
-            $this->fighters[] = $fighter;
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
         }
 
         return $this;
     }
 
-    public function removeFighter(User $fighter): self
+    public function removeParticipant(User $participant): self
     {
-        $this->fighters->removeElement($fighter);
+        $this->participants->removeElement($participant);
 
         return $this;
+    }
+
+    public function getParticipantFromRole(string $role): array 
+    {
+        $participantsMatchingRole = [];
+        foreach($this->participants as $participant){
+            if(in_array($role,$participant->getRoles())){
+                $participantsMatchingRole[] = $participant;
+            }
+        }
+        return $participantsMatchingRole;
     }
 
     public function getWinner(): ?User
@@ -214,4 +226,5 @@ class Tournament
 
         return $this;
     }
+    
 }
