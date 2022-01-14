@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -48,5 +49,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         foreach($res->fetchAllAssociative() as $row){
             yield User::fromArray($row);
         }
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findByRoleNew(string $role) {
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
+        $sql = "SELECT " .  $rsm->generateSelectClause() . " FROM public.user AS u WHERE roles::text LIKE :role";
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameter("role", '%"' . $role . '"%');
+
+        return $query->getResult();
     }
 }
