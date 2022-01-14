@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Faker\Factory;
 
 class UserFixtures extends Fixture 
 {
@@ -24,13 +25,14 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
         /////////ADMIN/////////
         $admin = (new User())
             ->setEmail('admin@admin')
             ->setIsVerified(true)
             ->setRoles(['ROLE_ADMIN'])
-            ->setNickname('adminTest')
-            ->setDescription('JE SUIS LE SUPER ADMIN')
+            ->setNickname($faker->realText(99,1))
+            ->setDescription($faker->realText(400,2))
         ;
         $admin->setPassword($this->userPasswordHasher->hashPassword($admin, 'test'));
         $manager->persist($admin);
@@ -42,8 +44,8 @@ class UserFixtures extends Fixture
                 ->setEmail("adjudicate{$i}@adjudicate")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_ADJUDICATE'])
-                ->setNickname("adjudicateTest{$i}")
-                ->setDescription('JE SUIS LE SUPER ADJUDICATE')
+                ->setNickname($faker->realText(99,1))
+                ->setDescription($faker->realText(400,2))
             ;
             $adjudicate->setPassword($this->userPasswordHasher->hashPassword($adjudicate, 'test'));
             $manager->persist($adjudicate);
@@ -57,8 +59,8 @@ class UserFixtures extends Fixture
                 ->setEmail("fighter{$i}@fighter")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_FIGHTER'])
-                ->setNickname("fighterTest{$i}")
-                ->setDescription('JE SUIS LE SUPER FIGHTER')
+                ->setNickname($faker->realText(99,1))
+                ->setDescription($faker->realText(400,2))
             ;
             $fighter->setPassword($this->userPasswordHasher->hashPassword($fighter, 'test'));
             $manager->persist($fighter);

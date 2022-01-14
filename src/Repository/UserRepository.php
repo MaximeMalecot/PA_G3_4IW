@@ -41,20 +41,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    public function findByRole(string $role): Generator {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "SELECT * FROM public.user WHERE roles::text LIKE :role";
-        $stmt = $conn->prepare($sql);
-        $res = $stmt->executeQuery(['role' => '%"' . $role . '"%']);
-        foreach($res->fetchAllAssociative() as $row){
-            yield User::fromArray($row);
-        }
-    }
-
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function findByRoleNew(string $role) {
+    public function findByRole(string $role) {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
         $sql = "SELECT " .  $rsm->generateSelectClause() . " FROM public.user AS u WHERE roles::text LIKE :role";

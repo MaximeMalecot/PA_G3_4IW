@@ -47,17 +47,7 @@ class TournamentRepository extends ServiceEntityRepository
 
             $lastTrials[] = $object;
             $manager->persist($object);
-        }//$nbTrials MATCH DU PREMIER TOUR CREER AVEC UTILISATEURS AFFECTES
-        /*$createdTrials = [];
-        for($i=0; $i<$nbTrials/2; $i++){
-            //ON CREER LES MATCH SUIVANT EN METTANT LES LASTTRIALS DESSUS 
-            $object = (new Trial())
-                ->setTournament($tournament)
-                ->addLastTrial(UArray::getRandomElem($lastTrials))
-                ->addLastTrial(UArray::getRandomElem($lastTrials));
-            $manager->persist($object);
-            $createdTrials [] = $object;
-        }*/
+        }
         $adjudicates = $tournament->getParticipantFromRole("ROLE_ADJUDICATE");
         $createdTrials = [];
         while($nbTrials !== 1){//ON ITERE POUR CREER DES MATCH JUSQU'A AVOIR CREER LE MATCH FINAL

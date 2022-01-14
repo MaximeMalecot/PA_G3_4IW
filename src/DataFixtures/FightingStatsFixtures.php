@@ -14,7 +14,7 @@ class FightingStatsFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-        $fighters = $manager->getRepository(User::class)->findByRoleNew("ROLE_FIGHTER");
+        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
         foreach ($fighters as $fighter) {
             $object = (new FightingStats())
                 ->setVictories($faker->numberBetween(0, 100))

@@ -4,29 +4,38 @@ namespace App\DataFixtures;
 
 use App\Entity\Tournament;
 use App\Entity\User;
+use App\Utils\UArray;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class TournamentFixtures extends Fixture implements DependentFixtureInterface
 {
-    const TOURNAMENT_CREATED = 'tournament';
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
         /////////CLASSICTOURNAMENT/////////
-       /* $fighters = [];
-        foreach($manager->getRepository(User::class)->findByRole("ROLE_FIGHTER") as $fighter){
-            $fighters[] = $manager->getRepository(User::class)->find($fighter->getId());
+        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
+        $adjudicates = $manager->getRepository(User::class)->findByRole("ROLE_ADJUDICATE");
+        $tournaments = [];
+        for($i=0; $i<2; $i++){
+            $object = (new Tournament())
+                ->setName($faker->realText(99,1))
+                ->setNbParticipants(8);
+            for($i=0; $i<8; $i++){
+                $object->addParticipant(UArray::getRandomElem($fighters));
+            }
+            for($i=0; $i<4; $i++){
+                $object->addParticipant(UArray::getRandomElem($adjudicates));
+            }
+            $manager->persist($object);
+            $tournaments[] = $object;
         }
-        $obj = (new Tournament())
-            ->setName("TrialHIHIHI")
-            ->setParticipants(4);
-        for($j=0; $j<4;$j++){
-            $obj->addFighter($fighters[$j]);
+        foreach($tournaments as $tournament){
+            $manager->getRepository(Tournament::class)->createTrialsForTournament($tournament);
         }
-        $manager->persist($obj);
-        $this->setReference(self::TOURNAMENT_CREATED, $obj);
-        $manager->flush();*/
+        $manager->flush();
     }
 
     public function getDependencies()
