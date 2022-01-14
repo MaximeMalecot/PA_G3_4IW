@@ -23,8 +23,7 @@ class TournamentRepository extends ServiceEntityRepository
 
     public function createTrialsForTournament(Tournament $tournament): ?Tournament //2n²
     {
-        if($tournament->getNbParticipants() === 0 
-        || count($tournament->getParticipantFromRole("ROLE_FIGHTER")) !== $tournament->getNbParticipants() 
+        if(count($tournament->getParticipantFromRole("ROLE_FIGHTER")) !== $tournament->getNbParticipants() 
         || count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < (count($tournament->getParticipantFromRole("ROLE_FIGHTER"))/2) 
         || $tournament->getNbParticipants()%4 !== 0){
             return null;
@@ -68,14 +67,6 @@ class TournamentRepository extends ServiceEntityRepository
         $manager->flush();
         return $tournament;
     }
-
-    function changeIntoBye($seed, $participantsCount)
-    {
-        //return $seed <= $participantsCount ?  $seed : sprintf('%d (= bye)', $seed);  
-        return $seed <= $participantsCount ?  $seed : null;
-    }
-
-    
 
     // /**
     //  * @return Tournament[] Returns an array of Tournament objects
