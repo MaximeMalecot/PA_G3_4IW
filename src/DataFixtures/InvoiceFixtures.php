@@ -25,7 +25,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 
 
             $object = (new Invoice())
-                ->setDate($faker->dateTimeBetween('-1 week', '+1 week'))
+                //->setDate($faker->dateTimeBetween('-1 week', '+1 week'))
                 ->setCreditAmount($priceInDollars * 100)
                 ->setPrice($priceInDollars * 100)
                 ->setIdPaypal($faker->uuid());

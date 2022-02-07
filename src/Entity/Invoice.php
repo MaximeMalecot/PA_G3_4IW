@@ -2,14 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\Timestampable;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  */
 class Invoice
 {
+    use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,11 +34,6 @@ class Invoice
      * @ORM\Column(type="string", length=255)
      */
     private $idPaypal;
-
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="invoices")
@@ -80,18 +78,6 @@ class Invoice
     public function setIdPaypal(string $idPaypal): self
     {
         $this->idPaypal = $idPaypal;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
 
         return $this;
     }

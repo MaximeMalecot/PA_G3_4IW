@@ -2,19 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\BlameableTrait;
 use App\Repository\TournamentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TournamentRepository::class)
  */
 class Tournament
 {
+    use BlameableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -32,12 +33,6 @@ class Tournament
      *      maxMessage = "Name cannot be longer than {{ limit }} characters")
      */
     private $name;
-
-    /**
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="createdTrials")
-     */
-    private $createdBy;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)

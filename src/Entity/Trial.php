@@ -2,18 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\BlameableTrait;
 use App\Repository\TrialRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TrialRepository::class)
  */
 class Trial
 {
+    use BlameableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -30,18 +31,6 @@ class Trial
      * @ORM\Column(type="smallint")
      */
     private $betStatus = 0;
-
-    /**
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="createdTrials")
-     */
-    private $createdBy;
-
-    /**
-     * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $updatedBy;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -126,30 +115,6 @@ class Trial
     public function setBetStatus(int $betStatus): self
     {
         $this->betStatus = $betStatus;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
 
         return $this;
     }
