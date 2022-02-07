@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\BlameableTrait;
 use App\Repository\TournamentRepository;
+use App\Entity\Traits\BlameableTrait;
+use App\Entity\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TournamentRepository::class)
@@ -16,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Tournament
 {
     use BlameableTrait;
+    use TimestampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -48,6 +51,14 @@ class Tournament
      * @ORM\Column(type="integer")
      */
     private $nbParticipants;
+
+    /**
+     * @var string|null
+     *
+     * @Gedmo\Slug(fields={"id", "name"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private $slug;
 
     /**
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="tournament")
@@ -139,6 +150,17 @@ class Tournament
     {
         $this->nbParticipants = $nbParticipants;
 
+        return $this;
+    }
+
+    public function getSlug(): ?string 
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self 
+    {
+        $this->slug = $slug;
         return $this;
     }
 

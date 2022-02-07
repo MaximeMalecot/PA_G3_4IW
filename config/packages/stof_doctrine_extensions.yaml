@@ -6,3 +6,5 @@ stof_doctrine_extensions:
         default:
             blameable: true
             timestampable: true
+            sluggable: true
+            sortable: true

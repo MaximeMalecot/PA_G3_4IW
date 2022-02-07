@@ -6,35 +6,49 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait TimestampableTrait{
     /**
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
      * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $updatedAt;
 
+    /**
+     * @return DateTime
+     */
     public function getCreatedAt(): ?\DateTimeInterface 
     {
         return $this->createdAt;
     }
 
-    /*public function setCreatedAt(): self
+    /**
+     * @param DateTime
+     * @return self
+     */
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt;
         return $this;
-    }*/
+    }
 
+    /**
+     * @return DateTime
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    /*public function setUpdatedAt(): self
+    /**
+     * @param DateTime
+     * @return self
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = $updatedAt;
         return $this;
-    }*/
+    }
 }

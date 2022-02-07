@@ -21,7 +21,8 @@ class TrialFixtures extends Fixture implements DependentFixtureInterface
             $object = (new Trial())
                 ->addFighter(UArray::getRandomElem($fighters))
                 ->addFighter(UArray::getRandomElem($fighters))
-                ->setAdjudicate(UArray::getRandomElem($adjudicates));
+                ->setAdjudicate(UArray::getRandomElem($adjudicates))
+                ->setPosition($i+1);
             $object->setCreatedBy($object->getAdjudicate());
             $manager->persist($object);
         }

@@ -23,7 +23,6 @@ class BetFixtures extends Fixture implements DependentFixtureInterface
 //            $trial = $faker->randomElement($trials);
             $object = (new Bet())
                 ->setAmount($faker->numberBetween(1, $user->getCredits()))
-                //->setDate($faker->dateTimeBetween('-1 week', '+1 week'))
             ->setBetter($user);
 
 //            $trial->addBet($object);
