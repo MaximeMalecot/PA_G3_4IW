@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
  * @ORM\Entity(repositoryClass=TournamentRepository::class)
  */
@@ -21,8 +24,20 @@ class Tournament
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="name required")
+     * @Assert\NotNull()
+     * @Assert\Type(type="string",message="The value {{ value }} is not a valid {{ type }}.")
+     * @Assert\Length(min = 2, max = 100,
+     *      minMessage = "Name must be at least {{ limit }} characters long",
+     *      maxMessage = "Name cannot be longer than {{ limit }} characters")
      */
     private $name;
+
+    /**
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="createdTrials")
+     */
+    private $createdBy;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -80,6 +95,18 @@ class Tournament
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

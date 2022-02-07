@@ -22,7 +22,8 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
         for($i=0; $i<2; $i++){
             $object = (new Tournament())
                 ->setName($faker->realText(99,1))
-                ->setNbParticipants(8);
+                ->setNbParticipants(8)
+                ->setCreatedBy(UArray::getRandomElem($adjudicates));
             for($i=0; $i<8; $i++){
                 $object->addParticipant(UArray::getRandomElem($fighters));
             }

@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
@@ -25,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="email required")
+     * @Assert\NotNull()
+     * @Assert\Email(message="The email '{{ value }}' is not a valid email.")
      */
     private $email;
 
@@ -36,6 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Type(type="string",message="The value {{ value }} is not a valid {{ type }}.")
      */
     private $password;
 
@@ -46,11 +52,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\NotBlank(message="nickname required")
+     * @Assert\NotNull()
+     * @Assert\Type(type="string",message="The value {{ value }} is not a valid {{ type }}.")
+     * @Assert\Length(min = 2, max = 100,
+     *      minMessage = "Your nickname must be at least {{ limit }} characters long",
+     *      maxMessage = "Your nickname cannot be longer than {{ limit }} characters"
+     * )
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Type(type="string",message="The value {{ value }} is not a valid {{ type }}.")
      */
     private $description;
 
