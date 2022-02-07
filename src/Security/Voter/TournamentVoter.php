@@ -2,17 +2,17 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Trial;
 use App\Entity\User;
+use App\Entity\Tournament;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class TrialVoter extends Voter
+class TournamentVoter extends Voter
 {
     /*
         TO IMPLEMENT THE VOTER IN A CONTROLLER JUST DO :
-        #[IsGranted(TrialVoter::EDIT, 'trial')]
+        #[IsGranted(UserVoter::EDIT, 'user')]
     */
     const EDIT = 'edit';
     const DELETE = 'delete';
@@ -20,7 +20,7 @@ class TrialVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::DELETE])
-            && $subject instanceof Trial;
+            && $subject instanceof Tournament;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -44,25 +44,12 @@ class TrialVoter extends Voter
     }
 
     /**
-     * @param Trial $trial
+     * @param Tournament $tournament
      * @param User $user
      * @return bool
      */
-    protected function canEdit(Trial $trial, User $user): bool
+    protected function canEdit(Tournament $tournament, User $user): bool
     {
-        if( in_array($trial->getStatus(), ['CREATED', 'DATE_ACCEPTED'])){
-            if( $trial->getFighters()->contains($user) || $user == $trial->getAdjudicate())
-            {
-                return true;
-            }
-            return false;
-        }else if( $trial->getStatus() == 'REFUSER'){
-            return false;
-        } else {
-            if($user == $trial->getAdjudicate()){
-                return true;
-            }
-            return false;
-        }
+        return $tournament->getCreatedBy() == $user;
     }
 }
