@@ -40,6 +40,11 @@ class FightingStats
      */
     private $target;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $rank;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,4 +97,17 @@ class FightingStats
 
         return $this;
     }
+
+    public function getRank(): ?int
+    {
+        return $this->rank;
+    }
+
+    public function setRank(int $rank): self
+    {
+        $this->rank = $rank;
+
+        return $this;
+    }
+
 }

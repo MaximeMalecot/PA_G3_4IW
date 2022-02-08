@@ -31,7 +31,7 @@ class UserFixtures extends Fixture
             ->setEmail('admin@admin')
             ->setIsVerified(true)
             ->setRoles(['ROLE_ADMIN'])
-            ->setNickname($faker->realText(99,1))
+            ->setNickname($faker->userName)
             ->setDescription($faker->realText(400,2))
         ;
         $admin->setPassword($this->userPasswordHasher->hashPassword($admin, 'test'));
@@ -44,7 +44,7 @@ class UserFixtures extends Fixture
                 ->setEmail("adjudicate{$i}@adjudicate")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_ADJUDICATE'])
-                ->setNickname($faker->realText(99,1))
+                ->setNickname($faker->userName)
                 ->setDescription($faker->realText(400,2))
             ;
             $adjudicate->setPassword($this->userPasswordHasher->hashPassword($adjudicate, 'test'));
@@ -59,7 +59,7 @@ class UserFixtures extends Fixture
                 ->setEmail("fighter{$i}@fighter")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_FIGHTER'])
-                ->setNickname($faker->realText(99,1))
+                ->setNickname($faker->userName)
                 ->setDescription($faker->realText(400,2))
             ;
             $fighter->setPassword($this->userPasswordHasher->hashPassword($fighter, 'test'));

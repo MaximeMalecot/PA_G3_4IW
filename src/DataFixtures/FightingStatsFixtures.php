@@ -21,10 +21,11 @@ class FightingStatsFixtures extends Fixture implements DependentFixtureInterface
                 ->setDefeats($faker->numberBetween(0, 100))
                 ->setRankingPoints($faker->randomDigit())
                 ->setTarget($fighter);
+            $manager->getRepository(FightingStats::class)->placeRank($object);
             $fighter->setFightingStats($object);
             $manager->persist($object);
+            $manager->flush();
         }
-        $manager->flush();
     }
 
     public function getDependencies()

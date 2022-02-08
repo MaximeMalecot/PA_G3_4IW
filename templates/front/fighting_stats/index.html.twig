@@ -3,18 +3,23 @@
 {% block title %}Hello FightingStatsController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/src/Controller/front/FightingStatsController.php'|file_link(0) }}">src/Controller/FightingStatsController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/templates/front/fighting_stats/index.html.twig'|file_link(0) }}">templates/fighting_stats/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <table>
+        <tr>
+            <th>rank</th>
+            <th>user</th>
+            <th>points</th>
+            <th>victories</th>
+            <th>defeats</th>
+        </tr>
+        {% for stat in fs %}
+            <tr>
+                <td>{{ stat.rank }}</td>
+                <td>{{ stat.getTarget().nickname }}</td>
+                <td>{{ stat.rankingPoints }}</td>
+                <td>{{ stat.victories }}</td>
+                <td>{{ stat.defeats }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{# IMPLEMENT IN JS THE RANK #}
 {% endblock %}
