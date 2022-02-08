@@ -10,6 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Security\Voter\UserVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\User;
+use App\Form\UserType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -46,7 +49,34 @@ class UserController extends AbstractController
                 'user' => $user,
             ]);
         }
-        
+    }
 
+    #[Route('/edit/{id}', name: 'front_user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[IsGranted(UserVoter::EDIT, 'user')]
+    public function edit(User $user, UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasherInterface->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
+
+            return $this->redirectToRoute('front_user_show', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        return $this->render('front/user/edit.html.twig', [
+            'user'=>$user,
+            'form' => $form->createView()
+         ]);
     }
 }

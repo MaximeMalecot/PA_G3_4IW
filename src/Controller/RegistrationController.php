@@ -32,6 +32,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            echo "JE SUIS DANS LE SUBMIT";
             // encode the plain password
             $user->setPassword(
             $userPasswordHasherInterface->hashPassword(

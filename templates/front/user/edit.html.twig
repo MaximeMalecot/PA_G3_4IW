@@ -1,0 +1,10 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Edition de l'user {{ user.nickname }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_rest(form) }}
+        <button type="submit">Modifier</button>
+    {{ form_end(form) }}
+{% endblock %}

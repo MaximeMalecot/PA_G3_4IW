@@ -19,7 +19,7 @@ class UserVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE])
             && $subject instanceof User;
     }
 
@@ -33,7 +33,7 @@ class UserVoter extends Voter
 
         switch ($attribute) {
             case self::SHOW:
-                return in_array('ROLE_FIGHTER', $subject->getRoles()) || $this->canManage($subject, $user);
+                return $this->canManage($subject, $user) || in_array('ROLE_FIGHTER', $subject->getRoles());
                 break;
             case self::EDIT:
                 return $this->canManage($subject, $user);
@@ -53,6 +53,6 @@ class UserVoter extends Voter
      */
     protected function canManage(User $target, User $user): bool
     {
-        return $target == $user || in_array('ROLE_ADMIN', $user->getRoles());
+        return ($target == $user || in_array('ROLE_ADMIN', $user->getRoles()));
     }
 }
