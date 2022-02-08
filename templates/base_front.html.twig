@@ -18,12 +18,12 @@
 <nav class="red">
     <div class="nav-wrapper">
          <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="#">matchs</a></li>
-            <li><a href="#">tournois</a></li>
-            <li><a href="#">classement</a></li>
-            <li><a href="#">compétiteurs</a></li>
+            <li><a href="{{ path('front_trial')}}">matchs</a></li>
+            <li><a href="{{ path('front_tournament')}}">tournois</a></li>
+            <li><a href="{{ path('front_fighting_stats')}}">classement</a></li>
+            <li><a href="{{ path('front_user')}}">compétiteurs</a></li>
         </ul>
-        <a href="#" class="brand-logo right">Logo</a>
+        <a href="{{ path('default')}}" class="brand-logo right">Logo</a>
     </div>
 </nav>
 
