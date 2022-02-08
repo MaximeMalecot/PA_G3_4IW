@@ -7,23 +7,25 @@
            and uncomment the following Encore helpers to start using Symfony UX #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     {% block stylesheets %}
-        {#{{ encore_entry_link_tags('app') }}#}
+        {# {{ encore_entry_link_tags('app') }} #}
     {% endblock %}
 
     {% block javascripts %}
-        {#{{ encore_entry_script_tags('app') }}#}
+        {# {{ encore_entry_script_tags('app') }} #}
     {% endblock %}
 </head>
 <body>
 <nav class="red">
     <div class="nav-wrapper">
-         <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="{{ path('front_trial')}}">matchs</a></li>
-            <li><a href="{{ path('front_tournament')}}">tournois</a></li>
-            <li><a href="{{ path('front_fighting_stats')}}">classement</a></li>
-            <li><a href="{{ path('front_user')}}">compétiteurs</a></li>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="{{ path('front_trial') }}">matchs</a></li>
+            <li><a href="{{ path('front_tournament') }}">tournois</a></li>
+            <li><a href="{{ path('front_fighting_stats') }}">classement</a></li>
+            <li><a href="{{ path('front_user') }}">compétiteurs</a></li>
+            <li><a href="{{ path('app_login') }}">login</a></li>
+            <li><a href="{{ path('app_register') }}">register</a></li>
         </ul>
-        <a href="{{ path('default')}}" class="brand-logo right">Logo</a>
+        <a href="{{ path('front_default') }}" class="brand-logo right">Logo</a>
     </div>
 </nav>
 
