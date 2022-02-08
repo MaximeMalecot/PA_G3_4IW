@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\Timestampable;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
