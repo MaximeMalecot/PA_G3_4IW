@@ -3,11 +3,15 @@
 {% block title %}USER {{ user.nickname }}{% endblock %}
 
 {% block body %}
-    {{ user.id }}
-    {{ stats.rankingPoints }}
-    <table>
-        <tr>
-            <td></td>
-        </tr>
-    </table>
+    <div>
+        Pseudo : {{ user.nickname }}</br>
+        Description : {{ user.description }}</br>
+        {% if stats is defined %}
+            Rank : {{ stats.rank }}</br>
+            Points : {{ stats.rankingPoints }}</br>
+            Victoires : {{ stats.victories }}</br>
+            Defaites : {{ stats.defeats }}</br>
+            Dernier combat : {{ stats.updatedAt|date('d-m-Y') }}</br>
+        {% endif %}
+    </div>
 {% endblock %}
