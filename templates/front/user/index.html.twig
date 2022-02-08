@@ -24,7 +24,7 @@
             <tr>
                 <th>{{ fighter.nickname }}</th>
                 <th>{{ fighter.description }}</th>
-                <th><a href="#">Coming soon</a></th>
+                <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
             </tr>
         {% endfor %}
         </tbody>

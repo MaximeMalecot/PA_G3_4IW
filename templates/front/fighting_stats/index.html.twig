@@ -14,12 +14,11 @@
         {% for stat in fs %}
             <tr>
                 <td>{{ stat.rank }}</td>
-                <td>{{ stat.getTarget().nickname }}</td>
+                <td><a href="{{ path('front_user_show', {'id': stat.getTarget().id}) }}">{{ stat.getTarget().nickname }}</a></td>{# emmene au profil du fighter#}
                 <td>{{ stat.rankingPoints }}</td>
                 <td>{{ stat.victories }}</td>
                 <td>{{ stat.defeats }}</td>
             </tr>
         {% endfor %}
     </table>
-{# IMPLEMENT IN JS THE RANK #}
 {% endblock %}

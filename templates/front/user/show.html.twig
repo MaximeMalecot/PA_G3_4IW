@@ -1,0 +1,13 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}USER {{ user.nickname }}{% endblock %}
+
+{% block body %}
+    {{ user.id }}
+    {{ stats.rankingPoints }}
+    <table>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+{% endblock %}

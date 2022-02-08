@@ -14,7 +14,7 @@ use App\Utils\UArray;
 #[Route('/stats')]
 class FightingStatsController extends AbstractController
 {
-    #[Route('/', name: 'front_fighting_stats')]
+    #[Route('/', name: 'front_fighting_stats', methods: ['GET'])]
     public function index(FightingStatsRepository $fsRepository): Response
     {
         return $this->render('front/fighting_stats/index.html.twig', [
