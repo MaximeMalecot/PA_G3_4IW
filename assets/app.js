@@ -10,6 +10,6 @@ import './styles/app.css';
 import 'bootstrap';
 import bsCustomFileInput from 'bs-custom-file-input';
 
-// start the Stimulus application
+// start the Stimulus application.
 import './bootstrap';
 bsCustomFileInput.init();
