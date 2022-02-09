@@ -1,0 +1,39 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>User {{ bets[0].better.nickname   }}! ✅</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>On</th>
+                <th>Amount</th>
+                <th>At</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bet in bets %}
+            <tr>
+                {% if bet.getTrial() is not null %}
+                    <th>{{ bet.trial.id }}</th>
+                {% elseif bet.getTournament() is not null %}
+                    <th>{{ bet.trial.id }}</th>
+                {% else %}
+                    <th>EMPTY</th>
+                {% endif %}
+                <th>{{ bet.amount }}</th>
+                <th>{{ bet.createdAt|date('d-m-Y H:i:s') }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

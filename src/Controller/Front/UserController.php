@@ -39,16 +39,11 @@ class UserController extends AbstractController
     #[IsGranted(UserVoter::SHOW, 'user')]
     public function show(User $user): Response
     {
-        if(in_array('ROLE_FIGHTER', $user->getRoles())){
-            return $this->render('front/user/show.html.twig', [
-                'user' => $user,
-                'stats'=> $user->getFightingStats(),
-            ]);
-        }else{
-            return $this->render('front/user/show.html.twig', [
-                'user' => $user,
-            ]);
-        }
+        $stats = $user->getFightingStats();
+        return $this->render('front/user/show.html.twig', [
+            'user' => $user,
+            'stats'=> $stats
+        ]);
     }
 
     #[Route('/edit/{id}', name: 'front_user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]

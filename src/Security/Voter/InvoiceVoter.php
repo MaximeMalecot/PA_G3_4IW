@@ -14,12 +14,11 @@ class InvoiceVoter extends Voter
         TO IMPLEMENT THE VOTER IN A CONTROLLER JUST DO :
         #[IsGranted(InvoiceVoter::EDIT, 'user')]
     */
-    const EDIT = 'edit';
-    const DELETE = 'delete';
+    const SHOW = 'show';
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::SHOW])
             && $subject instanceof Invoice;
     }
 
@@ -32,11 +31,8 @@ class InvoiceVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::EDIT:
-                return in_array('ROLE_ADMIN', $user->getRoles()) ;
-                break;
-            case self::DELETE:
-                return in_array('ROLE_ADMIN', $user->getRoles()) ;
+            case self::SHOW:
+                return $subject->getBuyer()->getId() == $user->getId() ;
                 break;
         }
 

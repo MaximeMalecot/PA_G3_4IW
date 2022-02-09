@@ -14,12 +14,11 @@ class BetVoter extends Voter
         TO IMPLEMENT THE VOTER IN A CONTROLLER JUST DO :
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
-    const EDIT = 'edit';
-    const DELETE = 'delete';
+    const SHOW = 'show';
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::SHOW])
             && $subject instanceof Bet;
     }
 
@@ -32,24 +31,11 @@ class BetVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::EDIT:
-                return $this->canEdit($subject, $user);
-                break;
-            case self::DELETE:
-                return in_array('ROLE_ADMIN', $user->getRoles()) || $this->canEdit($subject, $user);
+            case self::SHOW:
+                return $subject->getBetter() == $user;
                 break;
         }
 
         return false;
-    }
-
-    /**
-     * @param Bet $bet
-     * @param User $user
-     * @return bool
-     */
-    protected function canEdit(Bet $bet, User $user): bool
-    {
-        return $bet->getBetter() == $user;
     }
 }
