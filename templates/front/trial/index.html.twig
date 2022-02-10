@@ -10,11 +10,23 @@
 
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/src/Controller/front/TrialController.php'|file_link(0) }}">src/Controller/TrialController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/templates/front/trial/index.html.twig'|file_link(0) }}">templates/trial/index.html.twig</a></code></li>
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>arbitre</th>
+                <th>combattants</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for trial in trials %}
+            <tr>
+                <th>{{ trial.adjudicate.nickname }}</th>
+                <th>{{ trial.fighters[0].nickname }} vs {{ trial.fighters[1].nickname }}</th>
+                <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

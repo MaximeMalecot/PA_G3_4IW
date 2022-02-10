@@ -43,8 +43,7 @@ class TournamentRepository extends ServiceEntityRepository
                 ->addFighter(ArrayService::getRandomElem($fighters))
                 ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
                 ->setTournament($tournament)
-                ->setCreatedBy($tournament->getCreatedBy())
-                ->setPosition($i+1);
+                ->setCreatedBy($tournament->getCreatedBy());
             $lastTrials[] = $object;
             $manager->persist($object);
         }
@@ -58,8 +57,7 @@ class TournamentRepository extends ServiceEntityRepository
                     ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
                     ->addLastTrial(ArrayService::getRandomElem($lastTrials))
                     ->addLastTrial(ArrayService::getRandomElem($lastTrials))
-                    ->setCreatedBy($tournament->getCreatedBy())
-                    ->setPosition($i+1);
+                    ->setCreatedBy($tournament->getCreatedBy());
                 $manager->persist($object);
                 $createdTrials [] = $object;
             }

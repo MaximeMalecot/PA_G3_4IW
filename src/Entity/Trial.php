@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Trial
 {
     use BlameableTrait;
-    use SortableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

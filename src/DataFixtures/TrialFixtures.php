@@ -8,11 +8,13 @@ use App\Service\Type\ArrayService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class TrialFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
 
         /////////CLASSICTRIAL/////////
         $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
@@ -22,7 +24,8 @@ class TrialFixtures extends Fixture implements DependentFixtureInterface
                 ->addFighter(ArrayService::getRandomElem($fighters))
                 ->addFighter(ArrayService::getRandomElem($fighters))
                 ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
-                ->setPosition($i+1);
+                ->setStatus("AWAITING")
+                ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'));
             $object->setCreatedBy($object->getAdjudicate());
             $manager->persist($object);
         }
