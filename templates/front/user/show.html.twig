@@ -14,7 +14,7 @@
             Dernier combat : {{ stats.updatedAt|date('d-m-Y H:i:s') }}</br>
         {% endif %}
         
-        {% if (app.user.id == user.id or is_granted('ROLE_ADMIN') == true) %}
+        {% if (app.user.id is defined and app.user.id == user.id or is_granted('ROLE_ADMIN') == true) %}
             {% if user.getInvoices() is not null %}
                 <a href="{{ path('front_invoice', {'id': user.id})}}">factures</a></br>
             {% endif %}

@@ -27,13 +27,10 @@ class UserVoter extends Voter
     {
         /** @var User $user */
         $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
 
         switch ($attribute) {
             case self::SHOW:
-                return $this->canManage($subject, $user) || in_array('ROLE_FIGHTER', $subject->getRoles());
+                return in_array('ROLE_FIGHTER', $subject->getRoles()) || $this->canManage($subject, $user);
                 break;
             case self::EDIT:
                 return $this->canManage($subject, $user);

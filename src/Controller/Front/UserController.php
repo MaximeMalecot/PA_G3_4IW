@@ -39,10 +39,9 @@ class UserController extends AbstractController
     #[IsGranted(UserVoter::SHOW, 'user')]
     public function show(User $user): Response
     {
-        $stats = $user->getFightingStats();
         return $this->render('front/user/show.html.twig', [
             'user' => $user,
-            'stats'=> $stats
+            'stats'=> $user->getFightingStats()
         ]);
     }
 
