@@ -18,10 +18,9 @@ class BetController extends AbstractController
     #[IsGranted(BetVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
-        $bets = $user->getBets();
         return $this->render('front/bet/index.html.twig', [
             'controller_name' => 'UserController',
-            'bets' => $bets
+            'bets' => $user->getBets()
         ]);
 
     }

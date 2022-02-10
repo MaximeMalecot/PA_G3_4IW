@@ -13,18 +13,17 @@ use App\Entity\Invoice;
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/user  /{id}', name: 'front_invoice', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'front_invoice', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
-        $invoices = $user->getInvoices();
         return $this->render('front/invoice/index.html.twig', [
             'controller_name' => 'TrialController',
-            'invoices' => $invoices,
+            'invoices' => $user->getInvoices(),
         ]);
     }
 
-    #[Route('/show/{id}', name: 'front_show_invoice')]
+    #[Route('/show/{id}', name: 'front_invoice_show')]
     #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function show(Invoice $invoice): Response
     {

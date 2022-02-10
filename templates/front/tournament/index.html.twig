@@ -11,10 +11,34 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/src/Controller/front/TournamentController.php'|file_link(0) }}">src/Controller/TournamentController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/templates/front/tournament/index.html.twig'|file_link(0) }}">templates/tournament/index.html.twig</a></code></li>
-    </ul>
+    {% if tournaments is defined %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Arbitre</th>
+                <th>Nombre de combattants</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tournament in tournaments %}
+                <tr>
+                        <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
+                        <th>{{ tournament.createdBy.nickname }}</th>
+                        <th>{{ tournament.nbParticipants }}</th>
+                        <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </div>
 {% endblock %}
+
+{#
+    {% for fighter in tournament.getParticipantFromRole("ROLE_FIGHTER") %}
+        {{ fighter.nickname }}</br>
+    {% endfor %}
+#}

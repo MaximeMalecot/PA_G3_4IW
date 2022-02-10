@@ -53,6 +53,11 @@ class Tournament
     private $nbParticipants;
 
     /**
+     * @ORM\Column(type="string", length=255, options={"default": "CREATED"})
+     */
+    private $status="CREATED";
+
+    /**
      * @var string|null
      *
      * @Gedmo\Slug(fields={"id", "name"})
@@ -267,6 +272,18 @@ class Tournament
     public function setWinner(?User $winner): self
     {
         $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Tournament;
 use App\Entity\Trial;
 use App\Service\Type\ArrayService;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,15 @@ class TournamentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tournament::class);
+    }
+
+    public function findIncoming()
+    {
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(Tournament::class, 't');
+        $sql = "SELECT " .  $rsm->generateSelectClause() . " FROM public.tournament AS t WHERE date_start > NOW() AND status='AWAITING' OR status='STARTED'";
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        return $query->getResult();
     }
 
     public function createTrialsForTournament(Tournament $tournament): ?Tournament //2n²
@@ -43,6 +53,7 @@ class TournamentRepository extends ServiceEntityRepository
                 ->addFighter(ArrayService::getRandomElem($fighters))
                 ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
                 ->setTournament($tournament)
+                ->setStatus("AWAITING")
                 ->setCreatedBy($tournament->getCreatedBy());
             $lastTrials[] = $object;
             $manager->persist($object);

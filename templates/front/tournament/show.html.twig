@@ -1,0 +1,29 @@
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <b>Name:</b></br>
+    {{ tournament.name }}</br>
+    <b>Arbitre du tournoi:</b></br> 
+    {{ tournament.createdBy.nickname }}</br>
+    <b>Combattants:</b></br>
+    {% for fighter in tournament.getParticipantFromRole("ROLE_FIGHTER") %}
+        {{ fighter.nickname }}</br>
+    {% endfor %}
+    <b>Arbitres des matchs :</b></br>
+    {% for fighter in tournament.getParticipantFromRole("ROLE_ADJUDICATE") %}
+        {{ fighter.nickname }}</br>
+    {% endfor %}
+    <b>Date de début :</b></br>
+     {{ tournament.dateStart|date('d-m-Y H:i:s') }}</br>
+    <b>Match:</b></br>
+</div>
+{% endblock %}
