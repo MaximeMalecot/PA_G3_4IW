@@ -69,6 +69,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $twitch_channel;
+
+    /**
      * @ORM\Column(type="integer", options={"default":0})
      */
     private $credits = 0;
@@ -118,6 +123,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $acceptedTrials;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TwitchContent::class, mappedBy="creator", orphanRemoval=true)
+     */
+    private $twitchContents;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -129,6 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->invoices = new ArrayCollection();
         $this->acceptedTrials = new ArrayCollection();
         $this->adjudicatedTournaments = new ArrayCollection();
+        $this->twitchContents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -548,6 +559,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->adjudicatedTournaments->removeElement($adjudicatedTournament)) {
             $adjudicatedTournament->removeAdjudicate($this);
+        }
+
+        return $this;
+    }
+
+    public function getTwitchChannel(): ?string
+    {
+        return $this->twitch_channel;
+    }
+
+    public function setTwitchChannel(?string $twitch_channel): self
+    {
+        $this->twitch_channel = $twitch_channel;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TwitchContent[]
+     */
+    public function getTwitchContents(): Collection
+    {
+        return $this->twitchContents;
+    }
+
+    public function addTwitchContent(TwitchContent $twitchContent): self
+    {
+        if (!$this->twitchContents->contains($twitchContent)) {
+            $this->twitchContents[] = $twitchContent;
+            $twitchContent->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTwitchContent(TwitchContent $twitchContent): self
+    {
+        if ($this->twitchContents->removeElement($twitchContent)) {
+            // set the owning side to null (unless already changed)
+            if ($twitchContent->getCreator() === $this) {
+                $twitchContent->setCreator(null);
+            }
         }
 
         return $this;
