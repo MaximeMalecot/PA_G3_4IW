@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\FightingStats;
 use App\Entity\User;
+use App\Service\FightingStatsService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -11,6 +12,14 @@ use Faker\Factory;
 
 class FightingStatsFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    private $fightingStatsService;
+
+    public function __construct(FightingStatsService $fightingStatsService)
+    {
+        $this->fightingStatsService = $fightingStatsService;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
@@ -21,7 +30,7 @@ class FightingStatsFixtures extends Fixture implements DependentFixtureInterface
                 ->setDefeats($faker->numberBetween(0, 100))
                 ->setRankingPoints($faker->randomDigit())
                 ->setTarget($fighter);
-            $manager->getRepository(FightingStats::class)->placeRank($object);
+            $this->fightingStatsService->placeRank($object);
             $fighter->setFightingStats($object);
             $manager->persist($object);
             $manager->flush();
