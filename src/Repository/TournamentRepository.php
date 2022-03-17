@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Tournament;
 use App\Entity\Trial;
-use App\Service\Type\ArrayService;
+use App\Service\UArray;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,9 +49,9 @@ class TournamentRepository extends ServiceEntityRepository
 
         for($i=0; $i<$nbTrials;$i++){
             $object = (new Trial())
-                ->addFighter(ArrayService::getRandomElem($fighters))
-                ->addFighter(ArrayService::getRandomElem($fighters))
-                ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
+                ->addFighter(UArray::getRandomElem($fighters))
+                ->addFighter(UArray::getRandomElem($fighters))
+                ->setAdjudicate(UArray::getRandomElem($adjudicates))
                 ->setTournament($tournament)
                 ->setStatus("AWAITING")
                 ->setCreatedBy($tournament->getCreatedBy());
@@ -65,9 +65,9 @@ class TournamentRepository extends ServiceEntityRepository
                 //ON CREER LES MATCH SUIVANT EN METTANT LES LASTTRIALS DESSUS 
                 $object = (new Trial())
                     ->setTournament($tournament)
-                    ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
-                    ->addLastTrial(ArrayService::getRandomElem($lastTrials))
-                    ->addLastTrial(ArrayService::getRandomElem($lastTrials))
+                    ->setAdjudicate(UArray::getRandomElem($adjudicates))
+                    ->addLastTrial(UArray::getRandomElem($lastTrials))
+                    ->addLastTrial(UArray::getRandomElem($lastTrials))
                     ->setCreatedBy($tournament->getCreatedBy());
                 $manager->persist($object);
                 $createdTrials [] = $object;

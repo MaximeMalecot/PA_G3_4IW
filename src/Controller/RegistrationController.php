@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
-use App\Service\Mailing\UserMailService;
+use App\Service\UserMailer;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +27,7 @@ class RegistrationController extends AbstractController
     }
     
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request,UserMailService $ues, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function register(Request $request,UserMailer $ues, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);

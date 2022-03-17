@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Tournament;
 use App\Entity\User;
-use App\Service\Type\ArrayService;
+use App\Service\UArray;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -25,12 +25,12 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
                 ->setNbParticipants(8)
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'))
                 ->setStatus("AWAITING")
-                ->setCreatedBy(ArrayService::getRandomElem($adjudicates));
+                ->setCreatedBy(UArray::getRandomElem($adjudicates));
             for($j=0; $j<8; $j++){
-                $object->addParticipant(ArrayService::getRandomElem($fighters));
+                $object->addParticipant(UArray::getRandomElem($fighters));
             }
             for($z=0; $z<4; $z++){
-                $object->addParticipant(ArrayService::getRandomElem($adjudicates));
+                $object->addParticipant(UArray::getRandomElem($adjudicates));
             }
             $manager->persist($object);
             $tournaments[] = $object;
