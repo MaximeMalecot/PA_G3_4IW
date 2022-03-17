@@ -26,7 +26,7 @@
                 <tr>
                         <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
                         <th>{{ tournament.createdBy.nickname }}</th>
-                        <th>{{ tournament.nbParticipants }}</th>
+                        <th>{{ tournament.nbMaxParticipants }}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
                     
                 </tr>

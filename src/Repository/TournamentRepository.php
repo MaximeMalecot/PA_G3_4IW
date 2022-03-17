@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Tournament;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -17,6 +18,15 @@ class TournamentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tournament::class);
+    }
+
+    public function findIncoming()
+    {
+        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm->addRootEntityFromClassMetadata(Tournament::class, 't');
+        $sql = "SELECT " .  $rsm->generateSelectClause() . " FROM public.tournament AS t WHERE date_start > NOW() AND status='AWAITING' OR status='STARTED'";
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        return $query->getResult();
     }
 
     // /**

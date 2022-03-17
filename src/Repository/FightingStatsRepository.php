@@ -19,7 +19,17 @@ class FightingStatsRepository extends ServiceEntityRepository
         parent::__construct($registry, FightingStats::class);
     }
 
-
+    public function findGeRp(int $rp)
+    {
+        return $this->createQueryBuilder('fs')
+                ->where('fs.rankingPoints >= '.$rp)
+                ->orderBy('fs.rank', 'DESC')
+                ->getQuery()
+                ->execute();
+        /*$conn = $this->_em->getConnection();
+        $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
+        return $conn->executeQuery($select, [$rp])->fetchAllAssociative();*/
+    }
 
     // /**
     //  * @return FightingStats[] Returns an array of FightingStats objects
