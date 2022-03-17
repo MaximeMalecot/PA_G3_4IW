@@ -34,7 +34,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
         for($i=0; $i<2; $i++){
             $object = (new Tournament())
                 ->setName($faker->realText(99,1))
-                ->setNbParticipants(8)
+                ->setNbMaxParticipants(8)
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'))
                 ->setStatus("AWAITING")
                 ->setCreatedBy(UArray::getRandomElem($adjudicates));
