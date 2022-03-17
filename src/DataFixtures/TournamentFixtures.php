@@ -7,8 +7,8 @@ use App\Service\UArray;
 use App\Entity\Tournament;
 use App\DataFixtures\UserFixtures;
 use App\Repository\UserRepository;
+use App\Service\TournamentService;
 use Doctrine\Persistence\ObjectManager;
-use App\Repository\TournamentRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -16,12 +16,12 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
 {
 
     private $userRepository;
-    private $tournamentRepository;
+    private $tournamentService;
 
-    public function __construct(UserRepository $userRepository, TournamentRepository $tournamentRepository)
+    public function __construct(UserRepository $userRepository, TournamentService $tournamentService)
     {
         $this->userRepository = $userRepository;
-        $this->tournamentRepository = $tournamentRepository;
+        $this->tournamentService = $tournamentService;
     }
 
     public function load(ObjectManager $manager): void
@@ -48,7 +48,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
             $tournaments[] = $object;
         }
         foreach($tournaments as $tournament){
-            $this->tournamentRepository->createTrialsForTournament($tournament);
+            $this->tournamentService->createTrialsForTournament($tournament);
         }
         $manager->flush();
     }
