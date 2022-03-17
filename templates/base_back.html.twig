@@ -17,7 +17,12 @@
 <body>
 <nav>
     <div class="nav-wrapper">
-        <a href="{{ path("app_logout") }}">logout</a>
+        {% if app.user %}
+            <li><a href="{{ path('app_logout') }}">logout</a></li>
+        {% else %}
+            <li><a href="{{ path('app_login') }}">login</a></li>
+            <li><a href="{{ path('app_register') }}">register</a></li>
+        {% endif %}
         <a href="{{ path("back_default") }}" class="brand-logo">Logo</a>
     </div>
 </nav>

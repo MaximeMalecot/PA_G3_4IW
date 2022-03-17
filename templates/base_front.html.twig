@@ -22,8 +22,12 @@
             <li><a href="{{ path('front_tournament') }}">tournois</a></li>
             <li><a href="{{ path('front_fighting_stats') }}">classement</a></li>
             <li><a href="{{ path('front_user') }}">compétiteurs</a></li>
-            <li><a href="{{ path('app_login') }}">login</a></li>
-            <li><a href="{{ path('app_register') }}">register</a></li>
+            {% if app.user %}
+                <li><a href="{{ path('app_logout') }}">logout</a></li>
+            {% else %}
+                <li><a href="{{ path('app_login') }}">login</a></li>
+                <li><a href="{{ path('app_register') }}">register</a></li>
+            {% endif %}
         </ul>
         <a href="{{ path('front_default') }}" class="brand-logo right">Logo</a>
     </div>
