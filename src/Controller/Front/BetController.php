@@ -2,13 +2,12 @@
 
 namespace App\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Security\Voter\BetVoter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Security\Voter\BetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Entity\User;
-use App\Entity\Bet;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 #[Route('/bet')]

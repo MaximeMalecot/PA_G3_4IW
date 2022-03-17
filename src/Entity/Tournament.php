@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\TournamentRepository;
-use App\Entity\Traits\BlameableTrait;
-use App\Entity\Traits\TimestampableTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Traits\BlameableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
+use App\Repository\TournamentRepository;
+use App\Entity\Traits\TimestampableTrait;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TournamentRepository::class)
@@ -90,7 +89,6 @@ class Tournament
         $this->trials = new ArrayCollection();
         $this->bets = new ArrayCollection();
         $this->participants = new ArrayCollection();
-        $this->adjudicates = new ArrayCollection();
     }
 
     public function getId(): ?int

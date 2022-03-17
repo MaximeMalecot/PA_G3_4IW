@@ -2,28 +2,31 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\FightingStats;
-use App\Entity\User;
+use App\DataFixtures\UserFixtures;
+use App\Repository\UserRepository;
 use App\Service\FightingStatsService;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class FightingStatsFixtures extends Fixture implements DependentFixtureInterface
 {
 
     private $fightingStatsService;
+    private $userRepository;
 
-    public function __construct(FightingStatsService $fightingStatsService)
+    public function __construct(FightingStatsService $fightingStatsService, UserRepository $userRepository)
     {
         $this->fightingStatsService = $fightingStatsService;
+        $this->userRepository = $userRepository;
     }
 
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
+        $fighters = $this->userRepository->findByRole("ROLE_FIGHTER");
         foreach ($fighters as $fighter) {
             $object = (new FightingStats())
                 ->setVictories($faker->numberBetween(0, 100))

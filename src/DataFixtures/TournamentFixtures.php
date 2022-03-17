@@ -2,22 +2,34 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Tournament;
-use App\Entity\User;
+use Faker\Factory;
 use App\Service\UArray;
+use App\Entity\Tournament;
+use App\DataFixtures\UserFixtures;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ObjectManager;
+use App\Repository\TournamentRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class TournamentFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    private $userRepository;
+    private $tournamentRepository;
+
+    public function __construct(UserRepository $userRepository, TournamentRepository $tournamentRepository)
+    {
+        $this->userRepository = $userRepository;
+        $this->tournamentRepository = $tournamentRepository;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
         /////////CLASSICTOURNAMENT/////////
-        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
-        $adjudicates = $manager->getRepository(User::class)->findByRole("ROLE_ADJUDICATE");
+        $fighters = $this->userRepository->findByRole("ROLE_FIGHTER");
+        $adjudicates = $this->userRepository->findByRole("ROLE_ADJUDICATE");
         $tournaments = [];
         for($i=0; $i<2; $i++){
             $object = (new Tournament())
@@ -36,7 +48,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
             $tournaments[] = $object;
         }
         foreach($tournaments as $tournament){
-            $manager->getRepository(Tournament::class)->createTrialsForTournament($tournament);
+            $this->tournamentRepository->createTrialsForTournament($tournament);
         }
         $manager->flush();
     }

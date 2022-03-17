@@ -3,12 +3,9 @@
 namespace App\Controller\Front;
 
 use App\Repository\FightingStatsRepository;
-use App\Entity\FightingStats;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Faker\Factory;
-use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/stats')]
 class FightingStatsController extends AbstractController

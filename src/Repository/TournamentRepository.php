@@ -3,11 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Tournament;
-use App\Entity\Trial;
-use App\Service\UArray;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Tournament|null find($id, $lockMode = null, $lockVersion = null)

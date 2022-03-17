@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\TimestampableTrait;
-use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InvoiceRepository;
+use App\Entity\Traits\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)

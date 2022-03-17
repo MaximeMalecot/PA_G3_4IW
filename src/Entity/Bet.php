@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\TimestampableTrait;
-use App\Repository\BetRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BetRepository;
+use App\Entity\Traits\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=BetRepository::class)

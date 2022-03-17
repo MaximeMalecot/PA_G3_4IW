@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Tournament;
 use App\Entity\Trial;
+use App\Entity\Tournament;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 

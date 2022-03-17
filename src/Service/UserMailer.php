@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Security\EmailVerifier;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class UserMailer
 {

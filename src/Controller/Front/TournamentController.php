@@ -4,9 +4,9 @@ namespace App\Controller\Front;
 
 use App\Entity\Tournament;
 use App\Service\TournamentService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/tournament')]
 class TournamentController extends AbstractController

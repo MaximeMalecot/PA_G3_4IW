@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Trial;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Trial|null find($id, $lockMode = null, $lockVersion = null)

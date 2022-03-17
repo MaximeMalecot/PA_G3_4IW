@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Invoice;
+use Faker\Factory;
 use App\Entity\User;
+use App\Entity\Invoice;
+use App\DataFixtures\UserFixtures;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 {

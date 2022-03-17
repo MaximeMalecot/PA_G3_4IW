@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\BlameableTrait;
-use App\Entity\Traits\SortableTrait;
-use App\Repository\TrialRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrialRepository;
+use App\Entity\Traits\SortableTrait;
+use App\Entity\Traits\BlameableTrait;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**

@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-
-use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
@@ -366,7 +365,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tournaments->contains($tournament)) {
             $this->tournaments[] = $tournament;
-            $tournament->addParticipants($this);
+            $tournament->addParticipant($this);
         }
 
         return $this;
@@ -375,7 +374,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTournament(Tournament $tournament): self
     {
         if ($this->tournaments->removeElement($tournament)) {
-            $tournament->removeParticipants($this);
+            $tournament->removeParticipant($this);
         }
 
         return $this;
@@ -535,33 +534,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $obj->$property = $data[$property] ?? $default;
         }
         return $obj;
-    }
-
-    /**
-     * @return Collection|Tournament[]
-     */
-    public function getAdjudicatedTournaments(): Collection
-    {
-        return $this->adjudicatedTournaments;
-    }
-
-    public function addAdjudicatedTournament(Tournament $adjudicatedTournament): self
-    {
-        if (!$this->adjudicatedTournaments->contains($adjudicatedTournament)) {
-            $this->adjudicatedTournaments[] = $adjudicatedTournament;
-            $adjudicatedTournament->addAdjudicate($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAdjudicatedTournament(Tournament $adjudicatedTournament): self
-    {
-        if ($this->adjudicatedTournaments->removeElement($adjudicatedTournament)) {
-            $adjudicatedTournament->removeAdjudicate($this);
-        }
-
-        return $this;
     }
 
     public function getTwitchChannel(): ?string
