@@ -49,7 +49,7 @@ class Tournament
     /**
      * @ORM\Column(type="integer")
      */
-    private $nbParticipants;
+    private $nbMaxParticipants;
 
     /**
      * @ORM\Column(type="string", length=255, options={"default": "CREATED"})
@@ -144,14 +144,14 @@ class Tournament
         return $this;
     }
 
-    public function getNbParticipants(): ?int
+    public function getNbMaxParticipants(): ?int
     {
-        return $this->nbParticipants;
+        return $this->nbMaxParticipants;
     }
 
-    public function setNbParticipants(int $nbParticipants): self
+    public function setNbMaxParticipants(int $nbMaxParticipants): self
     {
-        $this->nbParticipants = $nbParticipants;
+        $this->nbMaxParticipants = $nbMaxParticipants;
 
         return $this;
     }

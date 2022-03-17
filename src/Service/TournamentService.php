@@ -28,9 +28,9 @@ class TournamentService
 
     public function createTrialsForTournament(Tournament $tournament): ?Tournament //2n²
     {
-        if(count($tournament->getParticipantFromRole("ROLE_FIGHTER")) !== $tournament->getNbParticipants()
+        if(count($tournament->getParticipantFromRole("ROLE_FIGHTER")) !== $tournament->getNbMaxParticipants()
             || count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < (count($tournament->getParticipantFromRole("ROLE_FIGHTER"))/2)
-            || $tournament->getNbParticipants()%4 !== 0){
+            || $tournament->getNbMaxParticipants()%4 !== 0){
             return null;
         }
 
