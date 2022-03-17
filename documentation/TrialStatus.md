@@ -35,7 +35,7 @@ REFUSED <=> MATCH REFUSER, AUCUNE MODIFICATION EXTERNE ATTENDUE
 ```
 ### Workflow :
 Normal behavior :
-This behavior is before a normal match behavior.
+This behavior is before a BasicTrial behavior.
 ```
 CREATED -> ACCEPTED -> VALIDATED -> ...
 ```
