@@ -20,23 +20,13 @@ class FightingStatsService
     public function modifyRank(FightingStats $fs, int $points){//IF LOSE POINTS = -100 ELSE POINTS = 100
         $incomingPoints = $fs->getRankingPoints() + $points;
         $conn = $this->entityManager->getConnection();
-        // $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
-        // $res = $conn->executeQuery($select, [$incomingPoints])->fetchAllAssociative();
-         // if( !empty($res)){
-        //     if($res[0]["ranking_points"] == $fs->getRankingPoints() + $points){
-        //         $incomingRank = $res[0]["rank"];
-        //     } else {
-        //         $incomingRank = $res[0]["rank"] + 1;
-        //     }
-        // } else {
-        //     $incomingRank = 1;
-        // }
-        $firstAbove = $this->fightingStatsRepository->findGeRp($incomingPoints)[0] ?? null;
-        if( $firstAbove ){
-            if($firstAbove->getRankingPoints() == $fs->getRankingPoints() + $points){
-                $incomingRank = $firstAbove->getRank();
+        $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
+        $res = $conn->executeQuery($select, [$incomingPoints])->fetchAllAssociative();
+         if( !empty($res)){
+            if($res[0]["ranking_points"] == $fs->getRankingPoints() + $points){
+                $incomingRank = $res[0]["rank"];
             } else {
-                $incomingRank = $firstAbove->getRank() + 1;
+                $incomingRank = $res[0]["rank"] + 1;
             }
         } else {
             $incomingRank = 1;
@@ -58,25 +48,15 @@ class FightingStatsService
     }
 
     public function placeRank(FightingStats $fs)
-    {
+    {   
         $conn = $this->entityManager->getConnection();
-        // $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
-        // $res = $conn->executeQuery($select, [$fs->getRankingPoints()])->fetchAllAssociative();
-        // if( !empty($res)){
-        //     if($res[0]["ranking_points"] == $fs->getRankingPoints()){
-        //         $fs->setRank($res[0]["rank"]);
-        //     } else {
-        //         $fs->setRank($res[0]["rank"] + 1);
-        //     }
-        // } else {
-        //     $fs->setRank(1);
-        // }
-        $firstAbove = $this->fightingStatsRepository->findGeRp($fs->getRankingPoints())[0] ?? null;
-        if( $firstAbove ){
-            if($firstAbove->getRankingPoints() == $fs->getRankingPoints()){
-                $fs->setRank($firstAbove->getRank());
+        $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
+        $res = $conn->executeQuery($select, [$fs->getRankingPoints()])->fetchAllAssociative();
+        if( !empty($res)){
+            if($res[0]["ranking_points"] == $fs->getRankingPoints()){
+                $fs->setRank($res[0]["rank"]);
             } else {
-                $fs->setRank($firstAbove->getRank() + 1);
+                $fs->setRank($res[0]["rank"] + 1);
             }
         } else {
             $fs->setRank(1);

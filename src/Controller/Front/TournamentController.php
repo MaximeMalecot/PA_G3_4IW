@@ -19,21 +19,6 @@ class TournamentController extends AbstractController
     #[Route('/', name: 'front_tournament', methods: ['GET'])]
     public function index(TournamentRepository $tournamentRepository, FightingStatsRepository $fs, FightingStatsService $fsS): Response
     {
-        $faker = Factory::create();
-        $manager = $this->getDoctrine()->getManager();
-        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
-        foreach ($fighters as $fighter) {
-            $object = (new FightingStats())
-                ->setVictories($faker->numberBetween(0, 100))
-                ->setDefeats($faker->numberBetween(0, 100))
-                ->setRankingPoints($faker->randomDigit())
-                ->setTarget($fighter);
-                $fsS->placeRank($object);
-            $fighter->setFightingStats($object);
-            $manager->persist($object);
-            $manager->flush();
-        }
-        dd("FIN");
         return $this->render('front/tournament/index.html.twig', [
             'controller_name' => 'TournamentController',
             'tournaments' => $tournamentRepository->findIncoming()
