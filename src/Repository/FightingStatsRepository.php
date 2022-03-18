@@ -19,8 +19,6 @@ class FightingStatsRepository extends ServiceEntityRepository
         parent::__construct($registry, FightingStats::class);
     }
 
-
-
     // /**
     //  * @return FightingStats[] Returns an array of FightingStats objects
     //  */

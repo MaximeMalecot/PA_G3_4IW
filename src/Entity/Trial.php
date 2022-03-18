@@ -54,7 +54,7 @@ class Trial
     private $bets;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trials")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adjudicatedTrials")
      */
     private $adjudicate;
 

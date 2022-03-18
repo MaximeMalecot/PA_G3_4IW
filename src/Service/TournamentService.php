@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Trial;
 use App\Entity\Tournament;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class TournamentService
 {
@@ -13,17 +12,7 @@ class TournamentService
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        // 3. Update the value of the private entityManager variable through injection
         $this->entityManager = $entityManager;
-    }
-
-    public function findIncoming()
-    {
-        $rsm = new ResultSetMappingBuilder($this->entityManager);
-        $rsm->addRootEntityFromClassMetadata(Tournament::class, 't');
-        $sql = "SELECT " .  $rsm->generateSelectClause() . " FROM public.tournament AS t WHERE date_start > NOW() AND status='AWAITING' OR status='STARTED'";
-        $query = $this->entityManager->createNativeQuery($sql, $rsm);
-        return $query->getResult();
     }
 
     public function createTrialsForTournament(Tournament $tournament): ?Tournament //2n²

@@ -93,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $fightingTrials;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="fighters")
+     * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="participants")
      */
     private $tournaments;
 
