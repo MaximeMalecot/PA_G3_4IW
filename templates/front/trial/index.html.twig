@@ -12,10 +12,10 @@
     <h1>Hello {{ controller_name }}! ✅</h1>
     <label for="filter">TRIALSTATUS</label>
     <form id="filter" action="{{ path('front_trial') }}" method="POST">
-        <select id="filter-select">
-            <option value="AWAITING" selected>EN ATTENTE</option>
-            <option value="STARTED">EN COURS</option>
-            <option value="ENDED">FINIS</option>
+        <select id="status" name="status">
+            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="STARTED" id="STARTED">EN COURS</option>
+            <option value="ENDED" id="ENDED">FINIS</option>
         </select>
     </form>
     <table>
@@ -42,12 +42,13 @@
 {% block javascripts %}
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
+        var select = document.getElementById('status');
+        {{status}}.selected = 'selected';
+        var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
             form.submit();
-        })
+        });
     });
     
 </script>

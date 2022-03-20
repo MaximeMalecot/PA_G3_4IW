@@ -15,12 +15,11 @@ class TrialController extends AbstractController
     #[Route('/', name: 'front_trial', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        if($request->isMethod('POST')){
-            dd($request->request->get('filter-select'));
-        }
+        $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('front/trial/index.html.twig', [
             'controller_name' => 'TrialController',
-            'trials' => $trialRepository->findBy(["status" => "AWAITING", "tournament" => NULL], ["dateStart" => "ASC"])
+            'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
+            'status' => $status
         ]);
     }
 
