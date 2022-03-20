@@ -10,6 +10,14 @@
 
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
+    <label for="filter">TRIALSTATUS</label>
+    <form id="filter" action="{{ path('front_trial') }}" method="POST">
+        <select id="filter-select">
+            <option value="AWAITING" selected>EN ATTENTE</option>
+            <option value="STARTED">EN COURS</option>
+            <option value="ENDED">FINIS</option>
+        </select>
+    </form>
     <table>
         <thead>
             <tr>
@@ -18,7 +26,7 @@
                 <th>date</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="trial_data">
         {% for trial in trials %}
             <tr>
                 <th>{{ trial.adjudicate.nickname }}</th>
@@ -29,4 +37,18 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+        let form = document.getElementById('filter');
+        form.addEventListener("change", async() => {
+            form.submit();
+        })
+    });
+    
+</script>
 {% endblock %}

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 use Symfony\Component\Validator\Constraints as Assert;
 /**
@@ -79,51 +80,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $credits = 0;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="better", orphanRemoval=true)
      */
     private $bets;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="adjudicate")
      */
     private $adjudicatedTrials;
 
     /**
+     * @Ignore()
      * @ORM\ManyToMany(targetEntity=Trial::class, mappedBy="fighters")
      */
     private $fightingTrials;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="fighters")
+     * @Ignore()
+     * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="participants")
      */
     private $tournaments;
 
     /**
+     * @Ignore()
      * @ORM\OneToOne(targetEntity=FightingStats::class, mappedBy="target", cascade={"persist", "remove"})
      */
     private $fightingStats;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Tournament::class, mappedBy="winner")
      */
     private $wonTournaments;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="winner")
      */
     private $wonTrials;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="buyer", orphanRemoval=true)
      */
     private $invoices;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="acceptedBy")
      */
     private $acceptedTrials;
 
     /**
+     * @Ignore()
      * @ORM\OneToMany(targetEntity=TwitchContent::class, mappedBy="creator", orphanRemoval=true)
      */
     private $twitchContents;
@@ -138,7 +149,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->wonTrials = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->acceptedTrials = new ArrayCollection();
-        $this->adjudicatedTournaments = new ArrayCollection();
         $this->twitchContents = new ArrayCollection();
     }
 
@@ -535,33 +545,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $obj->$property = $data[$property] ?? $default;
         }
         return $obj;
-    }
-
-    /**
-     * @return Collection|Tournament[]
-     */
-    public function getAdjudicatedTournaments(): Collection
-    {
-        return $this->adjudicatedTournaments;
-    }
-
-    public function addAdjudicatedTournament(Tournament $adjudicatedTournament): self
-    {
-        if (!$this->adjudicatedTournaments->contains($adjudicatedTournament)) {
-            $this->adjudicatedTournaments[] = $adjudicatedTournament;
-            $adjudicatedTournament->addAdjudicate($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAdjudicatedTournament(Tournament $adjudicatedTournament): self
-    {
-        if ($this->adjudicatedTournaments->removeElement($adjudicatedTournament)) {
-            $adjudicatedTournament->removeAdjudicate($this);
-        }
-
-        return $this;
     }
 
     public function getTwitchChannel(): ?string

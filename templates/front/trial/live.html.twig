@@ -1,0 +1,26 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}TRIAL {{ user.nickname }}{% endblock %}
+
+{% block body %}
+    <div>
+        Pseudo : {{ user.nickname }}</br>
+        Description : {{ user.description }}</br>
+        {% if user.fightingStats is defined and user.fightingStats is not null %}
+            Rank : {{ stats.rank }}</br>
+            Points : {{ stats.rankingPoints }}</br>
+            Victoires : {{ stats.victories }}</br>
+            Defaites : {{ stats.defeats }}</br>
+            Dernier combat : {{ stats.updatedAt|date('d-m-Y H:i:s') }}</br>
+        {% endif %}
+        
+        {% if (app.user.id is defined and app.user.id == user.id or is_granted('ROLE_ADMIN') == true) %}
+            {% if user.getInvoices() is not null %}
+                <a href="{{ path('front_invoice', {'id': user.id})}}">factures</a></br>
+            {% endif %}
+            {% if user.getBets() is not null%}
+                <a href="{{ path('front_bet', {'id': user.id}) }}">paris</a></br>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
