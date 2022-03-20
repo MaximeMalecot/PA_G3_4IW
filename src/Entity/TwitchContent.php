@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\TwitchContentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TwitchContentRepository;
 
 /**
  * @ORM\Entity(repositoryClass=TwitchContentRepository::class)

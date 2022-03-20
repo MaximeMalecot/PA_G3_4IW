@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\TournamentRepository;
-use App\Entity\Traits\BlameableTrait;
-use App\Entity\Traits\TimestampableTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Traits\BlameableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
+use App\Repository\TournamentRepository;
+use App\Entity\Traits\TimestampableTrait;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TournamentRepository::class)
@@ -50,7 +49,7 @@ class Tournament
     /**
      * @ORM\Column(type="integer")
      */
-    private $nbParticipants;
+    private $nbMaxParticipants;
 
     /**
      * @ORM\Column(type="string", length=255, options={"default": "CREATED"})
@@ -90,7 +89,6 @@ class Tournament
         $this->trials = new ArrayCollection();
         $this->bets = new ArrayCollection();
         $this->participants = new ArrayCollection();
-        $this->adjudicates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,14 +144,14 @@ class Tournament
         return $this;
     }
 
-    public function getNbParticipants(): ?int
+    public function getNbMaxParticipants(): ?int
     {
-        return $this->nbParticipants;
+        return $this->nbMaxParticipants;
     }
 
-    public function setNbParticipants(int $nbParticipants): self
+    public function setNbMaxParticipants(int $nbMaxParticipants): self
     {
-        $this->nbParticipants = $nbParticipants;
+        $this->nbMaxParticipants = $nbMaxParticipants;
 
         return $this;
     }

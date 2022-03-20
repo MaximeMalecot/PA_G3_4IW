@@ -4,12 +4,10 @@ namespace App\Controller\Front;
 
 use App\Entity\Trial;
 use App\Repository\TrialRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/trial')]
 class TrialController extends AbstractController
@@ -40,22 +38,4 @@ class TrialController extends AbstractController
             'trial' => $trial
         ]);
     }
-/*
-    #[Route('/filter/{status}', name: 'front_trial_filter', methods: ['GET'])]
-    public function filter(SerializerInterface $serializer, string $status, TrialRepository $trialRepository): Response 
-    {
-        if( !$status || !in_array($status,['AWAITING', 'STARTED', 'ENDED'])){
-            return new JsonResponse(['success' => false]);
-        }
-
-        if($status == "STARTED"){
-            $trials = $trialRepository->findBy(["status" => $status], ["dateStart" => "ASC"]);
-        }else {
-            $trials = $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]);
-        }
-        $jsonTrials = $serializer->serialize($trials, 'json');
-        $res = new JsonResponse();
-        $res->setData($jsonTrials);
-        return $res;
-    }*/
 }

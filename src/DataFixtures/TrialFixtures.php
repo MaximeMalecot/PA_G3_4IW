@@ -2,28 +2,37 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Trial;
-use App\Entity\User;
-use App\Service\Type\ArrayService;
+use App\Service\UArray;
+use App\DataFixtures\UserFixtures;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class TrialFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
 
         /////////CLASSICTRIAL/////////
-        $fighters = $manager->getRepository(User::class)->findByRole("ROLE_FIGHTER");
-        $adjudicates = $manager->getRepository(User::class)->findByRole("ROLE_ADJUDICATE");
+        $fighters = $this->userRepository->findByRole("ROLE_FIGHTER");
+        $adjudicates = $this->userRepository->findByRole("ROLE_ADJUDICATE");
         for($i=0; $i<5; $i++){
             $object = (new Trial())
-                ->addFighter(ArrayService::getRandomElem($fighters))
-                ->addFighter(ArrayService::getRandomElem($fighters))
-                ->setAdjudicate(ArrayService::getRandomElem($adjudicates))
+                ->addFighter(UArray::getRandomElem($fighters))
+                ->addFighter(UArray::getRandomElem($fighters))
+                ->setAdjudicate(UArray::getRandomElem($adjudicates))
                 ->setStatus("AWAITING")
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'));
             $object->setCreatedBy($object->getAdjudicate());

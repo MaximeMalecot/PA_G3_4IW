@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Ignore;
-
-use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
@@ -80,61 +78,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $credits = 0;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="better", orphanRemoval=true)
      */
     private $bets;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="adjudicate")
      */
     private $adjudicatedTrials;
 
     /**
-     * @Ignore()
      * @ORM\ManyToMany(targetEntity=Trial::class, mappedBy="fighters")
      */
     private $fightingTrials;
 
     /**
-     * @Ignore()
      * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="participants")
      */
     private $tournaments;
 
     /**
-     * @Ignore()
      * @ORM\OneToOne(targetEntity=FightingStats::class, mappedBy="target", cascade={"persist", "remove"})
      */
     private $fightingStats;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Tournament::class, mappedBy="winner")
      */
     private $wonTournaments;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="winner")
      */
     private $wonTrials;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="buyer", orphanRemoval=true)
      */
     private $invoices;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="acceptedBy")
      */
     private $acceptedTrials;
 
     /**
-     * @Ignore()
      * @ORM\OneToMany(targetEntity=TwitchContent::class, mappedBy="creator", orphanRemoval=true)
      */
     private $twitchContents;
@@ -376,7 +364,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tournaments->contains($tournament)) {
             $this->tournaments[] = $tournament;
-            $tournament->addParticipants($this);
+            $tournament->addParticipant($this);
         }
 
         return $this;
@@ -385,7 +373,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTournament(Tournament $tournament): self
     {
         if ($this->tournaments->removeElement($tournament)) {
-            $tournament->removeParticipants($this);
+            $tournament->removeParticipant($this);
         }
 
         return $this;

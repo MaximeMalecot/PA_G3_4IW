@@ -1,0 +1,17 @@
+## Ticket status
+### Status list :
+```
+CREATED <=> TOURNAMENT CREATED, WAITING CHALLENGERS TO START
+AWAITING <=> ENOUGH CHALLENGERS TO START, TRIALS AFFILIATED CREATED AND WAITING
+STARTED <=> TOURNAMENT START
+ENDED <=> TOURNAMENT ENDED WITH A WINNER
+```
+### Workflow :
+Normal behavior :
+```
+CREATED -> AWAITING -> STARTED -> ENDED
+```
+Behavior if not enough challengers or adjudicate cancel tournament :
+```
+CREATED -> REFUSED || CREATED -> AWAITING -> REFUSED
+```

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Type;
+namespace App\Service;
 
-class ArrayService
+class UArray
 {
     public static function getRandomElem(array &$array)
     {   

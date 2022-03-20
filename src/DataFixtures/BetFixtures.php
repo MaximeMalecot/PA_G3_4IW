@@ -2,12 +2,16 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Bet;
 use App\Entity\User;
+use App\DataFixtures\UserFixtures;
+use App\DataFixtures\TrialFixtures;
+use App\DataFixtures\InvoiceFixtures;
+use Doctrine\Persistence\ObjectManager;
+use App\DataFixtures\TournamentFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class BetFixtures extends Fixture implements DependentFixtureInterface
 {
