@@ -127,6 +127,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $twitchContents;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="creator", orphanRemoval=true)
+     */
+    private $tickets;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -138,6 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->invoices = new ArrayCollection();
         $this->acceptedTrials = new ArrayCollection();
         $this->twitchContents = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -571,6 +577,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($twitchContent->getCreator() === $this) {
                 $twitchContent->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getCreator() === $this) {
+                $ticket->setCreator(null);
             }
         }
 

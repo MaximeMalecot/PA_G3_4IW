@@ -52,7 +52,7 @@ class Tournament
     private $nbMaxParticipants;
 
     /**
-     * @ORM\Column(type="string", length=255, options={"default": "CREATED"})
+     * @ORM\Column(type="string", length=20, options={"default": "CREATED"})
      */
     private $status="CREATED";
 

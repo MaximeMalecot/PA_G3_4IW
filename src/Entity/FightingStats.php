@@ -35,15 +35,15 @@ class FightingStats
     private $defeats;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $rank;
+
+    /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="fightingStats", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $target;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $rank;
 
     public function getId(): ?int
     {
