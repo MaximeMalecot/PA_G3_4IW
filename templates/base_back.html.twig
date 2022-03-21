@@ -17,14 +17,11 @@
 <body>
 <nav class="red">
     <div class="nav-wrapper">
-        {% if app.user %}
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="{{ path("front_default") }}">front</a></li>
             <li><a href="{{ path('app_logout') }}">logout</a></li>
-        {% else %}
-            <li><a href="{{ path('app_login') }}">login</a></li>
-            <li><a href="{{ path('app_register') }}">register</a></li>
-        {% endif %}
-        <a href="{{ path("front_default") }}">front</a>
-        <a href="{{ path("back_default") }}" class="brand-logo">Logo</a>
+        </ul>
+        <a href="{{ path("back_default") }}" class="brand-logo right">Logo</a>
     </div>
 </nav>
 
