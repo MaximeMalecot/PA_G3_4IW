@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/user/{id}', name: 'front_invoice', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'invoice_index', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
@@ -23,7 +23,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name: 'front_invoice_show')]
+    #[Route('/show/{id}', name: 'invoice_show')]
     #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function show(Invoice $invoice): Response
     {

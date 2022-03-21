@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/tournament')]
 class TournamentController extends AbstractController
 {
-    #[Route('/', name: 'front_tournament', methods: ['GET'])]
+    #[Route('/', name: 'tournament_index', methods: ['GET'])]
     public function index(TournamentRepository $tournamentRepository, FightingStatsRepository $fs, FightingStatsService $fsS): Response
     {
         return $this->render('front/tournament/index.html.twig', [
@@ -25,7 +25,7 @@ class TournamentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'front_tournament_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'tournament_show', methods: ['GET'])]
     public function show(Tournament $tournament): Response 
     {
         return $this->render('front/tournament/show.html.twig', [

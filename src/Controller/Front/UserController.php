@@ -17,7 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'front_user', methods: ['GET'])]
+    #[Route('/', name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $repository): Response
     {
         try {
@@ -35,7 +35,7 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('/{id}', name: 'front_user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
+    #[Route('/{id}', name: 'user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
     #[IsGranted(UserVoter::SHOW, 'user')]
     public function show(User $user): Response
     {
@@ -45,7 +45,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'front_user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
     #[IsGranted(UserVoter::EDIT, 'user')]
     public function edit(User $user, UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
     {

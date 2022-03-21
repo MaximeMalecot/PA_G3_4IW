@@ -7,15 +7,15 @@
            and uncomment the following Encore helpers to start using Symfony UX #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     {% block stylesheets %}
-        {#{{ encore_entry_link_tags('app') }}#}
+        {# {{ encore_entry_link_tags('app') }} #}
     {% endblock %}
 
     {% block javascripts %}
-        {#{{ encore_entry_script_tags('app') }}#}
+        {# {{ encore_entry_script_tags('app') }} #}
     {% endblock %}
 </head>
 <body>
-<nav>
+<nav class="red">
     <div class="nav-wrapper">
         {% if app.user %}
             <li><a href="{{ path('app_logout') }}">logout</a></li>
@@ -23,6 +23,7 @@
             <li><a href="{{ path('app_login') }}">login</a></li>
             <li><a href="{{ path('app_register') }}">register</a></li>
         {% endif %}
+        <a href="{{ path("front_default") }}">front</a>
         <a href="{{ path("back_default") }}" class="brand-logo">Logo</a>
     </div>
 </nav>

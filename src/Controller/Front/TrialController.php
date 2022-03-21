@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/trial')]
 class TrialController extends AbstractController
 {
-    #[Route('/', name: 'front_trial', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
         $status = $request->request->get('status') ?? "AWAITING";
@@ -23,7 +23,7 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}',  name: 'front_trial_show', methods: ['GET'])]
+    #[Route('/{id}',  name: 'trial_show', methods: ['GET'])]
     public function show(Trial $trial): Response 
     {
         if($trial->getStatus() === "STARTED"){

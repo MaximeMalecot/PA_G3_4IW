@@ -24,9 +24,12 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    private Security $security;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, Security $security)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->security = $security;
     }
 
     public function authenticate(Request $request): PassportInterface
@@ -49,9 +52,10 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('default'));
+        if(in_array('ROLE_ADJUDICATE',$this->security->getUser()->getRoles()) || in_array('ROLE_ADMIN',$this->security->getUser()->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('back_default'));
+        }
+        return new RedirectResponse($this->urlGenerator->generate('front_default'));
     }
 
     protected function getLoginUrl(Request $request): string

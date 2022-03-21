@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/bet')]
 class BetController extends AbstractController
 {
-    #[Route('/user/{id}', name: 'front_bet', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'bet', methods: ['GET'])]
     #[IsGranted(BetVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
