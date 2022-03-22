@@ -42,7 +42,7 @@ class TicketController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('back_ticket_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/accept/{id}', name: 'ticket_accept', methods: ['POST'])]
@@ -54,7 +54,7 @@ class TicketController extends AbstractController
             //SHOULD SEND EMAIL
         }
 
-        return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('back_ticket_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/refuse/{id}', name: 'ticket_refuse', methods: ['POST'])]
@@ -66,6 +66,6 @@ class TicketController extends AbstractController
             //SHOULD SEND EMAIL
         }
 
-        return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('back_ticket_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\FightingStats;
-use App\Repository\FightingStatsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\FightingStatsRepository;
 
 class FightingStatsService
 {
@@ -63,6 +64,14 @@ class FightingStatsService
         }
         $update = "UPDATE fighting_stats SET rank = rank + 1 WHERE ranking_points < ?";
         $conn->executeStatement($update, [$fs->getRankingPoints()]);
+    }
+
+    public function setNewFighter(User $user){
+        $user->setRoles(['ROLE_FIGHTER']);
+        $fs = new FightingStats();
+        $fs->setRank($this->fightingStatsRepository->findMinRank());
+        $fs->setTarget($user);
+        $this->entityManager->persist($fs);
     }
 
 }

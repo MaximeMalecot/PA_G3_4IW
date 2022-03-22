@@ -20,19 +20,19 @@ class FightingStats
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $rankingPoints;
+    private $rankingPoints = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $victories;
+    private $victories = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $defeats;
+    private $defeats = 0;
 
     /**
      * @ORM\Column(type="integer")

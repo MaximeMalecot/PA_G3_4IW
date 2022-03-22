@@ -5,9 +5,12 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\DBAL\Exception;
-use App\Form\UserUpgradeType;
 use App\Security\Voter\UserVoter;
 use App\Repository\UserRepository;
+use App\Form\UserUpgradeFighterType;
+use App\Repository\TicketRepository;
+use App\Form\UserUpgradeAdjudicateType;
+use App\Service\FightingStatsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,20 +78,29 @@ class UserController extends AbstractController
     }
 
     #[Route('/upgrade', name: 'user_upgrade', methods: ['GET', 'POST'])]
-    public function upgrade(Request $request): Response
+    public function upgrade(Request $request, TicketRepository $ticketRepository, FightingStatsService $fightingStatsService): Response
     {
         $user = $this->getUser();
-        $form = $this->createForm(UserUpgradeType::class, $user);
+        $ticket = $ticketRepository->findOneBy(["createdBy" => $user->getId(), "status"=> "ACCEPTED"]);
+        if($ticket->getRoleWanted() == "Fighter"){
+            $form = $this->createForm(UserUpgradeFighterType::class, $user);
+        } else {
+            $form = $this->createForm(UserUpgradeAdjudicateType::class, $user);
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($ticket->getRoleWanted() == "Fighter"){
+                $fightingStatsService->setNewFighter($user);
+            } else {
+                $user->setRoles(['ROLE_ADJUDICATE']);
+            }
+            $ticket->setStatus("ENDED");
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
             $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
 
-            return $this->redirectToRoute('front_user_show', [
-                'id' => $user->getId()
-            ]);
+            return $this->redirectToRoute('front_default');
         }
 
         return $this->render('front/user/edit.html.twig', [

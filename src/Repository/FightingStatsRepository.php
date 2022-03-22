@@ -19,6 +19,15 @@ class FightingStatsRepository extends ServiceEntityRepository
         parent::__construct($registry, FightingStats::class);
     }
 
+    public function findMinRank()
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('MAX(fs.rank)')
+            ->from('App:FightingStats', 'fs')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return FightingStats[] Returns an array of FightingStats objects
     //  */
