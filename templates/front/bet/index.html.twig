@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Paris de {{ user.nickname }}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,31 +9,34 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>User {{ bets[0].better.nickname   }}! ✅</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>On</th>
-                <th>Amount</th>
-                <th>At</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for bet in bets %}
-            <tr>
-                {% if bet.getTrial() is not null %}
-                    <th>{{ bet.trial.id }}</th>
-                {% elseif bet.getTournament() is not null %}
-                    <th>{{ bet.trial.id }}</th>
-                {% else %}
-                    <th>EMPTY</th>
-                {% endif %}
-                <th>{{ bet.amount }}</th>
-                <th>{{ bet.createdAt|date('d-m-Y H:i:s') }}</th>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <h1>User {{ user.nickname }}</h1>
+    {% if user.bets is defined and user.bets is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>On</th>
+                    <th>Amount</th>
+                    <th>At</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for bet in user.bets %}
+                <tr>
+                    {% if bet.getTrial() is not null %}
+                        <th>{{ bet.trial.id }}</th>
+                    {% elseif bet.getTournament() is not null %}
+                        <th>{{ bet.trial.id }}</th>
+                    {% else %}
+                        <th>EMPTY</th>
+                    {% endif %}
+                    <th>{{ bet.amount }}</th>
+                    <th>{{ bet.createdAt|date('d-m-Y H:i:s') }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Pas de paris trouvés</p>
+    {% endif %}
 </div>
 {% endblock %}

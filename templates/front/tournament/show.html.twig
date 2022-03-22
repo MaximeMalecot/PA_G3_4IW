@@ -1,5 +1,7 @@
 {% extends 'base_front.html.twig' %}
 
+{% block title %}Tournament {{ tournament.name }}{% endblock %}
+
 {% block body %}
 
 <style>
@@ -8,8 +10,6 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
     <b>Name:</b></br>
     {{ tournament.name }}</br>
     <b>Arbitre du tournoi:</b></br> 

@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Hello TrialController!{% endblock %}
+{% block title %}Les combats{% endblock %}
 
 {% block body %}
 <style>
@@ -9,9 +9,9 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-    <label for="filter">TRIALSTATUS</label>
-    <form id="filter" action="{{ path('front_trial') }}" method="POST">
+    <h1>Les combats</h1>
+    <label for="filter">Status</label>
+    <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>

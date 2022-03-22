@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Factures de {{ user.nickname }}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,27 +9,31 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>User {{ invoices[0].buyer.nickname   }}! ✅</h1>
+    <h1>User {{ user.nickname }}</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>credit</th>
-                <th>price</th>
-                <th>paypal_id</th>
-                <th>date</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for invoice in invoices %}
-            <tr>
-                <th>{{ invoice.creditAmount }}</th>
-                <th>{{ invoice.price }}</th>
-                <th>{{ invoice.idPaypal }}</th>
-                <th>{{ invoice.createdAt|date('d-m-Y H:i:s') }}</th>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% if user.invoices is defined and user.invoices is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>credit</th>
+                    <th>price</th>
+                    <th>paypal_id</th>
+                    <th>date</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for invoice in user.invoices %}
+                <tr>
+                    <th>{{ invoice.creditAmount }}</th>
+                    <th>{{ invoice.price }} $</th>
+                    <th>{{ invoice.idPaypal }}</th>
+                    <th>{{ invoice.createdAt|date('d-m-Y H:i:s') }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Pas de facture trouvées</p>
+    {% endif %}
 </div>
 {% endblock %}

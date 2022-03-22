@@ -13,13 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/user/{id}', name: 'invoice_index', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'invoice_user', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
         return $this->render('front/invoice/index.html.twig', [
             'controller_name' => 'TrialController',
-            'invoices' => $user->getInvoices(),
+            'user' => $user,
         ]);
     }
 

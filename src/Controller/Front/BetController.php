@@ -13,13 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/bet')]
 class BetController extends AbstractController
 {
-    #[Route('/user/{id}', name: 'bet', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'bet_user', methods: ['GET'])]
     #[IsGranted(BetVoter::SHOW, 'user')]
     public function index(User $user): Response
     {
         return $this->render('front/bet/index.html.twig', [
             'controller_name' => 'UserController',
-            'bets' => $user->getBets()
+            'user' => $user
         ]);
 
     }

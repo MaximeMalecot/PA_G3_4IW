@@ -43,7 +43,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used    
     access_control:
-        - { path: ^/ticket, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADJUDICATE }
+        - { path: ^/ticket, roles: ROLE_USER }
         - { path: ^/logout, roles: ROLE_USER}
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
