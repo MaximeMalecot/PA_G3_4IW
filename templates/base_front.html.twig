@@ -26,6 +26,7 @@
                 {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
                     <li><a href="{{ path('back_default') }}">administration</a></li>
                 {% endif %}
+                <li><a href="{{ path('ticket_new') }}">upgrade</a></li>
                 <li><a href="{{ path('app_logout') }}">logout</a></li>
             {% else %}
                 <li><a href="{{ path('app_login') }}">login</a></li>
