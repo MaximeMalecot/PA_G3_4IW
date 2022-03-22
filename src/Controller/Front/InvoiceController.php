@@ -18,7 +18,6 @@ class InvoiceController extends AbstractController
     public function index(User $user): Response
     {
         return $this->render('front/invoice/index.html.twig', [
-            'controller_name' => 'TrialController',
             'user' => $user,
         ]);
     }
@@ -29,7 +28,6 @@ class InvoiceController extends AbstractController
     {
         dd('render pdf of invoice');
         return $this->render('front/invoice/show.html.twig', [
-            'controller_name' => 'TrialController',
             'invoice' => $invoice,
         ]);
     }

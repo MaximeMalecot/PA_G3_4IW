@@ -26,12 +26,10 @@ class UserController extends AbstractController
             $fighters = $repository->findByRole("ROLE_FIGHTER");
         } catch (Exception $e) {
             return $this->render('front/user/index.html.twig', [
-                'controller_name' => 'UserController',
                 'fighters' => "An error occurred."
             ]);
         }
         return $this->render('front/user/index.html.twig', [
-            'controller_name' => 'UserController',
             'fighters' => $fighters
         ]);
 

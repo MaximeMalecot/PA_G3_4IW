@@ -14,7 +14,6 @@ class FightingStatsController extends AbstractController
     public function index(FightingStatsRepository $fsRepository): Response
     {
         return $this->render('front/fighting_stats/index.html.twig', [
-            'controller_name' => 'Front/FightingStatsController',
             'fs' => $fsRepository->findBy([], ['rank' => 'ASC'])
         ]);
     }

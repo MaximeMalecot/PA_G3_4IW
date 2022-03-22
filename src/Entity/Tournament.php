@@ -18,6 +18,8 @@ class Tournament
 {
     use BlameableTrait;
     use TimestampableTrait;
+    
+    const ENUM_STATUS = [ "CREATED","AWAITING","STARTED","ENDED"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -281,6 +283,9 @@ class Tournament
 
     public function setStatus(string $status): self
     {
+        if (!in_array($status, self::ENUM_STATUS)) {
+            throw new \InvalidArgumentException("Invalid status");
+        }
         $this->status = $status;
 
         return $this;

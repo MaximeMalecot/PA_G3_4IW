@@ -17,7 +17,6 @@ class TrialController extends AbstractController
     {
         $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('front/trial/index.html.twig', [
-            'controller_name' => 'TrialController',
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
             'status' => $status
         ]);
@@ -28,12 +27,10 @@ class TrialController extends AbstractController
     {
         if($trial->getStatus() === "STARTED"){
             return $this->render('front/trial/live.html.twig', [
-                'controller_name' => 'TrialController',
                 'trial' => $trial
             ]);
         }
         return $this->render('front/trial/show.html.twig', [
-            'controller_name' => 'TrialController',
             'trial' => $trial
         ]);
     }

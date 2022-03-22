@@ -10,7 +10,14 @@
 
 <div class="example-wrapper">
     <h1>Les tournois</h1>
-
+    <label for="filter">Status</label>
+    <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
+        <select id="status" name="status">
+            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="STARTED" id="STARTED">EN COURS</option>
+            <option value="ENDED" id="ENDED">FINIS</option>
+        </select>
+    </form>
     {% if tournaments is defined %}
     <table>
         <thead>
@@ -36,9 +43,17 @@
     {% endif %}
 </div>
 {% endblock %}
-
-{#
-    {% for fighter in tournament.getParticipantFromRole("ROLE_FIGHTER") %}
-        {{ fighter.nickname }}</br>
-    {% endfor %}
-#}
+{% block javascripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        var select = document.getElementById('status');
+        {{status}}.selected = 'selected';
+        var instances = M.FormSelect.init(select);
+        let form = document.getElementById('filter');
+        form.addEventListener("change", async() => {
+            form.submit();
+        });
+    });
+    
+</script>
+{% endblock %}

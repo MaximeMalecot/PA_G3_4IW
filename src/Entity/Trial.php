@@ -17,6 +17,8 @@ class Trial
 {
     use BlameableTrait;
     use TimestampableTrait;
+
+    const ENUM_STATUS = ["CREATED","DATE_ACCEPTED","AWAITING","STARTED","ENDED","DATE_REFUSED","REFUSED"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -104,6 +106,9 @@ class Trial
 
     public function setStatus(string $status): self
     {
+        if (!in_array($status, self::ENUM_STATUS)) {
+            throw new \InvalidArgumentException("Invalid status");
+        }
         $this->status = $status;
 
         return $this;

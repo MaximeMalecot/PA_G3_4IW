@@ -3,12 +3,13 @@
 namespace App\Controller\Front;
 
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Tournament;
 use App\Entity\FightingStats;
-use App\Entity\User;
+use App\Service\FightingStatsService;
 use App\Repository\TournamentRepository;
 use App\Repository\FightingStatsRepository;
-use App\Service\FightingStatsService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,12 +17,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/tournament')]
 class TournamentController extends AbstractController
 {
-    #[Route('/', name: 'tournament_index', methods: ['GET'])]
-    public function index(TournamentRepository $tournamentRepository, FightingStatsRepository $fs, FightingStatsService $fsS): Response
+    #[Route('/', name: 'tournament_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
+        $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('front/tournament/index.html.twig', [
-            'controller_name' => 'TournamentController',
-            'tournaments' => $tournamentRepository->findIncoming()
+            'tournaments' => $tournamentRepository->findBy(["status" => $status], ["dateStart" => "ASC"]),
+            'status' => $status
         ]);
     }
 
@@ -29,7 +31,6 @@ class TournamentController extends AbstractController
     public function show(Tournament $tournament): Response 
     {
         return $this->render('front/tournament/show.html.twig', [
-            'controller_name' => 'TournamentController',
             'tournament' => $tournament
         ]);
     }
