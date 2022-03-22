@@ -5,9 +5,11 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\DBAL\Exception;
+use App\Form\UserUpgradeType;
 use App\Security\Voter\UserVoter;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -58,6 +60,29 @@ class UserController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
+
+            return $this->redirectToRoute('front_user_show', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        return $this->render('front/user/edit.html.twig', [
+            'user'=>$user,
+            'form' => $form->createView()
+         ]);
+    }
+
+    #[Route('/upgrade', name: 'user_upgrade', methods: ['GET', 'POST'])]
+    public function upgrade(Request $request): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserUpgradeType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

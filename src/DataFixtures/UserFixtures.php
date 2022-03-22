@@ -10,10 +10,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture 
 {
-    const USER_ADMIN = 'admin';
-    const USER_ADJUDICATE = 'adjudicate';
-    const USER_FIGHTER = 'fighter';
-    const USER_USER = 'user';
 
     /** @var UserPasswordHasherInterface $userPasswordHasher */
     private $userPasswordHasher;
@@ -28,7 +24,7 @@ class UserFixtures extends Fixture
         $faker = Factory::create();
         /////////ADMIN/////////
         $admin = (new User())
-            ->setEmail('admin@admin')
+            ->setEmail('admin@admin.com')
             ->setIsVerified(true)
             ->setRoles(['ROLE_ADMIN'])
             ->setNickname($faker->userName)
@@ -36,12 +32,11 @@ class UserFixtures extends Fixture
         ;
         $admin->setPassword($this->userPasswordHasher->hashPassword($admin, 'test'));
         $manager->persist($admin);
-        $this->setReference(self::USER_ADMIN, $admin);
 
         /////////ADJUDICATE/////////
         for($i=0;$i<20;$i++){
             $adjudicate = (new User())
-                ->setEmail("adjudicate{$i}@adjudicate")
+                ->setEmail("adjudicate{$i}@adjudicate.com")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_ADJUDICATE'])
                 ->setNickname($faker->userName)
@@ -50,13 +45,12 @@ class UserFixtures extends Fixture
             $adjudicate->setPassword($this->userPasswordHasher->hashPassword($adjudicate, 'test'));
             $manager->persist($adjudicate);
         }
-        $this->setReference(self::USER_ADJUDICATE, $adjudicate);
 
         /////////FIGHTER/////////
 
         for($i=0;$i<40;$i++){
             $fighter = (new User())
-                ->setEmail("fighter{$i}@fighter")
+                ->setEmail("fighter{$i}@fighter.com")
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_FIGHTER'])
                 ->setNickname($faker->userName)
@@ -65,19 +59,18 @@ class UserFixtures extends Fixture
             $fighter->setPassword($this->userPasswordHasher->hashPassword($fighter, 'test'));
             $manager->persist($fighter);
         }
-        $this->setReference(self::USER_FIGHTER, $fighter);
 
         /////////USER/////////
-        $user = (new User())
-            ->setEmail('user@user')
-            ->setIsVerified(true)
-            ->setRoles(['ROLE_USER'])
-            ->setNickname('userTest')
-        ;
-        $user->setPassword($this->userPasswordHasher->hashPassword($user, 'test'));
-        $manager->persist($user);
-        $this->setReference(self::USER_USER, $user);
-
+        for($i=0;$i<5;$i++){
+            $user = (new User())
+                ->setEmail("user{$i}@user.com")
+                ->setIsVerified(true)
+                ->setRoles(['ROLE_USER'])
+                ->setNickname($faker->userName)
+            ;
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, 'test'));
+            $manager->persist($user);
+        }
         $manager->flush();
     }
 }

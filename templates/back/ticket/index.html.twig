@@ -10,11 +10,26 @@
 
     <h1>Ticket index</h1>
 
+    <label for="filter">Filtrer</label>
+    <form id="filter" action="{{ path('back_ticket_index') }}" method="POST">
+        <select id="roleWanted" name="roleWanted">
+            <option value="Adjudicate" id="Adjudicate">Adjudicate</option>
+            <option value="Fighter" id="Fighter">Fighter</option>
+        </select>
+        <select id="status" name="status">
+            <option value="CREATED" id="CREATED">Créer</option>
+            <option value="ACCEPTED" id="ACCEPTED">Accepter</option>
+            <option value="ENDED" id="ENDED">Finis</option>
+            <option value="REFUSED" id="REFUSED">Refuser</option>
+        </select>
+        <input type="submit" value="Filtrer"/>
+    </form>
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Description</th>
+                <th>Role voulu</th>
                 <th>Status</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
@@ -26,12 +41,15 @@
             <tr>
                 <td>{{ ticket.id }}</td>
                 <td>{{ ticket.description }}</td>
+                <td>{{ ticket.roleWanted }}</td>
                 <td>{{ ticket.status }}</td>
                 <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    {{ include('back/ticket/_accept_form.html.twig') }}
-                    {{ include('back/ticket/_reject_form.html.twig') }}
+                    {% if ticket.status == "CREATED" %}
+                        {{ include('back/ticket/_accept_form.html.twig') }}
+                        {{ include('back/ticket/_reject_form.html.twig') }}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -41,4 +59,15 @@
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        var select = document.querySelectorAll("select");
+        {{status}}.selected = 'selected';
+        {{roleWanted}}.selected = 'selected';
+        var instances = M.FormSelect.init(select);
+    });
+    
+</script>
 {% endblock %}

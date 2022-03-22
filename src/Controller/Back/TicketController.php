@@ -14,11 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/ticket')]
 class TicketController extends AbstractController
 {
-    #[Route('/', name: 'ticket_index', methods: ['GET'])]
-    public function index(TicketRepository $ticketRepository): Response
+    #[Route('/', name: 'ticket_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, TicketRepository $ticketRepository): Response
     {
+        $roleWanted = $request->request->get('roleWanted') ?? "Fighter";
+        $status = $request->request->get('status') ?? "CREATED";
         return $this->render('back/ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findAll(),
+            'tickets' => $ticketRepository->findBy([ "roleWanted" => $roleWanted, "status" => $status]),
+            'status' => $status,
+            'roleWanted' => $roleWanted,
         ]);
     }
 
@@ -47,6 +51,7 @@ class TicketController extends AbstractController
         if ($this->isCsrfTokenValid('accept'.$ticket->getId(), $request->request->get('_token'))) {
             $ticket->setStatus("ACCEPTED");
             $entityManager->flush();
+            //SHOULD SEND EMAIL
         }
 
         return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
@@ -58,6 +63,7 @@ class TicketController extends AbstractController
         if ($this->isCsrfTokenValid('refuse'.$ticket->getId(), $request->request->get('_token'))) {
             $ticket->setStatus("REFUSED");
             $entityManager->flush();
+            //SHOULD SEND EMAIL
         }
 
         return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);

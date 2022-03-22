@@ -14,6 +14,9 @@ class Ticket
 {
     use TimestampableTrait;
     use BlameableTrait;
+
+    const ENUM_STATUS = ["CREATED","ACCEPTED","ENDED","REFUSED"];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -28,15 +31,15 @@ class Ticket
 
     
     /**
-     * @ORM\Column(type="string", length=20, options={"default" : "CREATED"})
+     * @ORM\Column(type="string", length=50)
+     */
+    private $roleWanted;
+    
+    /**
+     * @ORM\Column(type="string", length=20, options={"default": "CREATED"})
      */
     private $status="CREATED";
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tickets")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $creator;
 
     public function getId(): ?int
     {
@@ -55,18 +58,6 @@ class Ticket
         return $this;
     }
 
-    public function getCreator(): ?User
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(?User $creator): self
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -74,7 +65,22 @@ class Ticket
 
     public function setStatus(string $status): self
     {
+        if (!in_array($status, self::ENUM_STATUS)) {
+            throw new \InvalidArgumentException("Invalid status");
+        }
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getRoleWanted(): ?string
+    {
+        return $this->roleWanted;
+    }
+
+    public function setRoleWanted(string $roleWanted): self
+    {
+        $this->roleWanted = $roleWanted;
 
         return $this;
     }

@@ -16,6 +16,7 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
+            ->add('nickname')
             ->add('password', PasswordType::class, [
                 'constraints' => [
                     new NotBlank([
@@ -29,8 +30,6 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('nickname')
-            ->add('description')
         ;
     }
 

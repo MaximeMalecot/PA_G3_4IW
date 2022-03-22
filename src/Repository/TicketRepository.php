@@ -19,6 +19,14 @@ class TicketRepository extends ServiceEntityRepository
         parent::__construct($registry, Ticket::class);
     }
 
+    public function findPastTickets()
+    {
+        $q = $this->createQueryBuilder('t')
+            ->where('t.status != "CREATED"')
+            ->getQuery();
+        return $q->getResult();
+    }
+
     // /**
     //  * @return Ticket[] Returns an array of Ticket objects
     //  */

@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $twitchContents;
 
     /**
-     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="creator", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="createdBy", orphanRemoval=true)
      */
     private $tickets;
 
@@ -595,7 +595,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tickets->contains($ticket)) {
             $this->tickets[] = $ticket;
-            $ticket->setCreator($this);
+            $ticket->setCreatedBy($this);
         }
 
         return $this;
@@ -605,8 +605,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tickets->removeElement($ticket)) {
             // set the owning side to null (unless already changed)
-            if ($ticket->getCreator() === $this) {
-                $ticket->setCreator(null);
+            if ($ticket->getCreatedBy() === $this) {
+                $ticket->setCreatedBy(null);
             }
         }
 

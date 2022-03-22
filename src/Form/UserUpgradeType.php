@@ -2,31 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\Ticket;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class TicketType extends AbstractType
+class UserUpgradeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('roleWanted', ChoiceType::class, [
-                'choices'  => [
-                    'Fighter' => 'Fighter',
-                    'Adjudicate' => 'Adjudicate'
-                ],
-            ])
             ->add('description')
-            ;
+            ->add('twitch_channel')
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Ticket::class,
+            'data_class' => User::class,
         ]);
     }
 }

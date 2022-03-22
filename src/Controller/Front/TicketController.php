@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/ticket')]
 class TicketController extends AbstractController
 {
+
     #[Route('/', name: 'ticket_index', methods: ['GET'])]
     public function index(TicketRepository $ticketRepository): Response
     {
@@ -33,7 +34,7 @@ class TicketController extends AbstractController
             $entityManager->persist($ticket);
             $entityManager->flush();
 
-            return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('front/ticket/new.html.twig', [
