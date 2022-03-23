@@ -17,12 +17,19 @@ class TicketController extends AbstractController
     #[Route('/', name: 'ticket_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TicketRepository $ticketRepository): Response
     {
-        $roleWanted = $request->request->get('roleWanted') ?? "Fighter";
-        $status = $request->request->get('status') ?? "CREATED";
+        $roleWanted = $request->request->get('roleWanted') != "Role" ? $request->request->get('roleWanted') : null;
+        $status = $request->request->get('status')  != "Status" ? $request->request->get('status') : null;
+        $options = [];
+        if($roleWanted){
+            $options["roleWanted"] = $roleWanted;
+        }
+        if($status){
+            $options["status"] = $status;
+        }
         return $this->render('back/ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findBy([ "roleWanted" => $roleWanted, "status" => $status]),
-            'status' => $status,
-            'roleWanted' => $roleWanted,
+            'tickets' => $ticketRepository->findBy($options),
+            'status' => $status ?? "Status",
+            'roleWanted' => $roleWanted ?? "Role",
         ]);
     }
 

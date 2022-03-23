@@ -13,10 +13,12 @@
     <label for="filter">Filtrer</label>
     <form id="filter" action="{{ path('back_ticket_index') }}" method="POST">
         <select id="roleWanted" name="roleWanted">
+            <option value="Role" id="Role">---</option>
             <option value="Adjudicate" id="Adjudicate">Adjudicate</option>
             <option value="Fighter" id="Fighter">Fighter</option>
         </select>
         <select id="status" name="status">
+            <option value="Status" id="Status">---</option>
             <option value="CREATED" id="CREATED">Créer</option>
             <option value="ACCEPTED" id="ACCEPTED">Accepter</option>
             <option value="ENDED" id="ENDED">Finis</option>
@@ -64,8 +66,8 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
         var select = document.querySelectorAll("select");
-        {{status}}.selected = 'selected';
         {{roleWanted}}.selected = 'selected';
+        {{status}}.selected = 'selected';
         var instances = M.FormSelect.init(select);
     });
     
