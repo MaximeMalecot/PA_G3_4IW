@@ -3,14 +3,16 @@
 namespace App\Controller\Front;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Form\UserPwdType;
+use App\Form\UserEditType;
 use Doctrine\DBAL\Exception;
 use App\Security\Voter\UserVoter;
 use App\Repository\UserRepository;
 use App\Form\UserUpgradeFighterType;
 use App\Repository\TicketRepository;
-use App\Form\UserUpgradeAdjudicateType;
 use App\Service\FightingStatsService;
+use App\Form\UserUpgradeAdjudicateType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,9 +52,32 @@ class UserController extends AbstractController
 
     #[Route('/edit/{id}', name: 'user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
     #[IsGranted(UserVoter::EDIT, 'user')]
-    public function edit(User $user, UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
+    public function edit(User $user, Request $request): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserEditType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
+
+            return $this->redirectToRoute('front_user_edit', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        return $this->render('front/user/edit.html.twig', [
+            'user'=>$user,
+            'form' => $form->createView()
+         ]);
+    }
+
+    #[Route('/edit/pwd/{id}', name: 'user_pwd_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[IsGranted(UserVoter::EDIT, 'user')]
+    public function pwdChange(User $user, UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
+    {
+        $form = $this->createForm(UserPwdType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
@@ -66,7 +91,7 @@ class UserController extends AbstractController
 
             $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
 
-            return $this->redirectToRoute('front_user_show', [
+            return $this->redirectToRoute('front_user_edit', [
                 'id' => $user->getId()
             ]);
         }
@@ -75,6 +100,17 @@ class UserController extends AbstractController
             'user'=>$user,
             'form' => $form->createView()
          ]);
+    }
+
+    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/upgrade', name: 'user_upgrade', methods: ['GET', 'POST'])]

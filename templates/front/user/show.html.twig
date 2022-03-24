@@ -1,30 +1,37 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}User {{ user.nickname }}{% endblock %}
+{% block title %}User{% endblock %}
 
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
-    <div class="example-wrapper">
-        Pseudo : {{ user.nickname }}</br>
-        Description : {{ user.description }}</br>
-        {% if user.fightingStats is defined and user.fightingStats is not null %}
-            Rank : {{ stats.rank }}</br>
-            Points : {{ stats.rankingPoints }}</br>
-            Victoires : {{ stats.victories }}</br>
-            Defaites : {{ stats.defeats }}</br>
-            Dernier combat : {{ stats.updatedAt|date('d-m-Y H:i:s') }}</br>
-        {% endif %}
-        
-        {% if (app.user.id is defined and app.user.id == user.id or is_granted('ROLE_ADMIN') == true) %}
-            {% if user.getInvoices() is not null %}
-                <a href="{{ path('front_invoice_user', {'id': user.id})}}">factures</a></br>
-            {% endif %}
-            {% if user.getBets() is not null%}
-                <a href="{{ path('front_bet_user', {'id': user.id}) }}">paris</a></br>
-            {% endif %}
-        {% endif %}
-    </div>
+
+<div class="example-wrapper">
+    <h1>User</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Nickname</th>
+                <td>{{ user.nickname }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ user.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('front_user_index') }}">back to list</a>
+
+    <a href="{{ path('front_user_edit', {'id': user.id}) }}">edit</a>
+
+    {{ include('front/user/_delete_form.html.twig') }}
+</div>
 {% endblock %}
