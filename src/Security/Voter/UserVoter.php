@@ -49,6 +49,6 @@ class UserVoter extends Voter
      */
     protected function canManage(User $target, User $user): bool
     {
-        return ($target == $user || in_array('ROLE_ADMIN', $user->getRoles()));
+        return ($target === $user || in_array('ROLE_ADMIN', $user->getRoles()));
     }
 }
