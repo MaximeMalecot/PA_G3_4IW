@@ -35,6 +35,8 @@
                 <th>Status</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
+                <th>CreatedBy</th>
+                <th>UpdatedBy</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -47,6 +49,8 @@
                 <td>{{ ticket.status }}</td>
                 <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ ticket.createdBy.email }}</td>
+                <td>{{ ticket.updatedBy.email }}</td>
                 <td>
                     {% if ticket.status == "CREATED" %}
                         {{ include('back/ticket/_accept_form.html.twig') }}

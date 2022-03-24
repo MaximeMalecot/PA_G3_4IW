@@ -12,13 +12,14 @@ class UserVoter extends Voter
         TO IMPLEMENT THE VOTER IN A CONTROLLER JUST DO :
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
-    const SHOW = 'show';
-    const EDIT = 'edit';
     const DELETE = 'delete';
+    const EDIT = 'edit';
+    const SHOW = 'show';
+    const UPGRADE = 'upgrade';
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE])
+        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE, self::UPGRADE])
             && $subject instanceof User;
     }
 
@@ -28,14 +29,17 @@ class UserVoter extends Voter
         $user = $token->getUser();
 
         switch ($attribute) {
-            case self::SHOW:
-                return in_array('ROLE_FIGHTER', $subject->getRoles()) || $this->canManage($subject, $user);
+            case self::DELETE:
+                return $this->canManage($subject, $user);
                 break;
             case self::EDIT:
                 return $this->canManage($subject, $user);
                 break;
-            case self::DELETE:
-                return $this->canManage($subject, $user);
+            case self::SHOW:
+                return in_array('ROLE_FIGHTER', $subject->getRoles()) || $this->canManage($subject, $user);
+                break;
+            case self::UPGRADE:
+                return $subject === $user;
                 break;
         }
 

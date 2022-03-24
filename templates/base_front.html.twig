@@ -29,7 +29,7 @@
                     {% if app.user.tickets is defined and app.user.tickets is empty%}
                         <li><a href="{{ path('front_ticket_new') }}">upgrade</a></li>
                     {% elseif app.user.tickets[0].status == "ACCEPTED" %}
-                        <li><a href="{{ path('front_user_upgrade') }}">change your account</a></li>
+                        <li><a href="{{ path('front_user_upgrade', { "id": app.user.id }) }}">change your account</a></li>
                     {% endif %}
                 {% endif %}
                 <li><a href="{{ path('front_user_edit', { "id": app.user.id }) }}">Votre compte</a></li>
