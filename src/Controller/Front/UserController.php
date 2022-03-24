@@ -25,7 +25,66 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
 
-    #[Route('/edit/pwd/{id}', name: 'user_pwd_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[Route('/', name: 'user_index', methods: ['GET'])]
+    public function index(UserRepository $repository): Response
+    {
+        try {
+            $fighters = $repository->findByRole("ROLE_FIGHTER");
+        } catch (Exception $e) {
+            return $this->render('front/user/index.html.twig', [
+                'fighters' => "An error occurred."
+            ]);
+        }
+        return $this->render('front/user/index.html.twig', [
+            'fighters' => $fighters
+        ]);
+    }
+
+    #[Route('/{id}', name: 'user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
+    #[IsGranted(UserVoter::SHOW, 'user')]
+    public function show(User $user): Response
+    {
+        return $this->render('front/user/show.html.twig', [
+            'user' => $user,
+            'stats'=> $user->getFightingStats()
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/edit', name: 'user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[IsGranted(UserVoter::EDIT, 'user')]
+    public function edit(User $user, Request $request): Response
+    {
+        $form = $this->createForm(UserEditType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
+
+            return $this->redirectToRoute('front_user_edit', [
+                'id' => $user->getId()
+            ]);
+        }
+
+        return $this->render('front/user/edit.html.twig', [
+            'user'=>$user,
+            'form' => $form->createView()
+         ]);
+    }
+
+    #[Route('/{id}/pwd', name: 'user_pwd_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
     #[IsGranted(UserVoter::EDIT, 'user')]
     public function pwdChange(User $user, UserPasswordHasherInterface $userPasswordHasherInterface, Request $request): Response
     {
@@ -54,30 +113,7 @@ class UserController extends AbstractController
          ]);
     }
 
-    #[Route('/edit/{id}', name: 'user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
-    #[IsGranted(UserVoter::EDIT, 'user')]
-    public function edit(User $user, Request $request): Response
-    {
-        $form = $this->createForm(UserEditType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
-
-            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
-
-            return $this->redirectToRoute('front_user_edit', [
-                'id' => $user->getId()
-            ]);
-        }
-
-        return $this->render('front/user/edit.html.twig', [
-            'user'=>$user,
-            'form' => $form->createView()
-         ]);
-    }
-
-    #[Route('/upgrade/{id}', name: 'user_upgrade', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
+    #[Route('/{id}/upgrade', name: 'user_upgrade', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
     #[IsGranted(UserVoter::UPGRADE, 'user')]
     public function upgrade(User $user, Request $request, TicketRepository $ticketRepository, FightingStatsService $fightingStatsService): Response
     {
@@ -108,42 +144,4 @@ class UserController extends AbstractController
             'form' => $form->createView()
          ]);
     }
-
-    #[Route('/{id}', name: 'user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
-    #[IsGranted(UserVoter::SHOW, 'user')]
-    public function show(User $user): Response
-    {
-        return $this->render('front/user/show.html.twig', [
-            'user' => $user,
-            'stats'=> $user->getFightingStats()
-        ]);
-    }
-
-    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/', name: 'user_index', methods: ['GET'])]
-    public function index(UserRepository $repository): Response
-    {
-        try {
-            $fighters = $repository->findByRole("ROLE_FIGHTER");
-        } catch (Exception $e) {
-            return $this->render('front/user/index.html.twig', [
-                'fighters' => "An error occurred."
-            ]);
-        }
-        return $this->render('front/user/index.html.twig', [
-            'fighters' => $fighters
-        ]);
-
-    }
-
 }
