@@ -217,10 +217,10 @@ class CustomCrud extends AbstractMaker
         $entityTwigVarPlural = Str::asTwigVariable($entityVarPlural);
         $entityTwigVarSingular = Str::asTwigVariable($entityVarSingular);
 
-        $frontRouteName = Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix());
+        $frontRouteName = "front_".Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix());
         $frontTemplatesPath = "front/" . Str::asFilePath($frontControllerClassDetails->getRelativeNameWithoutSuffix());
 
-        $backRouteName = Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix());
+        $backRouteName = "back_".Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix());
         $backTemplatesPath = "back/" .  Str::asFilePath($backControllerClassDetails->getRelativeNameWithoutSuffix());
 
         $controllerTemplatePath = __DIR__ . '/Resources/skeleton/crud/controller/Controller.tpl.php';
