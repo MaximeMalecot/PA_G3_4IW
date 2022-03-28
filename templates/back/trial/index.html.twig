@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<title>Trial index</title>
+
+{% block body %}
+    <h1>Trial index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>BetStatus</th>
+                <th>DateStart</th>
+                <th>DateEnd</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for trial in trials %}
+            <tr>
+                <td>{{ trial.id }}</td>
+                <td>{{ trial.status }}</td>
+                <td>{{ trial.betStatus }}</td>
+                <td>{{ trial.dateStart ? trial.dateStart|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trial.dateEnd ? trial.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trial.createdAt ? trial.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ trial.updatedAt ? trial.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('back_trial_show', {'id': trial.id}) }}">show</a>
+                    <a href="{{ path('back_trial_edit', {'id': trial.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('back_trial_new') }}">Create new</a>
+{% endblock %}

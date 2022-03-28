@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>Trial</title>
+
+{% block body %}
+    <h1>Trial</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ trial.id }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ trial.status }}</td>
+            </tr>
+            <tr>
+                <th>BetStatus</th>
+                <td>{{ trial.betStatus }}</td>
+            </tr>
+            <tr>
+                <th>DateStart</th>
+                <td>{{ trial.dateStart ? trial.dateStart|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateEnd</th>
+                <td>{{ trial.dateEnd ? trial.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ trial.createdAt ? trial.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ trial.updatedAt ? trial.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('back_trial_index') }}">back to list</a>
+
+    <a href="{{ path('back_trial_edit', {'id': trial.id}) }}">edit</a>
+
+    {{ include('back/trial/_delete_form.html.twig') }}
+{% endblock %}
