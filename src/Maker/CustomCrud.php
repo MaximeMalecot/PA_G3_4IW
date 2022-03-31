@@ -217,10 +217,10 @@ class CustomCrud extends AbstractMaker
         $entityTwigVarPlural = Str::asTwigVariable($entityVarPlural);
         $entityTwigVarSingular = Str::asTwigVariable($entityVarSingular);
 
-        $frontRouteName = "front_".Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix());
+        $frontRouteName = str_replace("app_", "",Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix()));
         $frontTemplatesPath = "front/" . Str::asFilePath($frontControllerClassDetails->getRelativeNameWithoutSuffix());
 
-        $backRouteName = "back_".Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix());
+        $backRouteName = str_replace("app_", "",Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix()));
         $backTemplatesPath = "back/" .  Str::asFilePath($backControllerClassDetails->getRelativeNameWithoutSuffix());
 
         $controllerTemplatePath = __DIR__ . '/Resources/skeleton/crud/controller/Controller.tpl.php';
@@ -274,6 +274,9 @@ class CustomCrud extends AbstractMaker
             $entityDoctrineDetails->getFormFields(),
             $entityClassDetails
         );
+
+        $backRouteName = "back_".$backRouteName;
+        $frontRouteName = "front_".$frontRouteName;
 
         $frontTemplates = [
             '_delete_form' => [
@@ -384,4 +387,4 @@ class CustomCrud extends AbstractMaker
     {
         return $this->inflector->singularize($word);
     }
-}
+} 

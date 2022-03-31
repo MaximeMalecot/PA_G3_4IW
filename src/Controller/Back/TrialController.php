@@ -14,15 +14,25 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/trial')]
 class TrialController extends AbstractController
 {
-    #[Route('/', name: 'back_trial_index', methods: ['GET'])]
-    public function index(TrialRepository $trialRepository): Response
+    #[Route('/', name: 'trial_index', methods: ['GET'])]
+    public function index(Request $request, TrialRepository $trialRepository): Response
     {
+        dd("coonard");
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('trialFilter', $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->render('back/trial/index.html.twig', [
+                'trials' => $trialRepository->findBy(["status" => "AWAITING", "tournament" => NULL], ["dateStart" => "ASC"]),
+                'status' => "AWAITING"
+            ]);
+        }
+        $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('back/trial/index.html.twig', [
-            'trials' => $trialRepository->findAll(),
+            'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
+            'status' => $status
         ]);
     }
 
-    #[Route('/new', name: 'back_trial_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'trial_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $trial = new Trial();
@@ -42,7 +52,7 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'back_trial_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'trial_show', methods: ['GET'])]
     public function show(Trial $trial): Response
     {
         return $this->render('back/trial/show.html.twig', [
@@ -50,7 +60,7 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'back_trial_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'trial_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TrialType::class, $trial);
@@ -68,7 +78,7 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'back_trial_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'trial_delete', methods: ['POST'])]
     public function delete(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$trial->getId(), $request->request->get('_token'))) {
