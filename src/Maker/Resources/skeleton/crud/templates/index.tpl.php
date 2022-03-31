@@ -1,6 +1,12 @@
 <?= $helper->getHeadPrintCode($entity_class_name.' index'); ?>
 
 {% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
     <h1><?= $entity_class_name ?> index</h1>
 
     <table class="table">
@@ -32,4 +38,5 @@
     </table>
 
     <a href="{{ path('<?= $route_name ?>_new') }}">Create new</a>
+</div>
 {% endblock %}
