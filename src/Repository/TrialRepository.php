@@ -47,4 +47,19 @@ class TrialRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findFighters($id)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+           "SELECT u.id, u.nickname, u.roles
+            FROM App\Entity\User u
+            WHERE u.id != :id
+            AND u.isVerified = true"
+        )->setParameter('id', $id);
+
+       
+        return $query->getResult();
+    }
 }

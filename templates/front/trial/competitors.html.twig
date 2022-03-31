@@ -12,4 +12,26 @@
     <h1>Défiez un compétiteur</h1>
     
 </div>
+
+
+  <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nickname</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fighter in fighters %}
+            <tr>
+                <td>{{ fighter.id }}</td>
+                <td>{{ fighter.nickname }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune données</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

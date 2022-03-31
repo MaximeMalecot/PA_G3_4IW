@@ -24,9 +24,29 @@ class TrialController extends AbstractController
     }
 
     #[Route('/competitors',  name: 'trial_competitors', methods: ['GET'])]
-    public function competitors(Request $request): Response 
+    public function competitors(Request $request, TrialRepository $trialRepository): Response 
     {
-        return $this->render('front/trial/competitors.html.twig', [
+
+        // User actuellement
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+
+        // SQL => get all users 
+        $getUsers = $trialRepository->findFighters($userConnected->getId());
+        
+
+        // Filtrer tout les fighters 
+        $getFighters = [];
+
+        foreach($getUsers as $user){
+           if( in_array('ROLE_FIGHTER',$user['roles']) ){
+                $getFighters[] = $user;
+           }
+        } 
+
+
+       
+        return $this->render('front/trial/competitors.html.twig', [ 
+            'fighters' => $getFighters
         ]);
     }
 
