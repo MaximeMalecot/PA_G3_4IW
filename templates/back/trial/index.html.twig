@@ -3,43 +3,57 @@
 {% block title %}Trial index{% endblock %}
 
 {% block body %}
-    <h1>Trial index</h1>
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
 
-    <table class="table">
+<div class="example-wrapper">
+    <h1>Les combats</h1>
+    <label for="filter">Status</label>
+    <form id="filter" action="{{ path('back_trial_index') }}" method="POST">
+        <select id="status" name="status">
+            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="STARTED" id="STARTED">EN COURS</option>
+            <option value="ENDED" id="ENDED">FINIS</option>
+        </select>
+        <input type="hidden" name="_token" value="{{ csrf_token('trialFilter') }}">
+    </form>
+    <table>
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Status</th>
-                <th>BetStatus</th>
-                <th>DateStart</th>
-                <th>DateEnd</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
+                <th>arbitre</th>
+                <th>combattants</th>
+                <th>date</th>
             </tr>
         </thead>
-        <tbody>
-        {% for trial in trials %}
-            <tr>
-                <td>{{ trial.id }}</td>
-                <td>{{ trial.status }}</td>
-                <td>{{ trial.betStatus }}</td>
-                <td>{{ trial.dateStart ? trial.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trial.dateEnd ? trial.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trial.createdAt ? trial.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trial.updatedAt ? trial.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('back_trial_show', {'id': trial.id}) }}">show</a>
-                    <a href="{{ path('back_trial_edit', {'id': trial.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
+        <tbody id="trial_data">
+        {% if trials is defined and trials is not empty %}
+            {% for trial in trials %}
+                <tr>
+                    <th>{{ trial.adjudicate.nickname }}</th>
+                    <th>{{ trial.fighters[0].nickname }} vs {{ trial.fighters[1].nickname }}</th>
+                    <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                </tr>
+            {% endfor %}
+        {% endif %}
         </tbody>
     </table>
-
     <a href="{{ path('back_trial_new') }}">Create new</a>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        var select = document.getElementById('status');
+        {{status}}.selected = 'selected';
+        var instances = M.FormSelect.init(select);
+        let form = document.getElementById('filter');
+        form.addEventListener("change", async() => {
+            form.submit();
+        });
+    });
+    
+</script>
 {% endblock %}

@@ -14,10 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/trial')]
 class TrialController extends AbstractController
 {
-    #[Route('/', name: 'trial_index', methods: ['GET'])]
+    #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        dd("coonard");
         if ($request->isMethod('POST') && !$this->isCsrfTokenValid('trialFilter', $request->request->get('_token'))) {
             $this->addFlash('red', "SecurityError");
             return $this->render('back/trial/index.html.twig', [
