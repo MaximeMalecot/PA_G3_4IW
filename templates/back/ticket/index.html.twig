@@ -24,6 +24,7 @@
             <option value="ENDED" id="ENDED">Finis</option>
             <option value="REFUSED" id="REFUSED">Refuser</option>
         </select>
+        <input type="hidden" name="_token" value="{{ csrf_token('ticketFilter') }}">
         <input type="submit" value="Filtrer"/>
     </form>
     <table class="table">

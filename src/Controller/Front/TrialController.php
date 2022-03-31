@@ -15,6 +15,13 @@ class TrialController extends AbstractController
     #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('trialFilter', $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->render('front/trial/index.html.twig', [
+                'trials' => $trialRepository->findBy(["status" => "AWAITING", "tournament" => NULL], ["dateStart" => "ASC"]),
+                'status' => "AWAITING"
+            ]);
+        }
         $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('front/trial/index.html.twig', [
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),

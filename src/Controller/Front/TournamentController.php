@@ -20,6 +20,13 @@ class TournamentController extends AbstractController
     #[Route('/', name: 'tournament_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('tournamentFilter', $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->render('front/tournament/index.html.twig', [
+                'tournaments' => $tournamentRepository->findBy(["status" => "AWAITING"], ["dateStart" => "ASC"]),
+                'status' => "AWAITING"
+            ]);
+        }
         $status = $request->request->get('status') ?? "AWAITING";
         return $this->render('front/tournament/index.html.twig', [
             'tournaments' => $tournamentRepository->findBy(["status" => $status], ["dateStart" => "ASC"]),
