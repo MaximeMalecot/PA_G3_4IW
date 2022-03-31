@@ -1,4 +1,6 @@
-<?= $helper->getHeadPrintCode('Edit '.$entity_class_name) ?>
+<?= $base ?>
+
+{% block title%}Edit <?= $entity_class_name ?>{% endblock %}
 
 {% block body %}
 <style>

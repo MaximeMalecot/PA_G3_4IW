@@ -1,4 +1,6 @@
-<?= $helper->getHeadPrintCode($entity_class_name.' index'); ?>
+<?= $base ?>
+
+{% block title%}Index <?= $entity_class_name ?>{% endblock %}
 
 {% block body %}
 <style>
