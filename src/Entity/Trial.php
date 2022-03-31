@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrialRepository;
-use Doctrine\ORM\Mapping\JoinColumn;
 use App\Entity\Traits\BlameableTrait;
 use App\Entity\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\Collection;
@@ -59,7 +58,7 @@ class Trial
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adjudicatedTrials")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $adjudicate;
 
@@ -75,19 +74,19 @@ class Trial
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="fightingTrials")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $fighters;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wonTrials")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $winner;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="acceptedTrials")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $acceptedBy;
 

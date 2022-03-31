@@ -13,14 +13,14 @@
     <b>Name:</b></br>
     {{ tournament.name }}</br>
     <b>Arbitre du tournoi:</b></br> 
-    {{ tournament.createdBy.nickname }}</br>
+    {{ tournament.createdBy.nickname ?? "DELETED USER"}}</br>
     <b>Combattants:</b></br>
     {% for fighter in tournament.getParticipantFromRole("ROLE_FIGHTER") %}
-        {{ fighter.nickname }}</br>
+        {{ fighter.nickname ?? "DELETED USER"}}</br>
     {% endfor %}
     <b>Arbitres des matchs :</b></br>
     {% for fighter in tournament.getParticipantFromRole("ROLE_ADJUDICATE") %}
-        {{ fighter.nickname }}</br>
+        {{ fighter.nickname ?? "DELETED USER"}}</br>
     {% endfor %}
     <b>Date de début :</b></br>
      {{ tournament.dateStart|date('d-m-Y H:i:s') }}</br>
