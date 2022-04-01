@@ -19,6 +19,7 @@
             <tr>
                 <th>Id</th>
                 <th>Nickname</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,7 @@
             <tr>
                 <td>{{ fighter.id }}</td>
                 <td>{{ fighter.nickname }}</td>
+                <td><a href="{{ path('trial_challenge', {'id': fighter.id}) }}">defie</a></td>
             </tr>
         {% else %}
             <tr>
