@@ -18,6 +18,7 @@
                     <th>arbitre</th>
                     <th>combattants</th>
                     <th>date</th>
+                    <th>status</th>
                     <th>actions</th>
                 </tr>
             </thead>
@@ -28,10 +29,13 @@
                         <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                         <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                        <th>{{ trial.status }}</th>
+                        {% if not (trial.status == "DATE_ACCEPTED" and trial.updatedBy.id == app.user.id) %}
                         <th>
                             {{ include('front/trial/_accept_form.html.twig') }}
                             {{ include('front/trial/_reject_form.html.twig') }}
                         </th>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             {% endif %}
@@ -46,6 +50,7 @@
                     <th>arbitre</th>
                     <th>combattants</th>
                     <th>date</th>
+                    <th>status</th>
                     <th>actions</th>
                 </tr>
             </thead>
@@ -56,6 +61,7 @@
                         <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                         <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                        <th>{{ trial.status }}</th>
                         <th>
                             {{ include('front/trial/_accept_challenge_form.html.twig') }}
                             {{ include('front/trial/_reject_form.html.twig') }}

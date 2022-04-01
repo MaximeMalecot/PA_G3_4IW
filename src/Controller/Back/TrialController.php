@@ -7,6 +7,7 @@ use App\Form\TrialType;
 use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +41,7 @@ class TrialController extends AbstractController
     {
         $fighters = $userRepository->findByRole("ROLE_FIGHTER");
         if ($request->isMethod('POST') && $this->isCsrfTokenValid('newTrial', $request->request->get('_token'))) {
-            if(!$request->request->get('fighter1') || !$request->request->get('fighter2')){
+            if(!$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
                 $this->addFlash('red', "SecurityError");
                 return $this->renderForm('back/trial/new.html.twig',[
                     'fighters' => $fighters
@@ -50,6 +51,7 @@ class TrialController extends AbstractController
             $trial->addFighter($userRepository->find($request->request->get('fighter1')));
             $trial->addFighter($userRepository->find($request->request->get('fighter2')));
             $trial->setAdjudicate($this->getUser());
+            $trial->setDateStart(new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart')));
             $entityManager->persist($trial);
             $entityManager->flush();
 

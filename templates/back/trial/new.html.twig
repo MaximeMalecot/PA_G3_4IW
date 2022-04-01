@@ -10,23 +10,24 @@
 
 <div class="example-wrapper">
     <h1>Create new Trial</h1>
-    <form id="filter" action="{{ path('back_trial_new') }}" method="POST">
-        <select id="fighter1" name="fighter1">
-            <option id="select1-default" value="default" selected>---</option>
+    <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST">
+        <select id="fighter1" name="fighter1" required>
+            <option id="select1-default" value="default" disabled selected>---</option>
             {% for fighter in fighters %}
                 <option id="select1-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
             {% endfor %}
         </select>
-        <select id="fighter2" name="fighter2">
-            <option id="select2-default" value="default" selected>---</option>
+        <select id="fighter2" name="fighter2" required>
+            <option id="select2-default" value="default" disabled selected>---</option>
             {% for fighter in fighters %}
                 <option id="select2-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
             {% endfor %}
         </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}">
+        <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="Pick a date" required/>
+        <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="Pick a time" required/>
+        <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
         <input type="submit" value="Create"/>
     </form>
-
     <a href="{{ path('back_trial_index') }}">back to list</a>
 </div>
 {% endblock %}
@@ -34,13 +35,27 @@
 {% block javascripts %}
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
+        let form = document.getElementById('createTrial');
         let selectFighter1 = document.getElementById('fighter1');
         let selectFighter2 = document.getElementById('fighter2');
+        let datepicker = document.getElementById('dateStart');
+        let timepicker = document.getElementById('timeStart');
+
         selectFighter1.selectedIndex = 0;
         selectFighter2.selectedIndex = 0;
-
         M.FormSelect.init(selectFighter1);
         M.FormSelect.init(selectFighter2);
+        var dateInstance = M.Datepicker.init(datepicker, {
+            format: 'dd-mm-yyyy',
+            autoClose : "true",
+            minDate : new Date(),
+            setDefaultDate: true
+        })
+        var timeInstance = M.Timepicker.init(timepicker, {
+            autoClose: "true",
+            twelveHour: false,
+            defaultTime: "00:00"
+        });
 
         selectFighter1.addEventListener('change', (e) => {
             selectFighter2.querySelectorAll('option').forEach(opt => {
@@ -63,6 +78,16 @@
             tmpDisabled.disabled = true;
             M.FormSelect.init(selectFighter1);
         });
+
+        createTrial.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(selectFighter1.value == "default" || selectFighter2.value == "default"){
+                alert('Veuiller choisir des combattants');
+            }else{
+                createTrial.submit();
+            }
+        })
+
     });
 </script>
 {% endblock %}

@@ -23,12 +23,10 @@ class TrialRepository extends ServiceEntityRepository
     public function findIncomingTrials(User $user)
     {
         $qb = $this->createQueryBuilder('t');
-        return $qb
-            ->innerJoin('t.fighters', 'f')
-            ->where('t.status = :status')
+        return $qb->innerJoin('t.fighters', 'f')
+            ->where($qb->expr()->in('t.status',array("CREATED","DATE_ACCEPTED","DATE_REFUSED")))
             ->andWhere($qb->expr()->isNotNull('t.adjudicate'))
             ->andWhere('f.id = :uid')
-            ->setParameter('status', 'CREATED')
             ->setParameter('uid', $user->getId())
             ->getQuery()
             ->getResult()
@@ -38,23 +36,23 @@ class TrialRepository extends ServiceEntityRepository
     public function findIncomingChallenges(User $user)
     {
         $qb = $this->createQueryBuilder('t');
-        return $qb
-            ->innerJoin('t.fighters', 'f')
-            ->where('t.status = :status')
+        return $qb->innerJoin('t.fighters', 'f')
+            ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
             ->andWhere($qb->expr()->isNull('t.adjudicate'))
             ->andWhere('f.id = :uid')
-            ->setParameter('status', 'CREATED')
             ->setParameter('uid', $user->getId())
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function findNormalChallenges()
+    public function findNormalChallenges(User $user)
     {
         $qb = $this->createQueryBuilder('t');
-        return $qb->where('t.status != :status')
-            ->setParameter('status', 'CREATED')
+        return $qb->innerJoin('t.fighters', 'f')
+            ->where($qb->expr()->notIn('t.status',array("CREATED","DATE_ACCEPTED","DATE_REFUSED","ACCEPTED","VALIDATED")))
+            ->andWhere('f.id = :uid')
+            ->setParameter('uid', $user->getId())
             ->getQuery()
             ->getResult()
         ;

@@ -37,7 +37,7 @@ class TrialController extends AbstractController
         return $this->render('front/trial/consult.html.twig', [
             'nextTrials' => $trialRepository->findIncomingTrials($user),
             'nextChallenges' => $trialRepository->findIncomingChallenges($user),
-            'trials' => $trialRepository->findNormalChallenges()
+            'trials' => $trialRepository->findNormalChallenges($user)
         ]);
     }
 
@@ -45,7 +45,11 @@ class TrialController extends AbstractController
     public function acceptTrial(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('acceptTrial'.$trial->getId(), $request->request->get('_token'))) {
-            $trial->setStatus("DATE_ACCEPTED");
+            if($trial->getStatus() == "CREATED"){
+                $trial->setStatus("DATE_ACCEPTED");
+            } else if($trial->getStatus() == "DATE_ACCEPTED"){
+                $trial->setStatus("AWAITING");
+            }
             $entityManager->flush();
         }
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
@@ -67,6 +71,17 @@ class TrialController extends AbstractController
     {
         if ($this->isCsrfTokenValid('refuse'.$trial->getId(), $request->request->get('_token'))) {
             $trial->setStatus("REFUSED");
+            $entityManager->flush();
+            //SHOULD SEND EMAIL
+        }
+        return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
+    public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('refuseDate'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("DATE_REFUSED");
             $entityManager->flush();
             //SHOULD SEND EMAIL
         }
