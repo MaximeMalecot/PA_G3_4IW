@@ -31,8 +31,8 @@
         {% if trials is defined and trials is not empty %}
             {% for trial in trials %}
                 <tr>
-                    <th>{{ trial.adjudicate.nickname ?? "DELETED USER" }}</th>
-                    <th>{{ trial.fighters[0].nickname ?? "DELETED USER" }} vs {{ trial.fighters[1].nickname ?? "DELETED USER" }}</th>
+                    <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
+                    <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                     <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                 </tr>
             {% endfor %}

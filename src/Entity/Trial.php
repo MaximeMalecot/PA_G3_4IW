@@ -58,7 +58,7 @@ class Trial
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adjudicatedTrials")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     private $adjudicate;
 

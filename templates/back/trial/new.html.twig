@@ -24,7 +24,7 @@
             {% endfor %}
         </select>
         <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}">
-        <input type="submit" value="Filtrer"/>
+        <input type="submit" value="Create"/>
     </form>
 
     <a href="{{ path('back_trial_index') }}">back to list</a>

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Trial;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -17,6 +18,46 @@ class TrialRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Trial::class);
+    }
+
+    public function findIncomingTrials(User $user)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb
+            ->innerJoin('t.fighters', 'f')
+            ->where('t.status = :status')
+            ->andWhere($qb->expr()->isNotNull('t.adjudicate'))
+            ->andWhere('f.id = :uid')
+            ->setParameter('status', 'CREATED')
+            ->setParameter('uid', $user->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findIncomingChallenges(User $user)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb
+            ->innerJoin('t.fighters', 'f')
+            ->where('t.status = :status')
+            ->andWhere($qb->expr()->isNull('t.adjudicate'))
+            ->andWhere('f.id = :uid')
+            ->setParameter('status', 'CREATED')
+            ->setParameter('uid', $user->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findNormalChallenges()
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->where('t.status != :status')
+            ->setParameter('status', 'CREATED')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
