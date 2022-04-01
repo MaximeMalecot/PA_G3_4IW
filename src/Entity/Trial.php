@@ -92,7 +92,6 @@ class Trial
 
     public function __construct()
     {
-        $this->trials = new ArrayCollection();
         $this->bets = new ArrayCollection();
         $this->lastTrials = new ArrayCollection();
         $this->fighters = new ArrayCollection();
@@ -261,7 +260,7 @@ class Trial
 
     public function addFighter(User $fighter): self
     {
-        if (!$this->fighters->contains($fighter)) {
+        if (!$this->fighters->contains($fighter) && $this->fighters->count() < 2) {
             $this->fighters[] = $fighter;
         }
 

@@ -4,12 +4,15 @@ namespace App\Controller\Back;
 
 use App\Entity\Trial;
 use App\Form\TrialType;
+use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/trial')]
 class TrialController extends AbstractController
@@ -32,22 +35,29 @@ class TrialController extends AbstractController
     }
 
     #[Route('/new', name: 'trial_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[IsGranted(TrialVoter::CREATE)]
+    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
-        $trial = new Trial();
-        $form = $this->createForm(TrialType::class, $trial);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        $fighters = $userRepository->findByRole("ROLE_FIGHTER");
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('newTrial', $request->request->get('_token'))) {
+            if(!$request->request->get('fighter1') || !$request->request->get('fighter2')){
+                $this->addFlash('red', "SecurityError");
+                return $this->renderForm('back/trial/new.html.twig',[
+                    'fighters' => $fighters
+                ]);
+            }
+            $trial = new Trial();
+            $trial->addFighter($userRepository->find($request->request->get('fighter1')));
+            $trial->addFighter($userRepository->find($request->request->get('fighter2')));
+            $trial->setAdjudicate($this->getUser());
             $entityManager->persist($trial);
             $entityManager->flush();
 
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/trial/new.html.twig', [
-            'trial' => $trial,
-            'form' => $form,
+        return $this->renderForm('back/trial/new.html.twig',[
+            'fighters' => $fighters
         ]);
     }
 

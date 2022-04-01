@@ -10,19 +10,59 @@
 
 <div class="example-wrapper">
     <h1>Create new Trial</h1>
-
     <form id="filter" action="{{ path('back_trial_new') }}" method="POST">
-        <select id="fighter1">
+        <select id="fighter1" name="fighter1">
+            <option id="select1-default" value="default" selected>---</option>
             {% for fighter in fighters %}
+                <option id="select1-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
             {% endfor %}
         </select>
-        <select id="fighter2">
+        <select id="fighter2" name="fighter2">
+            <option id="select2-default" value="default" selected>---</option>
             {% for fighter in fighters %}
+                <option id="select2-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
             {% endfor %}
         </select>
         <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}">
+        <input type="submit" value="Filtrer"/>
     </form>
 
     <a href="{{ path('back_trial_index') }}">back to list</a>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        let selectFighter1 = document.getElementById('fighter1');
+        let selectFighter2 = document.getElementById('fighter2');
+        selectFighter1.selectedIndex = 0;
+        selectFighter2.selectedIndex = 0;
+
+        M.FormSelect.init(selectFighter1);
+        M.FormSelect.init(selectFighter2);
+
+        selectFighter1.addEventListener('change', (e) => {
+            selectFighter2.querySelectorAll('option').forEach(opt => {
+                if(opt.disabled == true){
+                    opt.disabled = false;
+                }
+            });
+            let tmpDisabled = document.getElementById('select2-'+e.target.value);
+            tmpDisabled.disabled = true;
+            M.FormSelect.init(selectFighter2);
+        });
+
+        selectFighter2.addEventListener('change', (e) => {
+            selectFighter1.querySelectorAll('option').forEach(opt => {
+                if(opt.disabled == true){
+                    opt.disabled = false;
+                }
+            });
+            let tmpDisabled = document.getElementById('select1-'+e.target.value);
+            tmpDisabled.disabled = true;
+            M.FormSelect.init(selectFighter1);
+        });
+    });
+</script>
 {% endblock %}

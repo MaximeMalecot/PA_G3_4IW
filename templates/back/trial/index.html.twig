@@ -14,6 +14,7 @@
     <form id="filter" action="{{ path('back_trial_index') }}" method="POST">
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="CREATED" id="CREATED">CREER</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>

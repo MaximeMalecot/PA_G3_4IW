@@ -16,11 +16,19 @@ class TrialVoter extends Voter
     */
     const EDIT = 'edit';
     const DELETE = 'delete';
+    const CREATE = 'create';
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE])
-            && $subject instanceof Trial;
+        if(in_array($attribute, [self::EDIT, self::DELETE, self::CREATE])){
+            if($attribute == self::CREATE){
+                return true;
+            } else {
+                return $subject instanceof Trial;
+            }
+        } else {
+            return false;
+        }
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -32,6 +40,9 @@ class TrialVoter extends Voter
         }
 
         switch ($attribute) {
+            case self::CREATE:
+                return in_array('ROLE_ADJUDICATE', $user->getRoles());
+                break;
             case self::EDIT:
                 return $this->canEdit($subject, $user);
                 break;
