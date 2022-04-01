@@ -30,12 +30,12 @@
                         <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                         <th>{{ trial.status }}</th>
-                        {% if not (trial.status == "DATE_ACCEPTED" and trial.updatedBy.id == app.user.id) %}
                         <th>
+                        {% if trial.status == "CREATED" or (trial.status == "DATE_ACCEPTED" and trial.updatedBy.id != app.user.id) %}
                             {{ include('front/trial/_accept_form.html.twig') }}
+                        {% endif %}
                             {{ include('front/trial/_reject_form.html.twig') }}
                         </th>
-                        {% endif %}
                     </tr>
                 {% endfor %}
             {% endif %}
@@ -81,6 +81,7 @@
                     <th>combattants</th>
                     <th>date</th>
                     <th>status</th>
+                    <th>actions</th>
                 </tr>
             </thead>
             <tbody id="others_data">
@@ -91,6 +92,11 @@
                         <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                         <th>{{ trial.status }}</th>
+                        <th>
+                        {% if trial.status == "AWAITING" and date() < limitRefuseTrialDate(trial.dateStart)%}
+                            {{ include('front/trial/_reject_form.html.twig') }}
+                        {% endif %}
+                        </th>
                     </tr>
                 {% endfor %}
             {% endif %}
