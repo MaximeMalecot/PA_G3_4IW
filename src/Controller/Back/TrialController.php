@@ -40,8 +40,8 @@ class TrialController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $fighters = $userRepository->findByRole("ROLE_FIGHTER");
-        if ($request->isMethod('POST') && $this->isCsrfTokenValid('newTrial', $request->request->get('_token'))) {
-            if(!$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
+        if ($request->isMethod('POST')) {
+            if(!$this->isCsrfTokenValid('newTrial', $request->request->get('_token')) || !$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
                 $this->addFlash('red', "SecurityError");
                 return $this->renderForm('back/trial/new.html.twig',[
                     'fighters' => $fighters
@@ -71,21 +71,38 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'trial_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    #[Route('/edit/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
+    public function edit(Request $request): Response
     {
-        $form = $this->createForm(TrialType::class, $trial);
-        $form->handleRequest($request);
+        dd('ahi');
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+    #[Route('/modifyDate/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
+    #[IsGranted(TrialVoter::CREATE)]
+    public function modifyDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    {
+        if ($request->isMethod('POST')) {
+            if(!$this->isCsrfTokenValid('editTrial'.$trial->getId(), $request->request->get('_token')) || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
+                $this->addFlash('red', "SecurityError");
+                return $this->render('back/trial/edit.html.twig', [
+                    'trial' => $trial,
+                ]);
+            }
+            if($trial->getStatus() !== "DATE_REFUSED"){
+                $this->addFlash('red', "Trying to modify a conform trial");
+                return $this->render('back/trial/edit.html.twig', [
+                    'trial' => $trial,
+                ]);
+            }
+            $trial->setDateStart(new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart')));
+            $trial->setStatus("CREATED");
             $entityManager->flush();
-
+            $this->addFlash('green', "trial modified");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/trial/edit.html.twig', [
+        return $this->render('back/trial/edit.html.twig', [
             'trial' => $trial,
-            'form' => $form,
         ]);
     }
 

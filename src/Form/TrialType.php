@@ -12,8 +12,7 @@ class TrialType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fighter1')
-            ->add('fighter2')
+            ->add('dateStart')
         ;
     }
 

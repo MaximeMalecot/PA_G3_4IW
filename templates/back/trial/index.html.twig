@@ -15,6 +15,11 @@
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
             <option value="CREATED" id="CREATED">CREER</option>
+            <option value="DATE_ACCEPTED" id="DATE_ACCEPTED">DATE_ACCEPTED</option>
+            <option value="DATE_REFUSED" id="DATE_REFUSED">DATE_REFUSED</option>
+            <option value="REFUSED" id="REFUSED">REFUSED</option>
+            <option value="ACCEPTED" id="ACCEPTED">ACCEPTED</option>
+            <option value="VALIDATED" id="VALIDATED">VALIDATED</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
@@ -26,6 +31,7 @@
                 <th>arbitre</th>
                 <th>combattants</th>
                 <th>date</th>
+                <th>actions</th>
             </tr>
         </thead>
         <tbody id="trial_data">
@@ -35,6 +41,11 @@
                     <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                     <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</th>
                     <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                    <th>
+                    {% if trial.status == "DATE_REFUSED" %}
+                        <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
+                    {% endif %}
+                    </th>
                 </tr>
             {% endfor %}
         {% endif %}

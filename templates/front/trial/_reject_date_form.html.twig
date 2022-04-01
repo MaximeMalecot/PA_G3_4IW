@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('front_trial_refuse_date', {'id': trial.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('refuseDate' ~ trial.id) }}">
-    <button class="btn">Refuse</button>
+    <button class="btn">DateChange</button>
 </form>

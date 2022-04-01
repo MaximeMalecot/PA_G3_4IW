@@ -33,6 +33,7 @@
                         <th>
                         {% if trial.status == "CREATED" or (trial.status == "DATE_ACCEPTED" and trial.updatedBy.id != app.user.id) %}
                             {{ include('front/trial/_accept_form.html.twig') }}
+                            {{ include('front/trial/_reject_date_form.html.twig') }}
                         {% endif %}
                             {{ include('front/trial/_reject_form.html.twig') }}
                         </th>
@@ -93,7 +94,7 @@
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                         <th>{{ trial.status }}</th>
                         <th>
-                        {% if trial.status == "AWAITING" and date() < limitRefuseTrialDate(trial.dateStart)%}
+                        {% if trial.status == "AWAITING" and date is defined and date() < limitRefuseTrialDate(trial.dateStart)%}
                             {{ include('front/trial/_reject_form.html.twig') }}
                         {% endif %}
                         </th>

@@ -40,6 +40,8 @@
         let selectFighter2 = document.getElementById('fighter2');
         let datepicker = document.getElementById('dateStart');
         let timepicker = document.getElementById('timeStart');
+        let minDate = new Date();
+        minDate.setDate(minDate.getDate()+1)
 
         selectFighter1.selectedIndex = 0;
         selectFighter2.selectedIndex = 0;
@@ -48,7 +50,7 @@
         var dateInstance = M.Datepicker.init(datepicker, {
             format: 'dd-mm-yyyy',
             autoClose : "true",
-            minDate : new Date(),
+            minDate : minDate,
             setDefaultDate: true
         })
         var timeInstance = M.Timepicker.init(timepicker, {
@@ -79,12 +81,12 @@
             M.FormSelect.init(selectFighter1);
         });
 
-        createTrial.addEventListener('submit', (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             if(selectFighter1.value == "default" || selectFighter2.value == "default"){
                 alert('Veuiller choisir des combattants');
             }else{
-                createTrial.submit();
+                form.submit();
             }
         })
 

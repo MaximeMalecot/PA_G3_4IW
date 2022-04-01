@@ -66,22 +66,22 @@ class TrialController extends AbstractController
         // return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/refuse/{id}', name: 'trial_refuse', methods: ['POST'])]
-    public function refuse(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
+    public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('refuse'.$trial->getId(), $request->request->get('_token'))) {
-            $trial->setStatus("REFUSED");
+        if ($this->isCsrfTokenValid('refuseDate'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("DATE_REFUSED");
             $entityManager->flush();
             //SHOULD SEND EMAIL
         }
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
-    public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    #[Route('/refuse/{id}', name: 'trial_refuse', methods: ['POST'])]
+    public function refuse(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('refuseDate'.$trial->getId(), $request->request->get('_token'))) {
-            $trial->setStatus("DATE_REFUSED");
+        if ($this->isCsrfTokenValid('refuse'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("REFUSED");
             $entityManager->flush();
             //SHOULD SEND EMAIL
         }
