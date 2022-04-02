@@ -17,6 +17,7 @@
                 <th>Nickname</th>
                 <th>Description</th>
                 <th>Stats</th>
+                <th>Challenge</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,9 @@
                 <th>{{ fighter.nickname }}</th>
                 <th>{{ fighter.description }}</th>
                 <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
+                <th>
+                    {{ include('front/user/_challenge_form.html.twig') }}
+                </th>
             </tr>
         {% endfor %}
         </tbody>

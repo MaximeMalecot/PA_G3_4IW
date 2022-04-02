@@ -32,60 +32,6 @@ class TrialController extends AbstractController
         ]);
     }
 
-    // #[Route('/competitors',  name: 'trial_competitors', methods: ['GET'])]
-    // public function competitors(Request $request, TrialRepository $trialRepository) 
-    // {
-    //     // User actuellement
-    //     $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-
-    //     // SQL => get all users 
-    //     $getUsers = $trialRepository->findFighters($userConnected->getId());
-        
-    //     // Filtrer tout les fighters 
-    //     $getFighters = [];
-
-    //     foreach($getUsers as $user){
-    //        if( in_array('ROLE_FIGHTER',$user['roles']) ){
-    //             $getFighters[] = $user;
-    //        }
-    //     } 
-    //     return $this->render('front/trial/competitors.html.twig', [ 
-    //         'fighters' => $getFighters
-    //     ]);
-    // }
-
-    #[Route('/challenge/{id}',  name: 'trial_challenge', methods: ['GET'])]
-    public function challenge(Request $request, TrialRepository $trialRepository,UserRepository $userRepository, int $id): Response 
-    {
-
-        $trial = new Trial();
-        $getUser =  $userRepository->find($id);
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-
-        $trial->setCreatedBy($userConnected);
-        $trial->setAcceptedBy($getUser);
-
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($trial);
-        $entityManager->flush();
-            
-        // SQL => get all users 
-        $getUsers = $trialRepository->findFighters($userConnected->getId());
-        
-        // Filtrer tout les fighters 
-        $getFighters = [];
-
-        foreach($getUsers as $user){
-           if( in_array('ROLE_FIGHTER',$user['roles']) ){
-                $getFighters[] = $user;
-           }
-        } 
-        return $this->render('front/trial/competitors.html.twig', [ 
-            'fighters' => $getFighters
-        ]);
-    }
-
     #[Route('/consult', name: 'trial_consult', methods: ['GET', 'POST'])]
     public function consult(Request $request, TrialRepository $trialRepository): Response
     {

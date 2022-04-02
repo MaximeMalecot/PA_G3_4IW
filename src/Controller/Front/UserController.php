@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\User;
+use App\Entity\Trial;
 use App\Form\UserPwdType;
 use App\Form\UserEditType;
 use Doctrine\DBAL\Exception;
@@ -39,6 +40,28 @@ class UserController extends AbstractController
             'fighters' => $fighters
         ]);
     }
+    #[Route('/challenge/fighter/{id}',  name: 'trial_challenge', methods: ['GET','POST'])]
+    public function challenge(Request $request,UserRepository $userRepository, int $id): Response 
+    {
+
+        $fighters = $userRepository->findByRole("ROLE_FIGHTER");
+        $fighter = $userRepository->find($id);
+        $user = $this->getUser();
+
+        $trial = new Trial();
+        $trial->addFighter($user);
+        $trial->addFighter($fighter);
+       
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($trial);
+        $entityManager->flush();
+    
+    
+        return $this->render('front/user/index.html.twig', [
+            'fighters' => $fighters
+        ]);
+    }
+
 
     #[Route('/{id}', name: 'user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
     #[IsGranted(UserVoter::SHOW, 'user')]

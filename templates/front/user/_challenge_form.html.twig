@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('trial_challenge', {'id': fighter.id}) }}" onsubmit="return confirm('Are you sure you want to challenge this fighter?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('challenge' ~ fighter.id) }}">
+    <button class="btn">Challenge</button>
+</form>
