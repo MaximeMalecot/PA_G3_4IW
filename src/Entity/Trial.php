@@ -18,7 +18,7 @@ class Trial
     use BlameableTrait;
     use TimestampableTrait;
 
-    const ENUM_STATUS = ["CREATED","DATE_ACCEPTED","AWAITING","STARTED","ENDED","DATE_REFUSED","REFUSED"];
+    const ENUM_STATUS = ["CREATED","DATE_ACCEPTED","ACCEPTED","AWAITING","STARTED","ENDED","DATE_REFUSED","REFUSED"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

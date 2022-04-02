@@ -23,7 +23,7 @@
             <li><a href="{{ path('front_tournament_index') }}">tournois</a></li>
             <li><a href="{{ path('front_fighting_stats_index') }}">classement</a></li>
             <li><a href="{{ path('front_user_index') }}">compétiteurs</a></li>
-            <li><a href="{{ path('trial_competitors') }}">challenges</a></li>
+            {# <li><a href="{{ path('trial_competitors') }}">challenges</a></li> #}
             {% if app.user %}
                 {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
                     <li><a href="{{ path('back_default') }}">administration</a></li>

@@ -37,7 +37,7 @@ class TrialRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         return $qb->innerJoin('t.fighters', 'f')
-            ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
+            ->where($qb->expr()->in('t.status',array("CREATED")))
             ->andWhere($qb->expr()->isNull('t.adjudicate'))
             ->andWhere('f.id = :uid')
             ->setParameter('uid', $user->getId())

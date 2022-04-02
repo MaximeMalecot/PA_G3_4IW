@@ -114,12 +114,12 @@ class TrialController extends AbstractController
     #[Route('/accept/challenge/{id}', name: 'trial_challenge_accept', methods: ['POST'])]
     public function acceptChallenge(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
-        dd("faut taffer ici");
-        // if ($this->isCsrfTokenValid('acceptChallenge'.$trial->getId(), $request->request->get('_token'))) {
-        //     $trial->setStatus("ACCEPTED");
-        //     $entityManager->flush();
-        // }
-        // return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+        
+        if ($this->isCsrfTokenValid('acceptChallenge'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("ACCEPTED");
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
