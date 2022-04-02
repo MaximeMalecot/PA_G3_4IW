@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
 use App\Entity\Traits\BlameableTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\TournamentRepository;
@@ -79,13 +78,13 @@ class Tournament
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="tournaments")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $participants;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wonTournaments")
-     * @JoinColumn(onDelete="SET NULL")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $winner;
 

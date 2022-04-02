@@ -11,12 +11,13 @@
 <div class="example-wrapper">
     <h1>Les tournois</h1>
     <label for="filter">Status</label>
-    <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
+    <form id="filter" action="{{ path('front_tournament_index') }}" method="POST">
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
+        <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
     {% if tournaments is defined %}
     <table>
@@ -32,7 +33,7 @@
             {% for tournament in tournaments %}
                 <tr>
                         <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
-                        <th>{{ tournament.createdBy.nickname }}</th>
+                        <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                         <th>{{ tournament.nbMaxParticipants }}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
                     

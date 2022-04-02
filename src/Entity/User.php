@@ -94,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=Tournament::class, mappedBy="participants")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $tournaments;
 

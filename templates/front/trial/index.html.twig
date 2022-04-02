@@ -17,6 +17,7 @@
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
+        <input type="hidden" name="_token" value="{{ csrf_token('trialFilter') }}">
     </form>
     <table>
         <thead>
@@ -27,13 +28,15 @@
             </tr>
         </thead>
         <tbody id="trial_data">
-        {% for trial in trials %}
-            <tr>
-                <th>{{ trial.adjudicate.nickname }}</th>
-                <th>{{ trial.fighters[0].nickname }} vs {{ trial.fighters[1].nickname }}</th>
-                <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
-            </tr>
-        {% endfor %}
+        {% if trials is defined and trials is not empty %}
+            {% for trial in trials %}
+                <tr>
+                    <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
+                    <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
+                    <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                </tr>
+            {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 </div>

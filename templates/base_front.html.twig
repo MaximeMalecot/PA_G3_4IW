@@ -28,6 +28,18 @@
                 {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
                     <li><a href="{{ path('back_default') }}">administration</a></li>
                 {% else %}
+                    {% if is_granted('ROLE_FIGHTER') %}
+                        <li><a href="{{ path('front_trial_consult') }}">my trials</li></a>
+                    {% endif %}
+                {# 
+                    {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}
+                        {% for trial in app.user.trials if not break %}
+                            {% if trial.status == "CREATED" %}
+                                <li><a href="{{ path('front_ticket_new') }}"></a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    #}
                     {% if app.user.tickets is defined and app.user.tickets is empty%}
                         <li><a href="{{ path('front_ticket_new') }}">upgrade</a></li>
                     {% elseif app.user.tickets[0].status == "ACCEPTED" %}
@@ -50,5 +62,12 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    {% for type, messages in app.flashes() %}
+        {% for message in messages %}
+            M.toast({html: '{{ message }}', classes: '{{ type }}'})
+        {% endfor %}
+    {% endfor %}
+</script>
 </body>
 </html>

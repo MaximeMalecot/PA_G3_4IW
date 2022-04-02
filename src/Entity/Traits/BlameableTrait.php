@@ -8,14 +8,14 @@ trait BlameableTrait{
     /**
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $createdBy;
 
     /**
      * @Gedmo\Blameable(on="update")
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $updatedBy;
 

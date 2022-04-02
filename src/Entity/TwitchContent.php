@@ -29,7 +29,7 @@ class TwitchContent
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="twitchContents")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      */
     private $creator;
 

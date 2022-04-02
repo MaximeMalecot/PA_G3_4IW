@@ -41,7 +41,7 @@ class FightingStats
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="fightingStats", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="cascade")
      */
     private $target;
 

@@ -23,6 +23,9 @@
                 <li><a href="{{ path("back_user_index") }}">utilisateurs</a></li>
                 <li><a href="{{ path("back_ticket_index") }}">tickets</a></li>
             {% endif %}
+            {% if is_granted('ROLE_ADJUDICATE') %}
+                <li><a href="{{ path("back_trial_index") }}">gestion des combats</a></li>
+            {% endif %}
             <li><a href="{{ path('app_logout') }}">logout</a></li>
         </ul>
         <a href="{{ path("back_default") }}" class="brand-logo right">Logo</a>
@@ -34,5 +37,12 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    {% for type, messages in app.flashes() %}
+        {% for message in messages %}
+            M.toast({html: '{{ message }}', classes: '{{ type }}'})
+        {% endfor %}
+    {% endfor %}
+</script>
 </body>
 </html>

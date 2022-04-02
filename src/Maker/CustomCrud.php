@@ -217,10 +217,10 @@ class CustomCrud extends AbstractMaker
         $entityTwigVarPlural = Str::asTwigVariable($entityVarPlural);
         $entityTwigVarSingular = Str::asTwigVariable($entityVarSingular);
 
-        $frontRouteName = "front_".Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix());
+        $frontRouteName = str_replace("app_", "",Str::asRouteName($frontControllerClassDetails->getRelativeNameWithoutSuffix()));
         $frontTemplatesPath = "front/" . Str::asFilePath($frontControllerClassDetails->getRelativeNameWithoutSuffix());
 
-        $backRouteName = "back_".Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix());
+        $backRouteName = str_replace("app_", "",Str::asRouteName($backControllerClassDetails->getRelativeNameWithoutSuffix()));
         $backTemplatesPath = "back/" .  Str::asFilePath($backControllerClassDetails->getRelativeNameWithoutSuffix());
 
         $controllerTemplatePath = __DIR__ . '/Resources/skeleton/crud/controller/Controller.tpl.php';
@@ -275,6 +275,10 @@ class CustomCrud extends AbstractMaker
             $entityClassDetails
         );
 
+        $backRouteName = "back_".$backRouteName;
+        $frontRouteName = "front_".$frontRouteName;
+        $backBase = "{% extends 'base_back.html.twig' %}";
+        $frontBase = "{% extends 'base_front.html.twig' %}";
         $frontTemplates = [
             '_delete_form' => [
                 'route_name' => $frontRouteName,
@@ -283,6 +287,7 @@ class CustomCrud extends AbstractMaker
             ],
             '_form' => [],
             'edit' => [
+                'base' => $frontBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
@@ -290,6 +295,7 @@ class CustomCrud extends AbstractMaker
                 'templates_path' => $frontTemplatesPath,
             ],
             'index' => [
+                'base' => $frontBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_plural' => $entityTwigVarPlural,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
@@ -298,11 +304,13 @@ class CustomCrud extends AbstractMaker
                 'route_name' => $frontRouteName,
             ],
             'new' => [
+                'base' => $frontBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'route_name' => $frontRouteName,
                 'templates_path' => $frontTemplatesPath,
             ],
             'show' => [
+                'base' => $frontBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
@@ -320,6 +328,7 @@ class CustomCrud extends AbstractMaker
             ],
             '_form' => [],
             'edit' => [
+                'base' => $backBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
@@ -327,6 +336,7 @@ class CustomCrud extends AbstractMaker
                 'templates_path' => $backTemplatesPath,
             ],
             'index' => [
+                'base' => $backBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_plural' => $entityTwigVarPlural,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
@@ -335,11 +345,13 @@ class CustomCrud extends AbstractMaker
                 'route_name' => $backRouteName,
             ],
             'new' => [
+                'base' => $backBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'route_name' => $backRouteName,
                 'templates_path' => $backTemplatesPath,
             ],
             'show' => [
+                'base' => $backBase,
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
@@ -384,4 +396,4 @@ class CustomCrud extends AbstractMaker
     {
         return $this->inflector->singularize($word);
     }
-}
+} 

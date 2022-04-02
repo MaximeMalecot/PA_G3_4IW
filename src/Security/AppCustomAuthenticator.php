@@ -54,6 +54,8 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         }
         if(in_array('ROLE_ADJUDICATE',$this->security->getUser()->getRoles()) || in_array('ROLE_ADMIN',$this->security->getUser()->getRoles())){
             return new RedirectResponse($this->urlGenerator->generate('back_default'));
+        } elseif (in_array('ROLE_FIGHTER',$this->security->getUser()->getRoles())){
+            return new RedirectResponse($this->urlGenerator->generate('front_trial_consult'));
         }
         return new RedirectResponse($this->urlGenerator->generate('front_default'));
     }

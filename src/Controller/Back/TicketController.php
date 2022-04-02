@@ -17,9 +17,17 @@ class TicketController extends AbstractController
     #[Route('/', name: 'ticket_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TicketRepository $ticketRepository): Response
     {
+        $options = [];
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('ticketFilter', $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->render('back/ticket/index.html.twig', [
+                'tickets' => $ticketRepository->findBy($options),
+                'status' => $status ?? "Status",
+                'roleWanted' => $roleWanted ?? "Role",
+            ]);
+        }
         $roleWanted = $request->request->get('roleWanted') != "Role" ? $request->request->get('roleWanted') : null;
         $status = $request->request->get('status')  != "Status" ? $request->request->get('status') : null;
-        $options = [];
         if($roleWanted){
             $options["roleWanted"] = $roleWanted;
         }
