@@ -122,6 +122,19 @@ class TrialController extends AbstractController
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/refuse/challenge/{id}', name: 'trial_challenge_refuse', methods: ['POST'])]
+    public function refuseChallenge(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    {
+        
+        if ($this->isCsrfTokenValid('refuseChallenge'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("REFUSED");
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
     #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
     public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
