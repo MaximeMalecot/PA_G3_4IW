@@ -46,6 +46,11 @@
                         <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
                     {% endif %}
                     </th>
+                    <th>
+                    {% if trial.status == "CREATED" %}
+                        <a href="{{ path('back_trial_accept_challenge', {'id': trial.id} ) }}">Accepte</a>
+                    {% endif %}
+                    </th>
                 </tr>
             {% endfor %}
         {% endif %}

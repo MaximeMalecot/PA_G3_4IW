@@ -79,8 +79,6 @@ class TrialController extends AbstractController
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
-
-
     #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
     public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {

@@ -35,6 +35,21 @@ class TrialController extends AbstractController
         ]);
     }
 
+    #[Route('/accept/challenge/{id}', name: 'back_trial_accept_challenge', methods: ['POST','GET'])]
+    public function acceptChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
+    {
+
+            $trial->setStatus("VALIDATED");
+            $entityManager->flush();
+
+            return $this->render('back/trial/index.html.twig', [
+                'trials' => $trialRepository->findBy(["status" => "VALIDATED", "tournament" => NULL], ["dateStart" => "ASC"]),
+                'status' => "VALIDATED"
+            ]);
+
+    }
+
+
     #[Route('/new', name: 'trial_new', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::CREATE)]
     public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
@@ -77,6 +92,7 @@ class TrialController extends AbstractController
         dd('ahi');
     }
 
+   
     #[Route('/modifyDate/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::CREATE)]
     public function modifyDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
