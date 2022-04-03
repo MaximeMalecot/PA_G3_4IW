@@ -17,7 +17,9 @@
                 <th>Nickname</th>
                 <th>Description</th>
                 <th>Stats</th>
-                <th>Challenge</th>
+                {% if is_granted('ROLE_FIGHTER') %}
+                    <th>Challenge</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -26,9 +28,15 @@
                 <th>{{ fighter.nickname }}</th>
                 <th>{{ fighter.description }}</th>
                 <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
-                <th>
-                    {{ include('front/user/_challenge_form.html.twig') }}
-                </th>
+                {% if is_granted('ROLE_FIGHTER') and canChallenge(app.user, fighter) %}
+                    <th>
+                        {{ include('front/user/_challenge_form.html.twig') }}
+                    </th>
+                {% else %}
+                    <th>
+                        Challenge already waiting
+                    </th>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>
