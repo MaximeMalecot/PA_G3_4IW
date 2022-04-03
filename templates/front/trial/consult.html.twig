@@ -64,8 +64,10 @@
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                         <th>{{ trial.status }}</th>
                         <th>
-                            {{ include('front/trial/_accept_challenge_form.html.twig') }}
-                            {{ include('front/trial/_reject_challenge_form.html.twig') }}
+                            {% if trial.status == "CREATED" and trial.createdBy.id != app.user.id %}
+                                {{ include('front/trial/_accept_challenge_form.html.twig') }}
+                                {{ include('front/trial/_reject_challenge_form.html.twig') }}
+                            {% endif %}
                         </th>
                     </tr>
                 {% endfor %}
