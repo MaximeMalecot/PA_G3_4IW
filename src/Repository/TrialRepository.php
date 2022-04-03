@@ -37,7 +37,7 @@ class TrialRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         return $qb->innerJoin('t.fighters', 'f')
-            ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
+            ->where($qb->expr()->in('t.status',array("CREATED")))
             ->andWhere($qb->expr()->isNull('t.adjudicate'))
             ->andWhere('f.id = :uid')
             ->setParameter('uid', $user->getId())
@@ -57,6 +57,21 @@ class TrialRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findChallenge(User $fighter, User $target)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->innerJoin('t.fighters', 'f1')
+            ->innerJoin('t.fighters', 'f2')
+            ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
+            ->andWhere($qb->expr()->isNull('t.adjudicate'))
+            ->andWhere('(f1.id = :uid1 AND f2.id = :uid2) OR (f1.id = :uid2 AND f2.id = :uid1)')
+            ->setParameter('uid1', $fighter->getId())
+            ->setParameter('uid2', $target->getId())
+            ->getQuery()
+            ->getResult()    
+        ;
+        }
 
     // /**
     //  * @return Trial[] Returns an array of Trial objects
@@ -86,4 +101,5 @@ class TrialRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

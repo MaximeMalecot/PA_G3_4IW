@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\User;
+use App\Entity\Trial;
 use App\Form\UserPwdType;
 use App\Form\UserEditType;
 use Doctrine\DBAL\Exception;
@@ -39,6 +40,22 @@ class UserController extends AbstractController
             'fighters' => $fighters
         ]);
     }
+    #[Route('/challenge/fighter/{id}',  name: 'user_challenge', methods: ['GET','POST'])]
+    public function challenge(User $fighter, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response 
+    {
+        if ($request->isMethod("POST") && $this->isCsrfTokenValid('challenge'.$fighter->getId(), $request->request->get('_token'))) {
+            $trial = new Trial();
+            $trial->addFighter($this->getUser());
+            $trial->addFighter($fighter);
+            $entityManager->persist($trial);
+            $entityManager->flush();
+            $this->addFlash('green', "Vous venez de challenge {$fighter->getNickname()}");
+        } else {
+            $this->addFlash('red', "Security error");
+        }
+        return $this->redirectToRoute('front_user_index');
+    }
+
 
     #[Route('/{id}', name: 'user_show', requirements: ['id' => '^\d+$'], methods: ['GET'])]
     #[IsGranted(UserVoter::SHOW, 'user')]

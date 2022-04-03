@@ -3,7 +3,9 @@
 namespace App\Controller\Front;
 
 use App\Entity\Trial;
+use App\Entity\User;
 use App\Repository\TrialRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,12 +60,23 @@ class TrialController extends AbstractController
     #[Route('/accept/challenge/{id}', name: 'trial_challenge_accept', methods: ['POST'])]
     public function acceptChallenge(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
-        dd("faut taffer ici");
-        // if ($this->isCsrfTokenValid('acceptChallenge'.$trial->getId(), $request->request->get('_token'))) {
-        //     $trial->setStatus("ACCEPTED");
-        //     $entityManager->flush();
-        // }
-        // return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+        
+        if ($this->isCsrfTokenValid('acceptChallenge'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("ACCEPTED");
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/refuse/challenge/{id}', name: 'trial_challenge_refuse', methods: ['POST'])]
+    public function refuseChallenge(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
+    {
+        
+        if ($this->isCsrfTokenValid('refuseChallenge'.$trial->getId(), $request->request->get('_token'))) {
+            $trial->setStatus("REFUSED");
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]

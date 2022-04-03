@@ -40,10 +40,23 @@
                 <tr>
                     <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                     <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</th>
-                    <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                    <th>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</th>
                     <th>
                     {% if trial.status == "DATE_REFUSED" %}
                         <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
+                    {% endif %}
+                    {% if trial.dateStart is defined and trial.dateStart is not null %}
+                        {% if date() < limitRefuseTrialDate(trial.dateStart)%}
+                                {{ include('back/trial/_delete_form.html.twig') }}
+                        {% endif %}
+                    {% else %}
+                        {{ include('back/trial/_delete_form.html.twig') }}
+                    {% endif %}
+                    </th>
+                    <th>
+                    {% if trial.status == "CREATED" %}
+                        <a href="{{ path('back_trial_accept_challenge', {'id': trial.id} ) }}">Accept</a>
+                        <a href="{{ path('back_trial_refuse_challenge', {'id': trial.id} ) }}">Refuse</a>
                     {% endif %}
                     </th>
                 </tr>
