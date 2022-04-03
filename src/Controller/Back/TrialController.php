@@ -49,6 +49,19 @@ class TrialController extends AbstractController
 
     }
 
+    #[Route('/refuse/challenge/{id}', name: 'back_trial_refuse_challenge', methods: ['POST','GET'])]
+    public function refuseChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
+    {
+
+            $trial->setStatus("REFUSED");
+            $entityManager->flush();
+
+            return $this->render('back/trial/index.html.twig', [
+                'trials' => $trialRepository->findBy(["status" => "REFUSED", "tournament" => NULL], ["dateStart" => "ASC"]),
+                'status' => "REFUSED"
+            ]);
+
+    }
 
     #[Route('/new', name: 'trial_new', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::CREATE)]
