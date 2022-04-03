@@ -58,6 +58,21 @@ class TrialRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findChallenge(User $fighter, User $target)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->innerJoin('t.fighters', 'f')
+            ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
+            ->andWhere($qb->expr()->isNull('t.adjudicate'))
+            ->andWhere('f.id = :uid1')
+            ->andWhere('f.id = :uid2')
+            ->setParameter('uid1', $fighter->getId())
+            ->setParameter('uid2', $target->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Trial[] Returns an array of Trial objects
     //  */
