@@ -40,26 +40,20 @@ class UserController extends AbstractController
             'fighters' => $fighters
         ]);
     }
-    #[Route('/challenge/fighter/{id}',  name: 'trial_challenge', methods: ['GET','POST'])]
-    public function challenge(Request $request,UserRepository $userRepository, int $id): Response 
+    #[Route('/challenge/fighter/{id}',  name: 'user_challenge', methods: ['GET','POST'])]
+    public function challenge(User $fighter, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response 
     {
-
-        $fighters = $userRepository->findByRole("ROLE_FIGHTER");
-        $fighter = $userRepository->find($id);
-        $user = $this->getUser();
-
-        $trial = new Trial();
-        $trial->addFighter($user);
-        $trial->addFighter($fighter);
-       
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($trial);
-        $entityManager->flush();
-    
-    
-        return $this->render('front/user/index.html.twig', [
-            'fighters' => $fighters
-        ]);
+        if ($request->isMethod("POST") && $this->isCsrfTokenValid('challenge'.$fighter->getId(), $request->request->get('_token'))) {
+            $trial = new Trial();
+            $trial->addFighter($this->getUser());
+            $trial->addFighter($fighter);
+            $entityManager->persist($trial);
+            $entityManager->flush();
+            $this->addFlash('green', "Vous venez de challenge {$fighter->getNickname()}");
+        } else {
+            $this->addFlash('red', "Security error");
+        }
+        return $this->redirectToRoute('front_user_index');
     }
 
 

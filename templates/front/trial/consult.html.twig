@@ -94,7 +94,7 @@
                         <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
                         <th>{{ trial.status }}</th>
                         <th>
-                        {% if trial.status == "AWAITING" and date is defined and date() < limitRefuseTrialDate(trial.dateStart)%}
+                        {% if trial.status == "AWAITING" and trial.dateStart is defined and trial.dateStart is not null and date() < limitRefuseTrialDate(trial.dateStart)%}
                             {{ include('front/trial/_reject_form.html.twig') }}
                         {% endif %}
                         </th>
