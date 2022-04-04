@@ -24,20 +24,20 @@
         </thead>
         <tbody>
         {% for fighter in fighters %}
-            {% if app.user is defined and app.user.id != fighter.id %}
             <tr>
                 <th>{{ fighter.nickname }}</th>
                 <th>{{ fighter.description }}</th>
                 <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
-                    <th>
                 {% if is_granted('ROLE_FIGHTER') and canChallenge(app.user, fighter) %}
-                        {{ include('front/user/_challenge_form.html.twig') }}
-                {% else %}
-                        Challenge already waiting
+                    <th>
+                        {% if canChallenge(app.user, fighter) %}
+                                {{ include('front/user/_challenge_form.html.twig') }}
+                        {% elseif app.user.id != fighter.id %}
+                            Challenge already waiting
+                        {% endif %}
+                    </th>
                 {% endif %}
-                </th>
             </tr>
-            {% endif %}
         {% endfor %}
         </tbody>
     </table>
