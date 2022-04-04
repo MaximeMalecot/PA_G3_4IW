@@ -31,6 +31,9 @@ class UserController extends AbstractController
     {
         try {
             $fighters = $repository->findByRole("ROLE_FIGHTER");
+            $fighters = array_filter($fighters, function ($fighter) {
+                return $fighter->getId() !== $this->getUser()->getId();
+            });
         } catch (Exception $e) {
             return $this->render('front/user/index.html.twig', [
                 'fighters' => "An error occurred."
