@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -65,14 +66,21 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
+    #[IsGranted(UserVoter::DELETE, 'user')]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            if($this->getUser()->getId() === $user->getId()){
+                $session = $this->get('session');
+                $session = new Session();
+                $session->invalidate();
+            }
             $entityManager->remove($user);
             $entityManager->flush();
+
         }
 
-        return $this->redirectToRoute('front_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/edit', name: 'user_edit', requirements: ['id' => '^\d+$'], methods: ['GET', 'POST'])]
