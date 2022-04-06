@@ -30,12 +30,14 @@ class UserController extends AbstractController
     public function index(UserRepository $repository): Response
     {
         $fighters = $repository->findByRole("ROLE_FIGHTER");
-        
+
         return $this->render('front/user/index.html.twig', [
             'fighters' => $repository->findByRole("ROLE_FIGHTER")
         ]);
     }
-    #[Route('/challenge/fighter/{id}',  name: 'user_challenge', methods: ['GET','POST'])]
+
+    #[Route('/challenge/{id}',  name: 'user_challenge', methods: ['GET','POST'])]
+    #[IsGranted(UserVoter::CHALLENGE, 'fighter')]
     public function challenge(User $fighter, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response 
     {
         if ($request->isMethod("POST") && $this->isCsrfTokenValid('challenge'.$fighter->getId(), $request->request->get('_token'))) {
