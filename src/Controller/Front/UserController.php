@@ -29,18 +29,10 @@ class UserController extends AbstractController
     #[Route('/', name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $repository): Response
     {
-        try {
-            $fighters = $repository->findByRole("ROLE_FIGHTER");
-            $fighters = array_filter($fighters, function ($fighter) {
-                return $fighter->getId() !== $this->getUser()->getId();
-            });
-        } catch (Exception $e) {
-            return $this->render('front/user/index.html.twig', [
-                'fighters' => "An error occurred."
-            ]);
-        }
+        $fighters = $repository->findByRole("ROLE_FIGHTER");
+        
         return $this->render('front/user/index.html.twig', [
-            'fighters' => $fighters
+            'fighters' => $repository->findByRole("ROLE_FIGHTER")
         ]);
     }
     #[Route('/challenge/fighter/{id}',  name: 'user_challenge', methods: ['GET','POST'])]

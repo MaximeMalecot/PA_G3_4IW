@@ -28,10 +28,10 @@
                 <th>{{ fighter.nickname }}</th>
                 <th>{{ fighter.description }}</th>
                 <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
-                {% if is_granted('ROLE_FIGHTER') and canChallenge(app.user, fighter) %}
+                {% if is_granted('ROLE_FIGHTER')%} 
                     <th>
                         {% if canChallenge(app.user, fighter) %}
-                                {{ include('front/user/_challenge_form.html.twig') }}
+                            {{ include('front/user/_challenge_form.html.twig') }}
                         {% elseif app.user.id != fighter.id %}
                             Challenge already waiting
                         {% endif %}

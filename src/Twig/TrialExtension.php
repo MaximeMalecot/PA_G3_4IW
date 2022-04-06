@@ -36,6 +36,9 @@ class TrialExtension extends AbstractExtension
 
     public function canChallenge(User $currentUser, User $target)
     {
+        if( $currentUser === $target){
+            return false;
+        }
         $challenges = $this->trialRepository->findChallenge($currentUser, $target);
         if(!empty($challenges)){
             return false;
