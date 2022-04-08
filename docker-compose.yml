@@ -17,7 +17,7 @@ services:
       - db-data:/var/lib/postgresql/data:rw
     ports:
       - target: 5432
-        published: 5433
+        published: 5432
         protocol: tcp
 
   php:
@@ -52,19 +52,19 @@ services:
     depends_on:
       - php
     ports:
-      - "81:80"
-      - "444:443"
+      - "80:80"
+      - "443:443"
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
+      - 8080:8080
   
   mailcatcher:
     image: schickling/mailcatcher
     ports:
-      - 1081:1080
+      - 1080:1080
 
 volumes:
   db-data: {}
