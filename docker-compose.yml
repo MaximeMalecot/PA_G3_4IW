@@ -66,6 +66,10 @@ services:
     ports:
       - 1080:1080
 
+networks:
+  default:
+    external:
+      name: custom_network
 volumes:
   db-data: {}
   app-cache: {}
