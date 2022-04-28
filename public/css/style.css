@@ -1,0 +1,11 @@
+body{
+    background-color: #111111 !important;
+    font-family: 'Blinker', sans-serif !important;
+}
+nav {
+    background-color: #000000 !important;
+}
+
+nav ul li a {
+    color:#FFFFFF !important;
+}
