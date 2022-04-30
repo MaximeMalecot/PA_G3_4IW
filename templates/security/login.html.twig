@@ -3,7 +3,7 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
+<form method="post" class="loginContainer">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -40,37 +40,41 @@
         Sign in
     </button> -->
 
-    <div class="container">
-        <h1 class="form-heading">login Form</h1>
-        <div class="login-form">
-        <div class="main-div">
-            <div class="panel">
-           <h2>Admin Login</h2>
-           <p>Please enter your email and password</p>
-           </div>
-            <form id="Login">
-        
-                <div class="form-group">
-        
-        
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Email Address">
-        
-                </div>
-        
-                <div class="form-group">
-        
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-        
-                </div>
-                <div class="forgot">
-                <a href="reset.html">Forgot password?</a>
+    
+        <div class="left_side">
         </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-        
-            </form>
+        <div class="right_side">
+            <img class="logo" src="" alt="logo">
+            <div class="form_connection">
+                <h1 class="title">Connexion</h1>
+
+                <input class="inputLogin" type="email" required minlength="8" maxlength="55" size="10"
+                    placeholder="Adresse mail" name="mail">
+
+                <input class="inputLogin" type="password" required minlength="8" maxlength="55" size="10"
+                    placeholder="Mot de passe" name="password">
+                    
+                <div class="block-login" style="width:80%; align-self:center;">
+
+                    <div class="remember">
+                        <input class="remember_check" type="checkbox" id="remember" name="remember">
+                        <label for="remember">Se souvenir de moi</label>
+                    </div>
+                    <div>
+                        <a class="lost" href="forget-password">Mot de passe oublié?</a>
+                    </div>
+                </div>
+
+                <input class="button submit" type="submit" value="Me connecter" onclick="onClick()">
+
+                <span class="bar"></span>
+                <h3 class="login_title">Pas encore inscrit ?</h3>
+                <input type="button" class="button submit" value="Inscription">
+
+
             </div>
-       
-        </div></div></div>
+        </div>
+        </div>
         
 </form>
 {% endblock %}
@@ -78,63 +82,130 @@
 {% block stylesheets%}
 
 <style>
-
-.form-heading { color:#fff; font-size:23px;}
-.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
-.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
-.login-form .form-control {
-  background: #f7f7f7 none repeat scroll 0 0;
-  border: 1px solid #d4d4d4;
-  border-radius: 4px;
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-}
-.main-div {
-  background: #ffffff none repeat scroll 0 0;
-  border-radius: 2px;
-  margin: 10px auto 30px;
-  max-width: 100%;
-  padding: 50px 70px 70px 71px;
-}
-
-.login-form .form-group {
-  margin-bottom:10px;
-}
-.login-form{ text-align:center;}
-.forgot a {
-  color: #777777;
-  font-size: 14px;
-  text-decoration: underline;
-}
-.login-form  .btn.btn-primary {
-  background: #f0ad4e none repeat scroll 0 0;
-  border-color: #f0ad4e;
-  color: #ffffff;
-  font-size: 14px;
+.loginContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1 1;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
-  padding: 0;
+  min-height: 100vh;
+  overflow: auto;
 }
-.forgot {
-  text-align: left; margin-bottom:30px;
+body {
+  background-size: cover !important;
+  color: #fff;
+  background:url({{asset('img/boxe.jpg')}});
 }
-.botto-text {
-  color: #ffffff;
-  font-size: 14px;
-  margin: auto;
+.left_side {
+  display: flex;
+  flex: 1 1 50%;
 }
-.login-form .btn.btn-primary.reset {
-  background: #ff9900 none repeat scroll 0 0;
+.right_side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 50% 1;
 }
-.back { text-align: left; margin-top:10px;}
-.back a {color: #444444; font-size: 13px;text-decoration: none;}
-
-    body{
-        background-size: cover !important;
-        background:url({{asset('img/boxe.jpg')}});
-    }
+.form_connection {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  background-color: #6A0903;
+  margin-bottom: 3em;
+  border-radius: 10px;
+  box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.25);
+  padding-top: 1.5em;
+  width: 55%;
+}
+.form_connection .inputLogin:not([type=submit]):not([type='checkbox']) {
+  flex: 1;
+  display: block;
+  min-width: 0;
+  border-radius: 5px;
+  border: none;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 15px;
+}
+.form_connection .inputLogin {
+  padding: 0.5em;
+  border: 1px solid #555;
+  border-radius: 4px;
+  outline: none;
+  font-size: 1.5em;
+  font-weight: lighter;
+  background: rgba(255, 255, 255, 0.25);
+  width: 80%;
+  align-self: center;
+}
+.form_connection .inputLogin[type=checkbox] {
+  cursor: pointer;
+}
+.form_connection  .inputLogin .submit {
+  cursor: pointer;
+  font-size: 2rem;
+  border-radius: 10px;
+}
+.form_connection .title {
+  font-size: 2em;
+  font-weight: lighter;
+  text-align: center;
+}
+.form_connection .button {
+  background: #400502;
+  border-radius: 5px;
+  width: 60%;
+  padding: 1em;
+  margin-bottom: 2em;
+  margin-top: 1.5rem;
+  font-size: 1.2em;
+  border: none;
+  align-self: center;
+  color:#fff;
+}
+.form_connection  .bar {
+  border-top: 1px solid #FFFFFF;
+  width: 80%;
+  align-self: center;
+}
+.form_connection .lost {
+  position: relative;
+  display: block;
+  color: black;
+  font-size: 0.5em;
+  text-decoration: underline;
+  font-weight: lighter;
+  margin: 0;
+}
+.form_connection  .remember {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  font-size: 0.8em;
+  font-weight: lighter;
+  margin-top: 5px;
+}
+.form_connection .remember_check {
+  background-color: #FFCE83;
+  border-radius: 2px;
+  margin: 0;
+  margin-right: 0.2em;
+  width: 20px;
+  height: 20px;
+}
+.form_connection .login_title {
+  font-weight: lighter;
+  text-align: center;
+   margin-top: 15px;
+}
+.form_connection  .block-login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>
 
 {% endblock %}
