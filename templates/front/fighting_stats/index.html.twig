@@ -1,19 +1,25 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Le ladder{% endblock %}
+{% block title %}Classement{% endblock %}
 
 {% block body %}
+<div class="example-wrapper">
+    <h1>Classement </h1>
     <table>
-        <tr>
+        {# <tr>
             <th>rank</th>
             <th>user</th>
             <th>points</th>
             <th>victories</th>
             <th>defeats</th>
+<<<<<<< HEAD
             {% if is_granted('ROLE_FIGHTER') %}
                 <th>action</th>
             {% endif %}
         </tr>
+=======
+        </tr> #}
+>>>>>>> 3edd6ba ( design in progress)
         {% for stat in fs %}
             <tr>
                 <td>{{ stat.rank }}</td>
@@ -34,4 +40,54 @@
             </tr>
         {% endfor %}
     </table>
+    <div class="container-compet">
+        <div class="cat-compet">
+            <div class="title">
+                <h2>Catégorie</h2>
+                <h4>"Le monstre" Jean DUPONT</h4>
+                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
+            </div>
+        </div>
+
+        <div class="cat-compet">
+            <h2>Catégorie</h2>
+            <h4>"Le monstre" Jean DUPONT</h4>
+                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
+        </div>
+
+        <div class="cat-compet">
+            <h2>Catégorie</h2>
+            <h4>"Le monstre" Jean DUPONT</h4>
+                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
+        </div>
+    </div>
+    
+
+</div>
+{% endblock %}
+
+{% block stylesheets%}
+<style>
+.container-compet {
+    display:flex;   
+    flex-direction: row;
+    justify-content: center;
+}
+.cat-compet {
+    display:flex;
+    background-color:#333;
+    color: white;
+    margin: 30px;
+    padding:25px;
+    border-radius: 8px;
+    width:50%;
+}
+h2{
+    color:red;
+    font-size: 25px;
+}
+h2{
+    font-size: 20px;
+}
+</style>
 {% endblock %}
