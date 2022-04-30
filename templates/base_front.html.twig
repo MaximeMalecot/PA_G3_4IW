@@ -19,10 +19,10 @@
 <nav class="red">
     <div class="nav-wrapper">
         <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="{{ path('front_trial_index') }}">matchs</a></li>
-            <li><a href="{{ path('front_tournament_index') }}">tournois</a></li>
-            <li><a href="{{ path('front_fighting_stats_index') }}">classement</a></li>
-            <li><a href="{{ path('front_user_index') }}">compétiteurs</a></li>
+            <li><a href="{{ path('front_trial_index') }}">Matchs</a></li>
+            <li><a href="{{ path('front_tournament_index') }}">Tournois</a></li>
+            <li><a href="{{ path('front_fighting_stats_index') }}">Classement</a></li>
+            <li><a href="{{ path('front_user_index') }}">Compétiteurs</a></li>
             {# <li><a href="{{ path('trial_competitors') }}">challenges</a></li> #}
             {% if app.user %}
                 {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
@@ -49,17 +49,29 @@
                 <li><a href="{{ path('front_user_edit', { "id": app.user.id }) }}">Votre compte</a></li>
                 <li><a href="{{ path('app_logout') }}">logout</a></li>
             {% else %}
-                <li><a href="{{ path('app_login') }}">login</a></li>
-                <li><a href="{{ path('app_register') }}">register</a></li>
+                <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                <li><a href="{{ path('app_register') }}">Inscription</a></li>
             {% endif %}
         </ul>
         <a href="{{ path('front_default') }}" class="brand-logo right">Logo</a>
     </div>
 </nav>
 
-<div class="container">
-    {% block body %}{% endblock %}
-</div>
+{% block body %}
+    {# <div class="home-container">
+        <section class="section1">
+			<div class="container">
+				<div class="title">
+					<h1>Venez vous affronter en direct</h1>
+					<a href="" class="cta-button">Suivez le stream</a>
+				</div>
+			</div>
+		</section>
+    </div> #}
+
+		
+{% endblock %}
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
