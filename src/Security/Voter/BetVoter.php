@@ -15,6 +15,9 @@ class BetVoter extends Voter
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
     const SHOW = 'show';
+    const CREATE = 'create';
+    const EDIT = 'edit';
+    const DELETE = 'delete';
 
     protected function supports(string $attribute, $subject): bool
     {
