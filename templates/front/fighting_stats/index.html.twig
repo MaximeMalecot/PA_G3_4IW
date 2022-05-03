@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="example-wrapper">
-    <h1>Classement </h1>
+    <h1 class="name-page">Classement</h1>
     <table>
         {# <tr>
             <th>rank</th>
@@ -42,6 +42,19 @@
     </table>
     <div class="container-compet">
         <div class="cat-compet">
+            <div class="block">
+                <h2>Catégorie</h2>
+                <h4>"Le monstre" Jean DUPONT</h4>
+                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
+                <div>
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cat-compet">
             <div class="title">
                 <h2>Catégorie</h2>
                 <h4>"Le monstre" Jean DUPONT</h4>
@@ -50,16 +63,14 @@
         </div>
 
         <div class="cat-compet">
-            <h2>Catégorie</h2>
-            <h4>"Le monstre" Jean DUPONT</h4>
+            <div class="title">
+                <h2>Catégorie</h2>
+                <h4>"Le monstre" Jean DUPONT</h4>
                 <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
+            </div>
         </div>
 
-        <div class="cat-compet">
-            <h2>Catégorie</h2>
-            <h4>"Le monstre" Jean DUPONT</h4>
-                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
-        </div>
+
     </div>
     
 
@@ -86,8 +97,15 @@ h2{
     color:red;
     font-size: 25px;
 }
-h2{
+h4{
     font-size: 20px;
+}
+.name-page {
+    display: flex;
+    font-size: 50px;
+    font-family: 'Lobster', cursive;
+    font-weight: bold;
+    margin:25px;
 }
 </style>
 {% endblock %}
