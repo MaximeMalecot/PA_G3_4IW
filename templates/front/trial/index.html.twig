@@ -3,14 +3,14 @@
 {% block title %}Les combats{% endblock %}
 
 {% block body %}
-<style>
+{# <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+</style> #}
 
 <div class="example-wrapper">
-    <h1>Les combats</h1>
-    <label for="filter">Status</label>
+    <h1 class="name-page">Matchs</h1>
+    {# <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
@@ -38,9 +38,65 @@
             {% endfor %}
         {% endif %}
         </tbody>
-    </table>
+    </table> #}
+    <div class="container-match">
+        <div class="cat-match">
+            <div class="block">
+                <h2>Match</h2>
+            </div>
+        </div>
+
+        <div class="cat-match">
+            <div class="block">
+                <h2>Match</h2>
+            </div>
+        </div>
+
+        <div class="cat-match">
+            <div class="block">
+                <h2>Match</h2>
+            </div>
+        </div>
+
+        <div class="cat-match">
+            <div class="block">
+                <h2>Match</h2>
+            </div>
+        </div>
+
+    </div>
 </div>
 {% endblock %}
+
+{% block stylesheets%}
+<style>
+.container-match {
+    display:flex;   
+    flex-direction: row;
+    justify-content: center;
+}
+.cat-match {
+    display:flex;
+    background-color:#333;
+    color: white;
+    margin: 30px;
+    padding:25px;
+    border-radius: 8px;
+    width:50%;
+}
+h2{
+    font-size: 25px;
+}
+.name-page {
+    display: flex;
+    font-size: 50px;
+    font-family: 'Lobster', cursive;
+    font-weight: bold;
+    margin:25px;
+}
+</style>
+{% endblock %}
+
 
 {% block javascripts %}
 <script type="text/javascript">
