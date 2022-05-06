@@ -25,6 +25,7 @@
             <li><a href="{{ path('front_user_index') }}">compétiteurs</a></li>
             {# <li><a href="{{ path('trial_competitors') }}">challenges</a></li> #}
             {% if app.user %}
+                <li><a href="{{path('front_bet_index')}}">bets</a></li>
                 {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
                     <li><a href="{{ path('back_default') }}">administration</a></li>
                 {% else %}

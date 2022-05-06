@@ -21,7 +21,7 @@ class BetVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::SHOW])
+        return in_array($attribute, [self::SHOW, self::CREATE, self::EDIT, self::DELETE])
             && $subject instanceof Bet;
     }
 
@@ -33,12 +33,10 @@ class BetVoter extends Voter
             return false;
         }
 
-        switch ($attribute) {
-            case self::SHOW:
-                return $subject->getBetter() == $user;
-                break;
-        }
+        return match ($attribute) {
+            self::SHOW => $subject->getBetter() == $user,
+            default => false,
+        };
 
-        return false;
     }
 }

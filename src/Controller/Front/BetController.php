@@ -13,25 +13,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/bet')]
 class BetController extends AbstractController
 {
-    #[Route('/', name: 'bet_user', methods: ['GET'])]
+    #[Route('/', name: 'bet_index', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('front/bet/index.html.twig', [
             'user' => $this->getUser()
         ]);
-
     }
 
     // Create Crud for Bet
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
-    #[IsGranted(BetVoter::CREATE, subject: 'bet')]
     public function create(): Response
     {
-        return $this->render('front/bet/create.html.twig');
+        return $this->render('front/bet/create.html.twig', [
+            'user' => $this->getUser()
+        ]);
     }
 
     #[Route('/edit/{id}', name: 'bet_edit', methods: ['GET', 'PUT'])]
-    #[IsGranted(BetVoter::EDIT, subject: 'bet')]
     public function edit(User $user): Response
     {
         return $this->render('front/bet/edit.html.twig', [
