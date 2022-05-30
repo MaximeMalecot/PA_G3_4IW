@@ -36,6 +36,8 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
+    networks:
+      - elk
     volumes:
       - ./:/var/www
       - app-cache:/var/www/var
@@ -67,9 +69,10 @@ services:
       - 1080:1080
 
 networks:
-  default:
-    external:
-      name: custom_network
+  elk:
+    name: custom_network
+    external: true
+
 volumes:
   db-data: {}
   app-cache: {}
