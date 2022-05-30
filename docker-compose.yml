@@ -71,7 +71,7 @@ services:
 
 networks:
   elk:
-    name: custom_network
+    name: bettle-elk
     external: true
 
 volumes:
