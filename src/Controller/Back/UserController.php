@@ -27,6 +27,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]
+    #[IsGranted(UserVoter::SHOW, 'user')]
     public function show(User $user): Response
     {
         return $this->render('back/user/show.html.twig', [
@@ -83,6 +84,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    #[IsGranted(UserVoter::DELETE, 'user')]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
