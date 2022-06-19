@@ -99,13 +99,6 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
-    public function edit(Request $request): Response
-    {
-        dd('ahi');
-    }
-
-   
     #[Route('/modifyDate/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::CREATE)]
     public function modifyDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response

@@ -2,12 +2,12 @@
 
 namespace App\Twig;
 
-use DateTime;
-use Twig\Extension\AbstractExtension;
+use App\Entity\Tournament;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\Extension\AbstractExtension;
 
-class DateExtension extends AbstractExtension
+class TournamentExtension extends AbstractExtension
 {
     public function getFilters(): array
     {
@@ -22,13 +22,12 @@ class DateExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('limitRefuseDelete', [$this, 'limitRefuseDelete']),
+            new TwigFunction('getNbFromRole', [$this, 'getNbFromRole']),
         ];
     }
 
-    public function limitRefuseDelete(\DateTime $value)
-    {
-        $limitDate = $value->modify('-1 day');
-        return $limitDate;
+    public function getNbFromRole(Tournament $tournament, string $role){
+        return count($tournament->getParticipantFromRole($role));
     }
+
 }

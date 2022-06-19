@@ -46,7 +46,7 @@
                         <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
                     {% endif %}
                     {% if trial.dateStart is defined and trial.dateStart is not null %}
-                        {% if date() < limitRefuseTrialDate(trial.dateStart)%}
+                        {% if date() < limitRefuseDelete(trial.dateStart)%}
                                 {{ include('back/trial/_delete_form.html.twig') }}
                         {% endif %}
                     {% else %}
