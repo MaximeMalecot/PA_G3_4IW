@@ -1,0 +1,8 @@
+@import "~materialize-css/dist/css/materialize.css";
+
+/*In case we need Tailwind CSS instead of Materialize CSS, comment the line above and uncomment the lines underneath */
+
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+/*@tailwind screens;*/
