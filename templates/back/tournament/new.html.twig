@@ -9,48 +9,44 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Create new Trial</h1>
-    <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST">
-        <select id="fighter1" name="fighter1" required>
-            <option id="select1-default" value="default" disabled selected>---</option>
-            {% for fighter in fighters %}
-                <option id="select1-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
-            {% endfor %}
-        </select>
-        <select id="fighter2" name="fighter2" required>
-            <option id="select2-default" value="default" disabled selected>---</option>
-            {% for fighter in fighters %}
-                <option id="select2-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
-            {% endfor %}
-        </select>
-        <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="Pick a date" required/>
-        <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="Pick a time" required/>
-        <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
+    <h1>Create new Tournament</h1>
+    <form id="createTournament" action="{{ path('back_tournament_new') }}" method="POST">
+        <input type="text" id="name" name="name" placeholder="Nom du tournoi" required/>
+        <label for="nbMaxParticipants">Seulement les multiples de 2 seront acceptés</label>
+        <input type="number" id="nbMaxParticipants" name="nbMaxParticipants" placeholder="Nombre de participants maximum" required/>
+        <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="Date de début" required/>
+        <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="Heure de début" required/>
+        <input type="text" class="datepicker" id="dateEnd" name="dateEnd" placeholder="Date de fin" required/>
+        <input type="hidden" name="_token" value="{{ csrf_token('newTournament') }}"/>
         <input type="submit" value="Create"/>
     </form>
-    <a href="{{ path('back_trial_index') }}">back to list</a>
+    <a href="{{ path('back_tournament_index') }}">back to list</a>
 </div>
 {% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
-        let form = document.getElementById('createTrial');
+        let form = document.getElementById('createTournament');
         let selectFighter1 = document.getElementById('fighter1');
         let selectFighter2 = document.getElementById('fighter2');
-        let datepicker = document.getElementById('dateStart');
+        let datestart = document.getElementById('dateStart');
+        let dateend = document.getElementById('dateEnd');
         let timepicker = document.getElementById('timeStart');
-        let minDate = new Date();
-        minDate.setDate(minDate.getDate()+1)
+        let nbMaxParticipants = document.getElementById('nbMaxParticipants');
+        let defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate()+1)
 
-        selectFighter1.selectedIndex = 0;
-        selectFighter2.selectedIndex = 0;
-        M.FormSelect.init(selectFighter1);
-        M.FormSelect.init(selectFighter2);
-        var dateInstance = M.Datepicker.init(datepicker, {
+        var dateStartInstance = M.Datepicker.init(datestart, {
             format: 'dd-mm-yyyy',
             autoClose : "true",
-            minDate : minDate,
+            minDate : defaultDate,
+            setDefaultDate: true
+        })
+        var dateEndInstance = M.Datepicker.init(dateend, {
+            format: 'dd-mm-yyyy',
+            autoClose : "true",
+            minDate : defaultDate,
             setDefaultDate: true
         })
         var timeInstance = M.Timepicker.init(timepicker, {
@@ -59,37 +55,21 @@
             defaultTime: "00:00"
         });
 
-        selectFighter1.addEventListener('change', (e) => {
-            selectFighter2.querySelectorAll('option').forEach(opt => {
-                if(opt.disabled == true){
-                    opt.disabled = false;
-                }
-            });
-            let tmpDisabled = document.getElementById('select2-'+e.target.value);
-            tmpDisabled.disabled = true;
-            M.FormSelect.init(selectFighter2);
-        });
-
-        selectFighter2.addEventListener('change', (e) => {
-            selectFighter1.querySelectorAll('option').forEach(opt => {
-                if(opt.disabled == true){
-                    opt.disabled = false;
-                }
-            });
-            let tmpDisabled = document.getElementById('select1-'+e.target.value);
-            tmpDisabled.disabled = true;
-            M.FormSelect.init(selectFighter1);
-        });
+        datestart.addEventListener('change', () => {
+            let dateStartValue = datestart.value.split(('-'))
+            let minDate = new Date(`${dateStartValue[2]}-${dateStartValue[1]}-${dateStartValue[0]}`);
+            minDate.setDate(minDate.getDate());
+            dateEndInstance.options.minDate = minDate;
+        })
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            if(selectFighter1.value == "default" || selectFighter2.value == "default"){
-                alert('Veuiller choisir des combattants');
+            if(nbMaxParticipants.value % 2 !== 0){
+                alert('Seulement les multiples de 2');
             }else{
                 form.submit();
             }
         })
-
     });
 </script>
 {% endblock %}

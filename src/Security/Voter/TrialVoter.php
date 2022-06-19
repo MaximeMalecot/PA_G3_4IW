@@ -28,9 +28,8 @@ class TrialVoter extends Voter
             } else {
                 return $subject instanceof Trial;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

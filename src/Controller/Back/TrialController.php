@@ -71,7 +71,7 @@ class TrialController extends AbstractController
         if ($request->isMethod('POST')) {
             if(!$this->isCsrfTokenValid('newTrial', $request->request->get('_token')) || !$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
                 $this->addFlash('red', "SecurityError");
-                return $this->renderForm('back/trial/new.html.twig',[
+                return $this->render('back/trial/new.html.twig',[
                     'fighters' => $fighters
                 ]);
             }
@@ -86,7 +86,7 @@ class TrialController extends AbstractController
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/trial/new.html.twig',[
+        return $this->render('back/trial/new.html.twig',[
             'fighters' => $fighters
         ]);
     }

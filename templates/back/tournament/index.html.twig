@@ -1,6 +1,6 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Trial index{% endblock %}
+{% block title %}Tournament index{% endblock %}
 
 {% block body %}
 <style>
@@ -9,7 +9,7 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Les combats</h1>
+    <h1>Les tournois</h1>
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('back_tournament_index') }}" method="POST">
         <select id="status" name="status">
@@ -30,11 +30,11 @@
                 <th>actions</th>
             </tr>
         </thead>
-        <tbody id="trial_data">
+        <tbody id="tournament_data">
         {% if tournaments is defined and tournaments is not empty %}
             {% for tournament in tournaments %}
                 <tr>
-                    <th>{{ tournament.adjudicate.nickname ?? "null" }}</th>
+                    <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}}</th>
                     <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>
@@ -49,6 +49,8 @@
                     </th>
                 </tr>
             {% endfor %}
+        {% else %}
+            ERROR
         {% endif %}
         </tbody>
     </table>
