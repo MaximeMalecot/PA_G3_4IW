@@ -2,23 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/style.css">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">#}
     {% block stylesheets %}
-        {# {{ encore_entry_link_tags('app') }} #}
+         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
     {% block javascripts %}
-        {# {{ encore_entry_script_tags('app') }} #}
+         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
 <body>
 <nav class="red">
     <div class="nav-wrapper">
-        <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <ul id="nav-mobile" class="left hide-on-med-and-down flex">
             <li><a href="{{ path('front_trial_index') }}">matchs</a></li>
             <li><a href="{{ path('front_tournament_index') }}">tournois</a></li>
             <li><a href="{{ path('front_fighting_stats_index') }}">classement</a></li>
@@ -30,7 +29,7 @@
                     <li><a href="{{ path('back_default') }}">administration</a></li>
                 {% else %}
                     {% if is_granted('ROLE_FIGHTER') %}
-                        <li><a href="{{ path('front_trial_consult') }}">my trials</li></a>
+                        <li><a href="{{ path('front_trial_consult') }}">my trials</a></li>
                     {% endif %}
                 {# 
                     {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}
@@ -62,13 +61,14 @@
     {% block body %}{% endblock %}
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    {% for type, messages in app.flashes() %}
-        {% for message in messages %}
-            M.toast({html: '{{ message }}', classes: '{{ type }}'})
+<script defer>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for type, messages in app.flashes() %}
+            {% for message in messages %}
+                M.toast({html: '{{ message }}', classes: '{{ type }}'})
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
+    });
 </script>
 </body>
 </html>
