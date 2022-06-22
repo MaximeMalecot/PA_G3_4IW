@@ -297,4 +297,9 @@ class Trial
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return join(" vs ", $this->getFighters()->toArray());
+    }
 }

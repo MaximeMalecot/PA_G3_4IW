@@ -11,6 +11,7 @@
 <div class="example-wrapper">
     <h1>User {{ user.nickname }}</h1>
     <h2>{{ user.credits ?? 0 }} credits</h2>
-    <p>Wesh cousin c'est le bet create là smr</p>
+    <p>Veuillez remplir les champs suivants afin de parier sur le combat que vous souhaitez</p>
+    {{ form(form) }}
 </div>
 {% endblock %}

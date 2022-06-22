@@ -24,9 +24,9 @@
             {% for bet in user.bets %}
                 <tr>
                     {% if bet.getTrial() is not null %}
-                        <th>{{ bet.trial.id }}</th>
+                        <th>{{ bet.trial.fighters|join(' vs ') }}</th>
                     {% elseif bet.getTournament() is not null %}
-                        <th>{{ bet.trial.id }}</th>
+                        <th>{{ bet.trial.name }}</th>
                     {% else %}
                         <th>EMPTY</th>
                     {% endif %}

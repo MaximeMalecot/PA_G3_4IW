@@ -3,7 +3,9 @@
 namespace App\Controller\Front;
 
 use App\Entity\User;
+use App\Form\BetType;
 use App\Security\Voter\BetVoter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -23,10 +25,22 @@ class BetController extends AbstractController
 
     // Create Crud for Bet
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        // Créer un Bet vide, qu'on remplira ensuite avec les données du formulaire
+        $form = $this->createForm(BetType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Créer la logique de validation (vérifier que le montant est positif + inférieur
+            // au montant de crédits détenus par l'utilisateur pariant.
+
+            $this->addFlash('green', "Votre pari a bien été créé !");
+            return $this->redirectToRoute('front_bet_index');
+        }
         return $this->render('front/bet/create.html.twig', [
-            'user' => $this->getUser()
+            'user' => $this->getUser(),
+            'form' => $form->createView()
         ]);
     }
 
