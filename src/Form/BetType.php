@@ -7,7 +7,7 @@ use App\Entity\Trial;
 use App\Repository\TrialRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,7 +35,7 @@ class BetType extends AbstractType
                  'multiple' => false,
                  'expanded' => false,
                 'placeholder' => 'Choisissez un trial'])
-            ->add('amount', NumberType::class, [
+            ->add('amount', IntegerType::class, [
                 'label' => 'Montant',
                 'attr' => [
                     'placeholder' => 'Montant du pari',

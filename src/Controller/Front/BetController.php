@@ -34,13 +34,14 @@ class BetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($form->isValid()) {
+            $user = $this->getUser();
+            $enteredAmount = $request->request->get('bet')['amount'];
+            $userAmount = $user->getCredits();
+            if ($form->isValid() && $enteredAmount > 0 && $enteredAmount <=$userAmount) {
                 $bet = new Bet();
-                // Créer la logique de validation (vérifier que le montant est positif + inférieur
-                // au montant de crédits détenus par l'utilisateur pariant.
-
                 $bet = $form->getData();
-                $bet->setBetter($this->getUser());
+                $bet->setBetter($user);
+                $user->setCredits($userAmount - $enteredAmount);
                 $entityManager->persist($bet);
                 $entityManager->flush();
 
