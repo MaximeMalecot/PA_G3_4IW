@@ -2,9 +2,11 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Bet;
 use App\Entity\User;
 use App\Form\BetType;
 use App\Security\Voter\BetVoter;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,18 +27,28 @@ class BetController extends AbstractController
 
     // Create Crud for Bet
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
-    public function create(Request $request): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Créer un Bet vide, qu'on remplira ensuite avec les données du formulaire
         $form = $this->createForm(BetType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Créer la logique de validation (vérifier que le montant est positif + inférieur
-            // au montant de crédits détenus par l'utilisateur pariant.
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $bet = new Bet();
+                // Créer la logique de validation (vérifier que le montant est positif + inférieur
+                // au montant de crédits détenus par l'utilisateur pariant.
 
-            $this->addFlash('green', "Votre pari a bien été créé !");
-            return $this->redirectToRoute('front_bet_index');
+                $bet = $form->getData();
+                $bet->setBetter($this->getUser());
+                $entityManager->persist($bet);
+                $entityManager->flush();
+
+                $this->addFlash('green', "Votre pari a bien été créé !");
+                return $this->redirectToRoute('front_bet_index');
+            }
+            $this->addFlash('red', "Les données envoyées ne sont pas correctes. Veuillez réessayer.");
+            return $this->redirectToRoute('front_bet_create');
         }
         return $this->render('front/bet/create.html.twig', [
             'user' => $this->getUser(),
