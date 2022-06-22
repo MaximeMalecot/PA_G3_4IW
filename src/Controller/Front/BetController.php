@@ -3,14 +3,11 @@
 namespace App\Controller\Front;
 
 use App\Entity\Bet;
-use App\Entity\User;
 use App\Form\BetType;
-use App\Security\Voter\BetVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -29,7 +26,10 @@ class BetController extends AbstractController
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Créer un Bet vide, qu'on remplira ensuite avec les données du formulaire
+        // TODO:
+        // - Trouver un moyen de donner le choix à l'utilisateur de choisir entre les trials de tournaments et les trials classiques
+        // - Choisir entre retirer le montant de crédits de l'utilisateur dès le bet ou de le faire après le match
+
         $form = $this->createForm(BetType::class);
         $form->handleRequest($request);
 
@@ -57,20 +57,4 @@ class BetController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'bet_edit', methods: ['GET', 'PUT'])]
-    public function edit(User $user): Response
-    {
-        return $this->render('front/bet/edit.html.twig', [
-            'user' => $user
-        ]);
-    }
-
-    #[Route('/delete/{id}', name: 'bet_delete', methods: ['DELETE'])]
-    #[IsGranted(BetVoter::DELETE, subject: 'bet')]
-    public function delete(User $user): Response
-    {
-        return $this->render('front/bet/delete.html.twig', [
-            'user' => $user
-        ]);
-    }
 }

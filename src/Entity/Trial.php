@@ -300,6 +300,8 @@ class Trial
 
     public function __toString(): string
     {
-        return join(" vs ", $this->getFighters()->toArray());
+        $result = join(" vs ", $this->getFighters()->toArray());
+        if ($this->getTournament() !== null) $result .= ' - ' . $this->getTournament()->getName();
+        return $result;
     }
 }
