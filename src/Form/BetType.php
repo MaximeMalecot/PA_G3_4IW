@@ -29,7 +29,7 @@ class BetType extends AbstractType
                     $qb = $tr->createQueryBuilder('t');
                     return $qb
                         ->innerJoin('t.fighters', 'f')
-                        ->where($qb->expr()->in('t.status',array("AWAITING")))
+                        ->where($qb->expr()->in('t.status',array("AWAITING", "STARTED")))
                         ->andWhere($qb->expr()->isNotNull('t.adjudicate'));
                 },
                  'multiple' => false,
