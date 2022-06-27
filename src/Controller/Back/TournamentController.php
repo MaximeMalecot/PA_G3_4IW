@@ -66,6 +66,38 @@ class TournamentController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/join', name: 'tournament_join', methods: ['POST'])]
+    #[IsGranted(TournamentVoter::JOIN, 'tournament')]
+    public function join(Request $request, Tournament $tournament, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('join'.$tournament->getId(), $request->request->get('_token'))) {
+            $tournament->addParticipant($this->getUser());
+            $em->flush();
+            $status = "CREATED";
+            return $this->render('back/tournament/index.html.twig', [
+                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => $status], ["dateStart" => "ASC"]),
+                'status' => $status
+            ]);
+        }
+        return $this->redirectToRoute('back_tournament_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/quit', name: 'tournament_quit', methods: ['POST'])]
+    #[IsGranted(TournamentVoter::QUIT, 'tournament')]
+    public function quit(Request $request, Tournament $tournament, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('quit'.$tournament->getId(), $request->request->get('_token'))) {
+            $tournament->removeParticipant($this->getUser());
+            $em->flush();
+            $status = "CREATED";
+            return $this->render('back/tournament/index.html.twig', [
+                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => $status], ["dateStart" => "ASC"]),
+                'status' => $status
+            ]);
+        }
+        return $this->redirectToRoute('back_tournament_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'tournament_delete', methods: ['POST'])]
     public function delete(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
     {

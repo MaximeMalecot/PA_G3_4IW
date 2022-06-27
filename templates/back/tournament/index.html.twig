@@ -23,6 +23,7 @@
     <table>
         <thead>
             <tr>
+                <th>nom</th>
                 <th>arbitre</th>
                 <th>nombre de combattants inscrits</th>
                 <th>nombre d'arbitre participants</th>
@@ -34,7 +35,7 @@
         {% if tournaments is defined and tournaments is not empty %}
             {% for tournament in tournaments %}
                 <tr>
-                    <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
+                    <th><a href="{{ path('back_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>                    <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</th>
                     <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>
@@ -45,6 +46,14 @@
                         {% endif %}
                     {% else %}
                         {{ include('back/tournament/_delete_form.html.twig') }}
+                    {% endif %}
+                    {% if tournament.status == "CREATED" %}
+                        {% if isInTournament(tournament, app.user) %}
+                            <th>{{ include('back/tournament/_quit_form.html.twig') }}</th>
+                        {% endif %}
+                        {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) %}
+                            <th>{{ include('back/tournament/_join_form.html.twig') }}</th>
+                        {% endif %}
                     {% endif %}
                     </th>
                 </tr>

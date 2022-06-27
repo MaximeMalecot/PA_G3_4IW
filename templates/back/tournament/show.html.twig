@@ -1,46 +1,29 @@
-<!DOCTYPE html>
+{% extends 'base_back.html.twig' %}
 
-<title>Trial</title>
+{% block title %}Tournament {{ tournament.name }}{% endblock %}
 
 {% block body %}
-    <h1>Trial</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trial.id }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ trial.status }}</td>
-            </tr>
-            <tr>
-                <th>BetStatus</th>
-                <td>{{ trial.betStatus }}</td>
-            </tr>
-            <tr>
-                <th>DateStart</th>
-                <td>{{ trial.dateStart ? trial.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateEnd</th>
-                <td>{{ trial.dateEnd ? trial.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ trial.createdAt ? trial.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ trial.updatedAt ? trial.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
 
-    <a href="{{ path('back_trial_index') }}">back to list</a>
-
-    <a href="{{ path('back_trial_edit', {'id': trial.id}) }}">edit</a>
-
-    {{ include('back/trial/_delete_form.html.twig') }}
+<div class="example-wrapper">
+    <b>Name:</b></br>
+    {{ tournament.name }}</br>
+    <b>Arbitre du tournoi:</b></br> 
+    {{ tournament.createdBy.nickname ?? "null"}}</br>
+    <b>Combattants:</b></br>
+    {% for fighter in tournament.getParticipantFromRole("ROLE_FIGHTER") %}
+        {{ fighter.nickname ?? "null"}}</br>
+    {% endfor %}
+    <b>Arbitres des matchs :</b></br>
+    {% for fighter in tournament.getParticipantFromRole("ROLE_ADJUDICATE") %}
+        {{ fighter.nickname ?? "null"}}</br>
+    {% endfor %}
+    <b>Date de début :</b></br>
+     {{ tournament.dateStart|date('d-m-Y H:i:s') }}</br>
+    <b>Match:</b></br>
+</div>
 {% endblock %}

@@ -50,12 +50,12 @@ class TrialVoter extends Voter
             case self::DELETE:
                 return in_array('ROLE_ADMIN', $user->getRoles()) || $this->canEdit($subject, $user);
                 break;
-            case self::TRIAL_ANSWER :
+            /*case self::TRIAL_ANSWER :
                 return canAnswerTrial($user, $subject);
                 break;
             case self::CHALLENGE_ANSWER :
                 return canAnswerChallenge($user, $subject);
-                break;
+                break;*/
         }
 
         return false;

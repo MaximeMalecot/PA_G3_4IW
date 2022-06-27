@@ -7,7 +7,6 @@ use App\Form\TrialType;
 use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
 use App\Repository\UserRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

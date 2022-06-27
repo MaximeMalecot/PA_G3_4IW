@@ -2,9 +2,10 @@
 
 namespace App\Twig;
 
-use App\Entity\Tournament;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\User;
+use App\Entity\Tournament;
 use Twig\Extension\AbstractExtension;
 
 class TournamentExtension extends AbstractExtension
@@ -23,11 +24,16 @@ class TournamentExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getNbFromRole', [$this, 'getNbFromRole']),
+            new TwigFunction('isInTournament', [$this, 'isInTournament'])
         ];
     }
 
     public function getNbFromRole(Tournament $tournament, string $role){
         return count($tournament->getParticipantFromRole($role));
+    }
+
+    public function isInTournament(Tournament $tournament, User $user){
+        return $tournament->getParticipants()->contains($user);
     }
 
 }

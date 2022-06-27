@@ -17,10 +17,13 @@ class TournamentVoter extends Voter
     const CREATE = 'create';
     const EDIT = 'edit';
     const DELETE = 'delete';
+    const SHOW = 'show';
+    const JOIN = 'join';
+    const QUIT = 'quit';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE])){
+        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT])){
             if($attribute == self::CREATE){
                 return true;
             } else {
@@ -39,6 +42,15 @@ class TournamentVoter extends Voter
         }
 
         switch ($attribute) {
+            case self::JOIN:
+                return $this->canJoin($subject, $user);
+                break;
+            case self::QUIT:
+                return $this->canQuit($subject, $user);
+                break;
+            case self::SHOW:
+                return $this->canShow($subject, $user);
+                break;
             case self::CREATE:
                 return in_array('ROLE_ADJUDICATE', $user->getRoles());
                 break;
@@ -51,6 +63,27 @@ class TournamentVoter extends Voter
         }
 
         return false;
+    }
+
+    protected function canJoin(Tournament $tournament, User $user) : bool 
+    {
+        if(in_array('ROLE_FIGHTER', $user->getRoles())){
+            return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_FIGHTER")) < $tournament->getNbMaxParticipants());
+        } else if (in_array('ROLE_ADJUDICATE', $user->getRoles())) {
+            return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < ($tournament->getNbMaxParticipants()/2));
+        } else {
+            return false;
+        } 
+    }
+
+    protected function canQuit(Tournament $tournament, User $user): bool
+    {
+        return $tournament->getStatus() === "CREATED" && $tournament->getParticipants()->contains($user);
+    }
+
+    protected function canShow(Tournament $tournament, User $user): bool 
+    {
+        return in_array($tournament->getStatus(), ["AWAITING","STARTED","ENDED"]) ? true : in_array('ROLE_FIGHTER', $user->getRoles());
     }
 
     /**

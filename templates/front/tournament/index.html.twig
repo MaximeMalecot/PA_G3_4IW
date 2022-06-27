@@ -13,6 +13,9 @@
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_tournament_index') }}" method="POST">
         <select id="status" name="status">
+            {% if is_granted('ROLE_FIGHTER') or is_granted('ROLE_ADJUDICATE') %}
+                <option value="CREATED" id="CREATED">CREER</option>
+            {% endif %}
             <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
@@ -27,6 +30,9 @@
                 <th>Arbitre</th>
                 <th>Nombre de combattants</th>
                 <th>date</th>
+                {% if is_granted('ROLE_FIGHTER') %}
+                    <th>actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -34,9 +40,16 @@
                 <tr>
                         <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
                         <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
-                        <th>{{ tournament.nbMaxParticipants }}</th>
+                        <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
-                    
+                        {% if tournament.status == "CREATED" %}
+                            {% if isInTournament(tournament, app.user) %}
+                                <th>{{ include('front/tournament/_quit_form.html.twig') }}</th>
+                            {% endif %}
+                            {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) or (is_granted('ROLE_FIGHTER') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) and isInTournament(tournament, app.user) == false %}
+                                <th>{{ include('front/tournament/_join_form.html.twig') }}</th>
+                            {% endif %}
+                        {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
