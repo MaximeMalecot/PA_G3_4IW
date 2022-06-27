@@ -48,6 +48,7 @@ class Trial
 
     /**
      * @ORM\ManyToOne(targetEntity=Tournament::class, inversedBy="trials")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $tournament;
 

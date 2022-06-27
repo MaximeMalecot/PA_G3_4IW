@@ -35,8 +35,8 @@
             {% for tournament in tournaments %}
                 <tr>
                     <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
-                    <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}}</th>
-                    <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}}</th>
+                    <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
+                    <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</th>
                     <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>
                     <th>
                     {% if tournament.dateStart is defined and tournament.dateStart is not null %}

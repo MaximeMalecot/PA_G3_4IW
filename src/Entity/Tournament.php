@@ -68,6 +68,7 @@ class Tournament
 
     /**
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="tournament")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $trials;
 

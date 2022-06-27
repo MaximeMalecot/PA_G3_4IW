@@ -42,6 +42,7 @@ class TournamentController extends AbstractController
                 $this->addFlash('red', "SecurityError");
                 return $this->render('back/tournament/new.html.twig');
             }
+            /* ADD VERIF ON NUMBER */
             $tournament = new Tournament();
             $tournament->setName($request->request->get('name'));
             $tournament->addParticipant($this->getUser());
