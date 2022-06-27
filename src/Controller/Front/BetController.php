@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\Bet;
 use App\Form\BetType;
+use App\Repository\TrialRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,11 +25,10 @@ class BetController extends AbstractController
 
     // Create Crud for Bet
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, TrialRepository $repository): Response
     {
         // TODO:
         // - Trouver un moyen de donner le choix à l'utilisateur de choisir entre les trials de tournaments et les trials classiques
-        // - Choisir entre retirer le montant de crédits de l'utilisateur dès le bet ou de le faire après le match
 
         $form = $this->createForm(BetType::class);
         $form->handleRequest($request);
@@ -38,17 +38,31 @@ class BetController extends AbstractController
             $enteredAmount = $request->request->get('bet')['amount'];
             $userAmount = $user->getCredits();
             if ($form->isValid() && $enteredAmount > 0 && $enteredAmount <=$userAmount) {
-                $bet = new Bet();
-                $bet = $form->getData();
-                $bet->setBetter($user);
-                $user->setCredits($userAmount - $enteredAmount);
-                $entityManager->persist($bet);
-                $entityManager->flush();
+                $trialId = $request->request->get('bet')['trial'];
+                $trial = $repository->find($trialId);
+                if ($trial) {
+                    $alreadyExistingBet = $user->getBets()->filter(function ($bet) use ($trial) {
+                        return $bet->getTrial()->getId() == $trial->getId();
+                    });
+                    if ($alreadyExistingBet->count()===0) {
+                        $bet = new Bet();
+                        $bet = $form->getData();
+                        $bet->setBetter($user);
+                        $bet->setTrial($trial);
+                        $entityManager->persist($bet);
+                        $entityManager->flush();
+                        $user->setCredits($userAmount - $enteredAmount);
+                        $entityManager->persist($user);
+                        $entityManager->flush();
 
-                $this->addFlash('green', "Votre pari a bien été créé !");
-                return $this->redirectToRoute('front_bet_index');
+                        $this->addFlash('green', "Votre pari a bien été créé !");
+                    } else {
+                        $this->addFlash('red', 'Vous avez déjà mis un pari sur ce trial.');
+                    }
+                }
+            } else {
+                $this->addFlash('red', "Les données envoyées ne sont pas correctes. Veuillez réessayer.");
             }
-            $this->addFlash('red', "Les données envoyées ne sont pas correctes. Veuillez réessayer.");
             return $this->redirectToRoute('front_bet_create');
         }
         return $this->render('front/bet/create.html.twig', [
