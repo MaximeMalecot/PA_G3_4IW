@@ -20,10 +20,11 @@ class TournamentVoter extends Voter
     const SHOW = 'show';
     const JOIN = 'join';
     const QUIT = 'quit';
+    const START = 'start';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT])){
+        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::START])){
             if($attribute == self::CREATE){
                 return true;
             } else {
@@ -53,6 +54,10 @@ class TournamentVoter extends Voter
                 break;
             case self::CREATE:
                 return in_array('ROLE_ADJUDICATE', $user->getRoles());
+                break;
+            
+            case self::START:
+                return $subject->getCreatedBy() === $user;
                 break;
             case self::EDIT:
                 return $this->canEdit($subject, $user);

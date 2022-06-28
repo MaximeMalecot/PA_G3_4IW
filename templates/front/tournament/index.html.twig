@@ -46,7 +46,7 @@
                             {% if isInTournament(tournament, app.user) %}
                                 <th>{{ include('front/tournament/_quit_form.html.twig') }}</th>
                             {% endif %}
-                            {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) or (is_granted('ROLE_FIGHTER') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) and isInTournament(tournament, app.user) == false %}
+                            {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) or (is_granted('ROLE_FIGHTER') and getNbFromRole(tournament, 'ROLE_FIGHTER') < tournament.nbMaxParticipants) and isInTournament(tournament, app.user) == false %}
                                 <th>{{ include('front/tournament/_join_form.html.twig') }}</th>
                             {% endif %}
                         {% endif %}
@@ -65,9 +65,10 @@
         var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
-            form.submit();
+            let url = "{{ path('front_tournament_index', {'status': 'statusValue'})|escape('js') }}";
+            url = url.replace('statusValue', select.value);
+            window.location.href = url;
         });
     });
-    
 </script>
 {% endblock %}

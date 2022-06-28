@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\User;
 use App\Entity\Tournament;
+use App\Entity\Trial;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,19 +17,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/tournament')]
 class TournamentController extends AbstractController
 {
-    #[Route('/', name: 'tournament_index', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'tournament_index', methods: ['GET'])]
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
-        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('tournamentFilter', $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
-            return $this->render('front/tournament/index.html.twig', [
-                'tournaments' => $tournamentRepository->findBy(["status" => "AWAITING"], ["dateStart" => "ASC"]),
-                'status' => "AWAITING"
-            ]);
-        }
-        $status = $request->request->get('status') ?? "AWAITING";
+        $status = in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : "AWAITING";
         return $this->render('front/tournament/index.html.twig', [
-            'tournaments' => $tournamentRepository->findBy(["status" => $status], ["dateStart" => "ASC"]),
+            'tournaments' => $tournamentRepository->findBy(["status" => $status ], ["dateStart" => "ASC"]),
             'status' => $status
         ]);
     }
@@ -41,11 +35,7 @@ class TournamentController extends AbstractController
         if ($this->isCsrfTokenValid('join'.$tournament->getId(), $request->request->get('_token'))) {
             $tournament->addParticipant($this->getUser());
             $em->flush();
-            $status = "CREATED";
-            return $this->render('front/tournament/index.html.twig', [
-                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => $status], ["dateStart" => "ASC"]),
-                'status' => $status
-            ]);
+            return $this->redirectToRoute('front_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('front_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -57,11 +47,7 @@ class TournamentController extends AbstractController
         if ($this->isCsrfTokenValid('quit'.$tournament->getId(), $request->request->get('_token'))) {
             $tournament->removeParticipant($this->getUser());
             $em->flush();
-            $status = "CREATED";
-            return $this->render('front/tournament/index.html.twig', [
-                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => $status], ["dateStart" => "ASC"]),
-                'status' => $status
-            ]);
+            return $this->redirectToRoute('front_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('front_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
