@@ -7,6 +7,7 @@ use App\Entity\Tournament;
 use App\Repository\UserRepository;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
+use App\Service\TournamentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +35,10 @@ class TournamentController extends AbstractController
         if ($request->isMethod('POST')) {
             if(!$this->isCsrfTokenValid('newTournament', $request->request->get('_token')) || !$request->request->get('name') || !$request->request->get('nbMaxParticipants') || !$request->request->get('dateStart') || !$request->request->get('timeStart') || !$request->request->get('dateEnd')){
                 $this->addFlash('red', "SecurityError");
+                return $this->render('back/tournament/new.html.twig');
+            }
+            if($request->request->get('nbMaxParticipants') % 2 !== 0){
+                $this->addFlash('red', "Set a even max participants number");
                 return $this->render('back/tournament/new.html.twig');
             }
             /* ADD VERIF ON NUMBER */
@@ -89,9 +94,10 @@ class TournamentController extends AbstractController
 
     #[Route('/{id}/start', name: 'tournament_start', methods: ['POST'])]
     #[IsGranted(TournamentVoter::START, 'tournament')]
-    public function start(Request $request, Tournament $tournament, EntityManagerInterface $em): Response
+    public function start(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
     {
-        if($tournament->getNbMaxParticipants() !== count($tournament->getParticipantFromRole("ROLE_FIGHTER")) || $tournament->getNbMaxParticipants()/2 !== count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")))
+        if(count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) !== $tournament->getNbMaxParticipants() / 2 && 
+            count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2 ))
         {
             $this->addFlash('red', "Missing participants");
             return $this->render('back/tournament/index.html.twig', [
@@ -100,9 +106,10 @@ class TournamentController extends AbstractController
             ]);
         }
         if ($this->isCsrfTokenValid('start'.$tournament->getId(), $request->request->get('_token'))) {
+            $ts->createTrialsForTournament($tournament);
             $tournament->setStatus("AWAITING");
             $em->flush();
-            $this->addFlash('green', "Tournament modified");
+            $this->addFlash('green', "Tournament initialized");
             return $this->render('back/tournament/index.html.twig', [
                 'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => "AWAITING"], ["dateStart" => "ASC"]),
                 'status' => "AWAITING"

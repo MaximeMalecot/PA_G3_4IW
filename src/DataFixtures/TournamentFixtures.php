@@ -50,6 +50,20 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
         foreach($tournaments as $tournament){
             $this->tournamentService->createTrialsForTournament($tournament);
         }
+
+        $object = (new Tournament())
+            ->setName($faker->realText(99,1))
+            ->setNbMaxParticipants(8)
+            ->setDateStart($faker->dateTimeBetween('+1 week', '+3 month'))
+            ->setStatus("CREATED")
+            ->setCreatedBy(UArray::getRandomElem($adjudicates));
+        for($i=0; $i<8; $i++){
+            if($i%2 === 0){
+                $object->addParticipant(UArray::getRandomElem($adjudicates));
+            }
+            $object->addParticipant(UArray::getRandomElem($fighters));
+        }
+        $manager->persist($object);
         $manager->flush();
     }
 

@@ -40,23 +40,23 @@
                     <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</th>
                     <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>
                     <th>
+                    {% if tournament.status == "CREATED" %}
+                        {% if isInTournament(tournament, app.user) %}
+                            {{ include('back/tournament/_quit_form.html.twig') }}
+                        {% endif %}
+                        {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) %}
+                            {{ include('back/tournament/_join_form.html.twig') }}
+                        {% endif %}
+                        {% if canStart(tournament, app.user)%}
+                            {{ include('back/tournament/_start_form.html.twig') }}
+                        {% endif %}
+                    {% endif %}
                     {% if tournament.dateStart is defined and tournament.dateStart is not null %}
                         {% if date() < limitRefuseDelete(tournament.dateStart)%}
                                 {{ include('back/tournament/_delete_form.html.twig') }}
                         {% endif %}
                     {% else %}
                         {{ include('back/tournament/_delete_form.html.twig') }}
-                    {% endif %}
-                    {% if tournament.status == "CREATED" %}
-                        {% if isInTournament(tournament, app.user) %}
-                            <th>{{ include('back/tournament/_quit_form.html.twig') }}</th>
-                        {% endif %}
-                        {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) %}
-                            <th>{{ include('back/tournament/_join_form.html.twig') }}</th>
-                        {% endif %}
-                        {% if tournament.createdBy == app.user and getNbFromRole(tournament, 'ROLE_ADJUDICATE') == (tournament.nbMaxParticipants / 2) and getNbFromRole(tournament, 'ROLE_FIGHTER') == tournament.nbMaxParticipants%}
-                            <th>{{ include('back/tournament/_start_form.html.twig') }}</th>
-                        {% endif %}
                     {% endif %}
                     </th>
                 </tr>

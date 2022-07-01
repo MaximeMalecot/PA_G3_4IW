@@ -89,6 +89,11 @@ class Tournament
      */
     private $winner;
 
+    /**
+     * @ORM\Column(type="integer", options={"default": "0"})
+     */
+    private $step = 0;
+
     public function __construct()
     {
         $this->trials = new ArrayCollection();
@@ -290,6 +295,18 @@ class Tournament
             throw new \InvalidArgumentException("Invalid status");
         }
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStep(): ?int
+    {
+        return $this->step;
+    }
+
+    public function setStep(int $step): self
+    {
+        $this->step = $step;
 
         return $this;
     }

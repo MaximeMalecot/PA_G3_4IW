@@ -91,6 +91,11 @@ class Trial
      */
     private $acceptedBy;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $tournamentStep;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -295,6 +300,18 @@ class Trial
     public function setAcceptedBy(?User $acceptedBy): self
     {
         $this->acceptedBy = $acceptedBy;
+
+        return $this;
+    }
+
+    public function getTournamentStep(): ?int
+    {
+        return $this->tournamentStep;
+    }
+
+    public function setTournamentStep(int $tournamentStep): self
+    {
+        $this->tournamentStep = $tournamentStep;
 
         return $this;
     }

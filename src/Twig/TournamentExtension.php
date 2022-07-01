@@ -24,16 +24,23 @@ class TournamentExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getNbFromRole', [$this, 'getNbFromRole']),
-            new TwigFunction('isInTournament', [$this, 'isInTournament'])
+            new TwigFunction('isInTournament', [$this, 'isInTournament']),
+            new TwigFunction('canStart', [$this, 'canStart'])
         ];
     }
 
-    public function getNbFromRole(Tournament $tournament, string $role){
+    public function getNbFromRole(Tournament $tournament, string $role): int
+    {
         return count($tournament->getParticipantFromRole($role));
     }
 
-    public function isInTournament(Tournament $tournament, User $user){
+    public function isInTournament(Tournament $tournament, User $user): bool
+    {
         return $tournament->getParticipants()->contains($user);
     }
 
+    public function canStart(Tournament $tournament, User $user): bool
+    {
+        return $tournament->getCreatedBy() === $user && count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) === $tournament->getNbMaxParticipants() / 2 && count($tournament->getParticipantFromRole("ROLE_FIGHTER")) > ($tournament->getNbMaxParticipants() / 2 );
+    }
 }
