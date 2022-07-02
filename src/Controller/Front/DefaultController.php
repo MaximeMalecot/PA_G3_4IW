@@ -48,4 +48,16 @@ class DefaultController extends AbstractController
         ]);
         return $this->redirect($checkout_session->url);
     }
+
+    #[Route('/success', name: 'success')]
+    public function success() : Response{
+
+        return $this->render('front/payment/success.html.twig');
+    }
+
+    #[Route('/cancel', name: 'cancel')]
+    public function cancel() : Response{
+
+        return $this->render('front/payment/cancel.html.twig');
+    }
 }
