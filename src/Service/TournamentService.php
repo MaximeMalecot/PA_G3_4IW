@@ -84,6 +84,7 @@ class TournamentService
         $trials = $this->entityManager->getRepository(Trial::class)->findNotFullFighterTrial($tournament);
         $trial = UArray::getRandomElem($trials);
         $tournament->addParticipant($user);
+        $trial->getNextTrial()->removeFighter($trial->getNextTrial()->getFighters()[0]);
         $trial->addFighter($user);
         $trial->setStatus("AWAITING");
         $trial->setWinner(null);
