@@ -7,6 +7,7 @@ use App\Entity\Tournament;
 use App\Entity\Trial;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
+use App\Service\TournamentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,11 @@ class TournamentController extends AbstractController
     #[Route('/', name: 'tournament_index', methods: ['GET'])]
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
-        $status = in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : "AWAITING";
+        if($this->getUser()){
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "AWAITING";
+        } else {
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED"]) ? $request->query->get('status') : "AWAITING";
+        }
         return $this->render('front/tournament/index.html.twig', [
             'tournaments' => $tournamentRepository->findBy(["status" => $status ], ["dateStart" => "ASC"]),
             'status' => $status
@@ -30,10 +35,14 @@ class TournamentController extends AbstractController
 
     #[Route('/{id}/join', name: 'tournament_join', methods: ['POST'])]
     #[IsGranted(TournamentVoter::JOIN, 'tournament')]
-    public function join(Request $request, Tournament $tournament, EntityManagerInterface $em): Response
+    public function join(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('join'.$tournament->getId(), $request->request->get('_token'))) {
-            $tournament->addParticipant($this->getUser());
+            if($tournament->getStatus() === "AWAITING"){
+                $ts->addToTrial($tournament, $this->getUser());
+            }else{
+                $tournament->addParticipant($this->getUser());
+            }
             $em->flush();
             return $this->redirectToRoute('front_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }

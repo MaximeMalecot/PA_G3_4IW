@@ -57,8 +57,8 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
             ->setDateStart($faker->dateTimeBetween('+1 week', '+3 month'))
             ->setStatus("CREATED")
             ->setCreatedBy(UArray::getRandomElem($adjudicates));
-        for($i=0; $i<8; $i++){
-            if($i%2 === 0){
+        for($i=0; $i<7; $i++){
+            if($i < 4){
                 $object->addParticipant(UArray::getRandomElem($adjudicates));
             }
             $object->addParticipant(UArray::getRandomElem($fighters));

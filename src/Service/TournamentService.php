@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\Trial;
 use App\Entity\Tournament;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,5 +77,17 @@ class TournamentService
         }
         $manager->flush();
         return $tournament;
+    }
+
+    public function addToTrial(Tournament $tournament, User $user): bool
+    {
+        $trials = $this->entityManager->getRepository(Trial::class)->findNotFullFighterTrial($tournament);
+        $trial = UArray::getRandomElem($trials);
+        $tournament->addParticipant($user);
+        $trial->addFighter($user);
+        $trial->setStatus("AWAITING");
+        $trial->setWinner(null);
+        $this->entityManager->flush();
+        return true;
     }
 }

@@ -42,14 +42,16 @@
                         <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                         <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
-                        {% if tournament.status == "CREATED" %}
-                            {% if isInTournament(tournament, app.user) %}
-                                <th>{{ include('front/tournament/_quit_form.html.twig') }}</th>
-                            {% endif %}
-                            {% if (is_granted('ROLE_ADJUDICATE') and getNbFromRole(tournament, 'ROLE_ADJUDICATE') < (tournament.nbMaxParticipants / 2)) or (is_granted('ROLE_FIGHTER') and getNbFromRole(tournament, 'ROLE_FIGHTER') < tournament.nbMaxParticipants) and isInTournament(tournament, app.user) == false %}
-                                <th>{{ include('front/tournament/_join_form.html.twig') }}</th>
-                            {% endif %}
+                        <th>
+                        {% if app.user %}
+                        {% if canQuit(tournament, app.user) %}
+                            {{ include('front/tournament/_quit_form.html.twig') }}
                         {% endif %}
+                        {% if canJoin(tournament, app.user) %}
+                            {{ include('front/tournament/_join_form.html.twig') }}
+                        {% endif %}
+                        {% endif %}
+                        </th>
                 </tr>
             {% endfor %}
         </tbody>

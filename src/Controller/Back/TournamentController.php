@@ -92,9 +92,9 @@ class TournamentController extends AbstractController
         return $this->redirectToRoute('back_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/start', name: 'tournament_start', methods: ['POST'])]
-    #[IsGranted(TournamentVoter::START, 'tournament')]
-    public function start(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
+    #[Route('/{id}/lock', name: 'tournament_lock', methods: ['POST'])]
+    #[IsGranted(TournamentVoter::LOCK, 'tournament')]
+    public function lock(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
     {
         if(count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) !== $tournament->getNbMaxParticipants() / 2 && 
             count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2 ))
@@ -105,7 +105,7 @@ class TournamentController extends AbstractController
                 'status' => "CREATED"
             ]);
         }
-        if ($this->isCsrfTokenValid('start'.$tournament->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('lock'.$tournament->getId(), $request->request->get('_token'))) {
             $ts->createTrialsForTournament($tournament);
             $tournament->setStatus("AWAITING");
             $em->flush();

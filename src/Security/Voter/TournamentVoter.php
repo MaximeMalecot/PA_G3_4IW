@@ -20,11 +20,11 @@ class TournamentVoter extends Voter
     const SHOW = 'show';
     const JOIN = 'join';
     const QUIT = 'quit';
-    const START = 'start';
+    const LOCK = 'lock';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::START])){
+        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::LOCK])){
             if($attribute == self::CREATE){
                 return true;
             } else {
@@ -55,9 +55,8 @@ class TournamentVoter extends Voter
             case self::CREATE:
                 return in_array('ROLE_ADJUDICATE', $user->getRoles());
                 break;
-            
-            case self::START:
-                return $subject->getCreatedBy() === $user;
+            case self::LOCK:
+                return $subject->getCreatedBy() === $user && count($subject->getParticipantFromRole("ROLE_ADJUDICATE")) === $subject->getNbMaxParticipants() / 2 && count($subject->getParticipantFromRole("ROLE_FIGHTER")) > ($subject->getNbMaxParticipants() / 2 );
                 break;
             case self::EDIT:
                 return $this->canEdit($subject, $user);
@@ -73,7 +72,9 @@ class TournamentVoter extends Voter
     protected function canJoin(Tournament $tournament, User $user) : bool 
     {
         if(in_array('ROLE_FIGHTER', $user->getRoles())){
-            return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_FIGHTER")) < $tournament->getNbMaxParticipants());
+            return ($tournament->getStatus() === "CREATED" || $tournament->getStatus() === "AWAITING") && 
+            !$tournament->getParticipants()->contains($user) && 
+            (count($tournament->getParticipantFromRole("ROLE_FIGHTER")) < $tournament->getNbMaxParticipants());
         } else if (in_array('ROLE_ADJUDICATE', $user->getRoles())) {
             return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < ($tournament->getNbMaxParticipants()/2));
         } else {

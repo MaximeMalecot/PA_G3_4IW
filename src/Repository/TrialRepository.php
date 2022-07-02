@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Trial;
+use App\Entity\Tournament;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -75,7 +76,23 @@ class TrialRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()    
         ;
-        }
+    }
+
+    public function findNotFullFighterTrial(Tournament $tournament)
+    {
+        $qb = $this->createQueryBuilder('trial');
+        return $qb->innerJoin('trial.tournament', 'tournament')
+            ->innerJoin('trial.fighters', 'fighters')
+            ->where('tournament.id = :tid')
+            ->andWhere('trial.tournamentStep = :step')
+            ->andWhere("trial.status = :status")
+            ->setParameter('tid', $tournament->getId())
+            ->setParameter('step', 1)
+            ->setParameter('status', "ENDED")
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
     // /**
     //  * @return Trial[] Returns an array of Trial objects
