@@ -13,12 +13,12 @@ class PaymentController extends AbstractController
     #[Route('/payment', name: 'payment')]
     public function payment(): Response
     {
-        // $securityContext = $this->container->get('security.authorization_checker');
+        $securityContext = $this->container->get('security.authorization_checker');
 
-        // if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
 
-        //     return $this->redirect("/login");
-        // }
+            return $this->redirect("/login");
+        }
 
         \Stripe\Stripe::setApiKey('sk_test_51LGVfsBYnbPwVzITdZ1beyU8wGKOFIZDYQNHbysLI7wof5e2n3SPGhdkPVsOvkzsfFWnb8btlVhoCuG5X3Kk1OqA004NNlVIXq');
         $YOUR_DOMAIN = 'http://localhost:81/';
