@@ -40,6 +40,12 @@ class Bet
      */
     private $tournament;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="inverseBets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $bettee;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +95,18 @@ class Bet
     public function setTournament(?Tournament $tournament): self
     {
         $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    public function getBettee(): ?User
+    {
+        return $this->bettee;
+    }
+
+    public function setBettee(?User $bettee): self
+    {
+        $this->bettee = $bettee;
 
         return $this;
     }

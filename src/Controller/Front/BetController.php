@@ -3,7 +3,8 @@
 namespace App\Controller\Front;
 
 use App\Entity\Bet;
-use App\Form\BetType;
+use App\Entity\Trial;
+use App\Form\TrialBetType;
 use App\Repository\TrialRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,35 @@ class BetController extends AbstractController
         ]);
     }
 
+    #[Route('/tournament/{id}/create', name: 'bet_tournament_create', methods: ['GET', 'POST'])]
+    public function createBetOnTournament(int $id, Request $request) {
+        return $this->render('front/bet/create.html.twig', [
+            'user' => $this->getUser(),
+        ]);
+    }
+
+    #[Route('/trial/{id}/create', name: 'bet_trial_create', methods: ['GET', 'POST'])]
+    public function createBetOnTrial(int $id, Request $request) {
+        $bet = new Bet();
+        $form = $this->createForm(TrialBetType::class, $bet, [
+            'trial_id' => $id
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $bet = $form->getData();
+            $bet->setBetter($this->getUser());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($bet);
+            $em->flush();
+            $this->addFlash('success', 'Pari effectué avec succès');
+            return $this->redirectToRoute('front_trial_index');
+        }
+        return $this->render('front/bet/create.html.twig', [
+            'user' => $this->getUser(),
+            'form' => $form->createView()
+        ]);
+    }
+
     // Create Crud for Bet
     #[Route('/create', name: 'bet_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, TrialRepository $repository): Response
@@ -30,7 +60,7 @@ class BetController extends AbstractController
         // TODO:
         // - Trouver un moyen de donner le choix à l'utilisateur de choisir entre les trials de tournaments et les trials classiques
 
-        $form = $this->createForm(BetType::class);
+        $form = $this->createForm(TrialBetType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

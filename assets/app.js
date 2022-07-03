@@ -14,5 +14,5 @@ window.M = M;
 
 document.addEventListener('DOMContentLoaded', function() {
     const elems = document.querySelectorAll('select');
-    M.FormSelect.init(elems, {});
+    M.FormSelect.init(elems, null, {});
 });

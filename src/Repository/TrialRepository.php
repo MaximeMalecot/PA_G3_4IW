@@ -32,6 +32,22 @@ class TrialRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function findTrialsWithoutTournament()
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->where($qb->expr()->isNull('t.tournament'))
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findTrialsWithTournament()
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->where($qb->expr()->isNotNull('t.tournament'))
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     public function findIncomingChallenges(User $user)
     {

@@ -13,7 +13,7 @@
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_tournament_index') }}" method="POST">
         <select id="status" name="status">
-            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ?? 'selected' : null }}>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
@@ -27,6 +27,7 @@
                 <th>Arbitre</th>
                 <th>Nombre de combattants</th>
                 <th>date</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
                         <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                         <th>{{ tournament.nbMaxParticipants }}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
+                        <td><a href="{{ path('front_bet_tournament_create', {'id': tournament.id}) }}" class="waves-effect waves-light btn">Parier sur ce tournoi</a></td>
                     
                 </tr>
             {% endfor %}
@@ -45,16 +47,15 @@
 </div>
 {% endblock %}
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.getElementById('status');
-        {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
-        let form = document.getElementById('filter');
-        form.addEventListener("change", async() => {
-            form.submit();
+    {{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            {{status}}.selected = 'selected';
+            let form = document.getElementById('filter');
+            form.addEventListener("change", async() => {
+                form.submit();
+            });
         });
-    });
-    
-</script>
+
+    </script>
 {% endblock %}

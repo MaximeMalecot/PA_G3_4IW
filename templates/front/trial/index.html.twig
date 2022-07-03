@@ -10,10 +10,10 @@
 
 <div class="example-wrapper">
     <h1>Les combats</h1>
-    <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
+        <label for="status">Status</label>
         <select id="status" name="status">
-            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
@@ -25,6 +25,7 @@
                 <th>arbitre</th>
                 <th>combattants</th>
                 <th>date</th>
+                <th>action</th>
             </tr>
         </thead>
         <tbody id="trial_data">
@@ -34,6 +35,7 @@
                     <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                     <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                     <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
+                    <td><a href="{{ path('front_bet_trial_create', {'id': trial.id}) }}" class="waves-effect waves-light btn">Parier sur ce combat</a></td>
                 </tr>
             {% endfor %}
         {% endif %}
@@ -43,16 +45,14 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.getElementById('status');
-        {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
-        let form = document.getElementById('filter');
-        form.addEventListener("change", async() => {
-            form.submit();
+    {{ parent() }}
+    <script type="text/javascript" defer>
+        document.addEventListener('DOMContentLoaded',  function() {
+            {{status}}.selected = 'selected';
+            let form = document.getElementById('filter');
+            form.addEventListener("change", async() => {
+                form.submit();
+            });
         });
-    });
-    
-</script>
+    </script>
 {% endblock %}

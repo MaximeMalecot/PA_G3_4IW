@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Trial;
-use App\Service\UArray;
 use App\DataFixtures\UserFixtures;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -29,17 +28,20 @@ class TrialFixtures extends Fixture implements DependentFixtureInterface
         $fighters = $this->userRepository->findByRole("ROLE_FIGHTER");
         $adjudicates = $this->userRepository->findByRole("ROLE_ADJUDICATE");
         for($i=0; $i<5; $i++){
+            $fighter1 = $faker->randomElement($fighters);
+            $fighter2 = $faker->randomElement($fighters);
+            $adjudicate = $faker->randomElement($adjudicates);
             $object = (new Trial())
-                ->addFighter(UArray::getRandomElem($fighters))
-                ->addFighter(UArray::getRandomElem($fighters))
-                ->setAdjudicate(UArray::getRandomElem($adjudicates))
+                ->addFighter($fighter1)
+                ->addFighter($fighter2)
+                ->setAdjudicate($adjudicate)
                 ->setStatus("AWAITING")
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'));
             $object->setCreatedBy($object->getAdjudicate());
             $manager->persist($object);
         }
         $manager->flush();
-        
+        $trials = $manager->getRepository(Trial::class)->findAll();
     }
 
     public function getDependencies()
