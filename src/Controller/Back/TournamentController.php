@@ -37,8 +37,8 @@ class TournamentController extends AbstractController
                 $this->addFlash('red', "SecurityError");
                 return $this->render('back/tournament/new.html.twig');
             }
-            if($request->request->get('nbMaxParticipants') % 2 !== 0){
-                $this->addFlash('red', "Set a even max participants number");
+            if(log($request->request->get('nbMaxParticipants'),2)%1 !== 0){
+                $this->addFlash('red', "Set max participants number to a natural exp of 2 (2,4,8,16,32,64,128,256,512,1024)");
                 return $this->render('back/tournament/new.html.twig');
             }
             /* ADD VERIF ON NUMBER */

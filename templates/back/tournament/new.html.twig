@@ -64,7 +64,7 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            if(nbMaxParticipants.value % 2 !== 0){
+            if(Math.log2(nbMaxParticipants.value)%1 > 0 ){
                 alert('Seulement les multiples de 2');
             }else{
                 form.submit();
