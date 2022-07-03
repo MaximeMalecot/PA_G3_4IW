@@ -39,8 +39,10 @@ class BetController extends AbstractController
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $trial = $this->getDoctrine()->getRepository(Trial::class)->find($id);
             $bet = $form->getData();
             $bet->setBetter($this->getUser());
+            $bet->setTrial($trial);
             $em = $this->getDoctrine()->getManager();
             $em->persist($bet);
             $em->flush();

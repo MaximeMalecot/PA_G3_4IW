@@ -29,14 +29,6 @@ class TrialBetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('trial', HiddenType::class, [
-                'data' => $this->trialRepository->find($options['trial_id']),
-                'data_class' => Trial::class,
-            ])
-            ->add('better', HiddenType::class, [
-                'data' => $this->security->getUser(),
-                'data_class' => User::class,
-            ])
             ->add('bettee', EntityType::class, [
                 'class'=> User::class,
                 'choice_label'=>'nickname',
