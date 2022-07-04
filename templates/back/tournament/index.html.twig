@@ -18,7 +18,6 @@
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
     <table>
         <thead>
@@ -35,7 +34,8 @@
         {% if tournaments is defined and tournaments is not empty %}
             {% for tournament in tournaments %}
                 <tr>
-                    <th><a href="{{ path('back_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>                    <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
+                    <th><a href="{{ path('back_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>                    
+                    <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                     <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</th>
                     <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>

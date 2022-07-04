@@ -86,12 +86,6 @@ class Trial
     private $winner;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="acceptedTrials")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    private $acceptedBy;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $tournamentStep;
@@ -288,18 +282,6 @@ class Trial
     public function setWinner(?User $winner): self
     {
         $this->winner = $winner;
-
-        return $this;
-    }
-
-    public function getAcceptedBy(): ?User
-    {
-        return $this->acceptedBy;
-    }
-
-    public function setAcceptedBy(?User $acceptedBy): self
-    {
-        $this->acceptedBy = $acceptedBy;
 
         return $this;
     }
