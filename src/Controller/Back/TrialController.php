@@ -8,6 +8,7 @@ use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
 use App\Repository\UserRepository;
 use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,49 +19,53 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/trial')]
 class TrialController extends AbstractController
 {
-    #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'trial_index', methods: ['GET'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        if ($request->isMethod('POST') && !$this->isCsrfTokenValid('trialFilter', $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
-            return $this->render('back/trial/index.html.twig', [
-                'trials' => $trialRepository->findBy(["status" => "AWAITING", "tournament" => NULL], ["dateStart" => "ASC"]),
-                'status' => "AWAITING"
-            ]);
-        }
-        $status = $request->request->get('status') ?? "AWAITING";
+        $status = in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : "AWAITING";
         return $this->render('back/trial/index.html.twig', [
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
             'status' => $status
         ]);
     }
 
-    #[Route('/accept/challenge/{id}', name: 'back_trial_accept_challenge', methods: ['POST','GET'])]
-    public function acceptChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/start/{id}', name: 'trial_start', methods: ['POST'])]
+    #[IsGranted(TrialVoter::EDIT, "trial")]
+    public function start(Request $request,Trial $trial): Response
     {
-
-            $trial->setStatus("VALIDATED");
-            $entityManager->flush();
-
-            return $this->render('back/trial/index.html.twig', [
-                'trials' => $trialRepository->findBy(["status" => "VALIDATED", "tournament" => NULL], ["dateStart" => "ASC"]),
-                'status' => "VALIDATED"
-            ]);
-
+        if(!$this->isCsrfTokenValid('start'.$trial->getId(), $request->request->get('_token'))){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
+        }
+        dd('SHOULD START');
     }
 
-    #[Route('/refuse/challenge/{id}', name: 'back_trial_refuse_challenge', methods: ['POST','GET'])]
+    #[Route('/accept/challenge/{id}', name: 'trial_accept_challenge', methods: ['POST'])]
+    #[IsGranted(TrialVoter::CHALLENGE_ANSWER, "trial")]
+    public function acceptChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
+    {
+        if(!$this->isCsrfTokenValid('acceptChallengeBack'.$trial->getId(), $request->request->get('_token'))){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
+        }
+        $trial->setStatus("VALIDATED");
+        $trial->setAdjudicate($this->getUser());
+        $entityManager->flush();
+        $this->addFlash('green', "Modify the date to continue process");
+        return $this->redirectToRoute('back_trial_modify_date', ["id"=>$trial->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/refuse/challenge/{id}', name: 'trial_refuse_challenge', methods: ['POST'])]
+    #[IsGranted(TrialVoter::CHALLENGE_ANSWER, "trial")]
     public function refuseChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
     {
-
-            $trial->setStatus("REFUSED");
-            $entityManager->flush();
-
-            return $this->render('back/trial/index.html.twig', [
-                'trials' => $trialRepository->findBy(["status" => "REFUSED", "tournament" => NULL], ["dateStart" => "ASC"]),
-                'status' => "REFUSED"
-            ]);
-
+        if(!$this->isCsrfTokenValid('refuseChallengeBack'.$trial->getId(), $request->request->get('_token'))){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
+        }
+        $trial->setStatus("REFUSED");
+        $entityManager->flush();
+        return $this->redirectToRoute('back_trial_index', ["status" => "REFUSED"], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/new', name: 'trial_new', methods: ['GET', 'POST'])]
@@ -71,7 +76,7 @@ class TrialController extends AbstractController
         if ($request->isMethod('POST')) {
             if(!$this->isCsrfTokenValid('newTrial', $request->request->get('_token')) || !$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
                 $this->addFlash('red', "SecurityError");
-                return $this->renderForm('back/trial/new.html.twig',[
+                return $this->render('back/trial/new.html.twig',[
                     'fighters' => $fighters
                 ]);
             }
@@ -86,7 +91,7 @@ class TrialController extends AbstractController
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/trial/new.html.twig',[
+        return $this->render('back/trial/new.html.twig',[
             'fighters' => $fighters
         ]);
     }
@@ -99,13 +104,6 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
-    public function edit(Request $request): Response
-    {
-        dd('ahi');
-    }
-
-   
     #[Route('/modifyDate/{id}', name: 'trial_modify_date', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::CREATE)]
     public function modifyDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
@@ -117,13 +115,14 @@ class TrialController extends AbstractController
                     'trial' => $trial,
                 ]);
             }
-            if($trial->getStatus() !== "DATE_REFUSED"){
+            if(!in_array($trial->getStatus(), ["DATE_REFUSED","VALIDATED"])){
                 $this->addFlash('red', "Trying to modify a conform trial");
                 return $this->render('back/trial/edit.html.twig', [
                     'trial' => $trial,
                 ]);
             }
-            $trial->setDateStart(new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart')));
+            $dateStart = new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart'), new DateTimeZone("Europe/Paris"));
+            $trial->setDateStart($dateStart);
             $trial->setStatus("CREATED");
             $entityManager->flush();
             $this->addFlash('green', "trial modified");

@@ -22,11 +22,11 @@ class DateExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('limitRefuseTrialDate', [$this, 'limitRefuseTrialDate']),
+            new TwigFunction('limitRefuseDelete', [$this, 'limitRefuseDelete']),
         ];
     }
 
-    public function limitRefuseTrialDate(\DateTime $value)
+    public function limitRefuseDelete(\DateTime $value)
     {
         $limitDate = $value->modify('-1 day');
         return $limitDate;

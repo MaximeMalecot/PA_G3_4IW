@@ -17,7 +17,6 @@
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('trialFilter') }}">
     </form>
     <table>
         <thead>
@@ -50,7 +49,9 @@
         var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
-            form.submit();
+            let url = "{{ path('front_trial_index', {'status': 'statusValue'})|escape('js') }}";
+            url = url.replace('statusValue', select.value);
+            window.location.href = url;
         });
     });
     
