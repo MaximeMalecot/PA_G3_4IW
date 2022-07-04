@@ -2,10 +2,14 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Stripe\Checkout;
+use App\Repository\UserRepository;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class PaymentController extends AbstractController
@@ -36,7 +40,7 @@ class PaymentController extends AbstractController
         $session = new Session();
     
         $price = $credits[$credit];
-        $session->set('credit', $price);
+        $session->set('credit', $credit);
 
         \Stripe\Stripe::setApiKey('sk_test_51LGVfsBYnbPwVzITdZ1beyU8wGKOFIZDYQNHbysLI7wof5e2n3SPGhdkPVsOvkzsfFWnb8btlVhoCuG5X3Kk1OqA004NNlVIXq');
         $YOUR_DOMAIN = 'http://localhost:81/';
@@ -61,9 +65,19 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/success', name: 'success')]
-    public function success(): Response
+    public function success(Request $request, UserRepository $userRepository): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $user = $entityManager->getRepository(User::class)->find(129);
+        //$userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        $session = new Session();
+        $credits = $user->getCredits();
+        $credits += $session->get('credit');
 
+        $user->setCredits($credits);
+        $entityManager->flush();
+        $session->remove('credit');
+      
         return $this->render('front/payment/success.html.twig');
     }
 
