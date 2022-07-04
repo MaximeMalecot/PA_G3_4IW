@@ -6,12 +6,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Stripe\Checkout;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class PaymentController extends AbstractController
 {
+    #[Route('/credit', name: 'credit')]
+    public function credit(): Response
+    {
 
-    #[Route('/payment', name: 'payment')]
-    public function payment(): Response
+        return $this->render('front/payment/index.html.twig');
+    }
+
+    #[Route('/payment/{credit}', name: 'payment')]
+    public function payment(int $credit): Response
     {
         $securityContext = $this->container->get('security.authorization_checker');
 
@@ -20,6 +27,17 @@ class PaymentController extends AbstractController
             return $this->redirect("/login");
         }
 
+        $credits = [ 100 => "10", 250 => "25", 500 => "50", 750 => "65"];
+
+        if (!in_array($credit, array_keys($credits))){
+            return $this->redirect("/login");
+        }
+
+        $session = new Session();
+    
+        $price = $credits[$credit];
+        $session->set('credit', $price);
+
         \Stripe\Stripe::setApiKey('sk_test_51LGVfsBYnbPwVzITdZ1beyU8wGKOFIZDYQNHbysLI7wof5e2n3SPGhdkPVsOvkzsfFWnb8btlVhoCuG5X3Kk1OqA004NNlVIXq');
         $YOUR_DOMAIN = 'http://localhost:81/';
         $checkout_session = \Stripe\Checkout\Session::create([
@@ -27,7 +45,7 @@ class PaymentController extends AbstractController
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'eur',
-                    'unit_amount' => 100 * 100,
+                    'unit_amount' => 100 * $price,
                     'product_data' => [
                         'name' => 'Achat de crédits',
                         'images' => ["https://i.imgur.com/EHyR2nP.png"],
