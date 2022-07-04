@@ -78,7 +78,7 @@ class TrialVoter extends Voter
                 return true;
             }
             return false;
-        }else if( $trial->getStatus() == 'REFUSER'){
+        }else if( $trial->getStatus() === 'REFUSED'){
             return false;
         } else {
             if($user == $trial->getAdjudicate()){

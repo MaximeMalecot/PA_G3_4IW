@@ -4,8 +4,10 @@ namespace App\Twig;
 
 use App\Entity\User;
 use Twig\TwigFilter;
+use App\Entity\Trial;
 use Twig\TwigFunction;
 use App\Repository\TrialRepository;
+use DateTime;
 use Twig\Extension\AbstractExtension;
 
 class TrialExtension extends AbstractExtension
@@ -31,6 +33,7 @@ class TrialExtension extends AbstractExtension
     {
         return [
             new TwigFunction('canChallenge', [$this, 'canChallenge']),
+            new TwigFunction('canStart', [$this, 'canStart']),
         ];
     }
 
@@ -44,5 +47,23 @@ class TrialExtension extends AbstractExtension
             return false;
         }
         return true;
+    }
+
+    public function canStart(User $user, Trial $trial)
+    {
+        $startDate = \DateTime::createFromInterface($trial->getDateStart());
+        $now = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
+        $now = new \DateTime($now->format('Y-m-d H:i:s'));
+        $min = clone $startDate;
+        $max = clone $startDate;
+        $min->sub(new \DateInterval("PT1H"));
+        $min->add(new \DateInterval("P1D"));
+        $max->add(new \DateInterval("PT1H"));
+        $max->add(new \DateInterval("P1D"));
+        if($trial->getAdjudicate() === $user && $min < $now &&  $max > $now){
+            return true;
+        }
+
+        return false;
     }
 }

@@ -50,7 +50,10 @@
                     {% endif %}
                     {% if trial.dateStart is defined and trial.dateStart is not null %}
                         {% if date() < limitRefuseDelete(trial.dateStart)%}
-                                {{ include('back/trial/_delete_form.html.twig') }}
+                            {{ include('back/trial/_delete_form.html.twig') }}
+                        {% endif %}
+                        {% if trial.status == "AWAITING" and canStart(app.user, trial) %}
+                            {{ include('back/trial/_start_form.html.twig') }}
                         {% endif %}
                     {% else %}
                         {{ include('back/trial/_delete_form.html.twig') }}

@@ -7,6 +7,8 @@ use App\Form\TrialType;
 use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,14 +29,15 @@ class TrialController extends AbstractController
         ]);
     }
 
-    #[Route('/start/{id}', name: 'trial_start', methods: ['GET'])]
-    #[IsGranted(TrialVoter::EDIT)]
-    public function start(Request $request,Trial $trial, TrialRepository $trialRepository): Response
+    #[Route('/start/{id}', name: 'trial_start', methods: ['POST'])]
+    #[IsGranted(TrialVoter::EDIT, "trial")]
+    public function start(Request $request,Trial $trial): Response
     {
         if(!$this->isCsrfTokenValid('start'.$trial->getId(), $request->request->get('_token'))){
             $this->addFlash('red', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
+        dd('SHOULD START');
     }
 
     #[Route('/accept/challenge/{id}', name: 'trial_accept_challenge', methods: ['POST'])]
@@ -118,7 +121,8 @@ class TrialController extends AbstractController
                     'trial' => $trial,
                 ]);
             }
-            $trial->setDateStart(new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart')));
+            $dateStart = new \DateTime($request->request->get('dateStart')." ".$request->request->get('timeStart'), new DateTimeZone("Europe/Paris"));
+            $trial->setDateStart($dateStart);
             $trial->setStatus("CREATED");
             $entityManager->flush();
             $this->addFlash('green', "trial modified");
