@@ -10,46 +10,60 @@
     <div class="container-credit">
         <div class="cat-credit">
             <div class="block">
-                <label for="credit">100 crédits </label>
-                <label for="price">10 €</label>
-                <div>
-                    <a href='/payment/100' class="btn btn-outline-danger">Acheter</a>
+            <div class="card-title">
+                    <label for="credit">100 crédits </label>
+                </div>
+                <div class="card-text">
+                    <label for="price">10€</label>
+                </div>
+                <div class="btn-credit">
+                    <a href='/payment/100' class="btn btn-danger">Acheter</a>
                 </div>
             </div>
         </div>
 
         <div class="cat-credit">
             <div class="block">
-                <label for="credit">250 crédits </label>
-                <label for="price">25€</label>
-                <div>
-                    <a href='/payment/250' class="btn btn-outline-danger">Acheter</a>
+            <div class="card-title">
+                    <label for="credit">250 crédits </label>
+                </div>
+                <div class="card-text">
+                    <label for="price">25€</label>
+                </div>
+                <div class="btn-credit">
+                    <a href='/payment/250' class="btn btn-danger">Acheter</a>
                 </div>
             </div>
         </div>
 
         <div class="cat-credit">
             <div class="block">
-                <label for="credit">500 crédits </label>
-                <label for="price">50€</label>
-                <div>
-                    <a href='/payment/500' class="btn btn-outline-danger">Acheter</a>
+                <div class="card-title">
+                    <label for="credit">500 crédits </label>
+                </div>
+                <div class="card-text">
+                    <label for="price">50€</label>
+                </div>
+                <div class="btn-credit">
+                    <a href='/payment/500' class="btn btn-danger">Acheter</a>
                 </div>
             </div>
         </div>
    
          <div class="cat-credit">
             <div class="block">
-                <label for="credit">750 crédits </label>
-                <label for="price">65€</label>
-                <div>
-                    <a href='/payment/750' class="btn btn-outline-danger">Acheter</a>
+            <div class="card-title">
+                    <label for="credit">750 crédits </label>
+                </div>
+                <div class="card-text">
+                    <label for="price">65€</label>
+                </div>
+                <div class="btn-credit">
+                    <a href='/payment/750' class="btn btn-danger">Acheter</a>
                 </div>
             </div>
         </div> 
     </div>
-    
-    
 </div>
 {% endblock %}
 
@@ -64,8 +78,9 @@
 }
 .cat-credit {
     
-    background-color:#333;
-    color: white;
+    background-color: #FFFFFF;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    color: #000000;
     margin: 30px;
     padding:25px;
     border-radius: 8px;
@@ -77,9 +92,27 @@ h2{
 .name-page {
     display: flex;
     font-size: 50px;
-    font-family: 'Lobster', cursive;
     font-weight: bold;
+    color: #fff;
     margin:25px;
+}
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+.card-title {   
+    font-weight: bold;
+    color: #000;
+}
+.btn-credit{
+    margin-top: 20px;
+}
+label {
+    font-size: 19px;
+    color: #000;
 }
 </style>
 {% endblock %}
