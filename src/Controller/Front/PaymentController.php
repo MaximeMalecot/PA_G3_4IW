@@ -2,7 +2,9 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Invoice;
 use App\Entity\User;
+use App\Repository\InvoiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +33,7 @@ class PaymentController extends AbstractController
         //     return $this->redirect("/login");
         // }
 
-        $credits = [ 100 => "10", 250 => "25", 500 => "50", 750 => "65"];
+        $credits = [ 100 => "10", 250 => "25", 500 => "50", 750 => "75", 1000 => "100", 5000 => "500"];
 
         if (!in_array($credit, array_keys($credits))){
             return $this->redirect("/login");
@@ -51,7 +53,7 @@ class PaymentController extends AbstractController
                     'unit_amount' => 100 * $price,
                     'product_data' => [
                         'name' => 'Achat de crédits',
-                        'images' => ["https://i.imgur.com/EHyR2nP.png"],
+                        'images' => ["https://conseils.casalsport.com/wp-content/uploads/2019/05/entretenir-ses-gants-de-boxe.jpg"],
                     ],
                 ],
                 'quantity' => 1,
@@ -68,7 +70,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/success', name: 'success')]
-    public function success(Request $request, UserRepository $userRepository): Response
+    public function success(Request $request, UserRepository $userRepository, InvoiceRepository $invoiceRepository): Response
     {
 
         $session = new Session();
@@ -95,6 +97,14 @@ class PaymentController extends AbstractController
             $credits += $session->get('credit');
             $user->setCredits($credits);
 
+            $entityManager->flush();
+            $invoice = new Invoice();
+            // $invoice->setUser($user);
+            $invoice->setBuyer($user);
+            $invoice->setCreditAmount($session->get('credit'));
+            $invoice->setPrice($session->get('credit') / 10);
+            $invoice->setIdPaypal('123456789');
+            $entityManager->persist($invoice);
             $entityManager->flush();
             $session->remove('credit');
             $session->remove('payment_intent');
