@@ -3,10 +3,12 @@
 namespace App\Controller\Back;
 
 use App\Entity\Trial;
+use App\Entity\User;
 use App\Form\TrialType;
 use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
 use App\Repository\UserRepository;
+use App\Service\TrialService;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,18 +33,39 @@ class TrialController extends AbstractController
 
     #[Route('/start/{id}', name: 'trial_start', methods: ['POST'])]
     #[IsGranted(TrialVoter::EDIT, "trial")]
-    public function start(Request $request,Trial $trial): Response
+    public function start(Request $request,Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if(!$this->isCsrfTokenValid('start'.$trial->getId(), $request->request->get('_token'))){
             $this->addFlash('red', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
-        dd('SHOULD START');
+        $trial->setBetStatus(0);
+        $trial->setStatus("STARTED");
+        $entityManager->flush();
+        $this->addFlash('green', 'Trial started, don\'t forget to end it after your stream');
+        return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/end/{id}', name: 'trial_end', methods: ['POST'])]
+    #[IsGranted(TrialVoter::EDIT, "trial")]
+    public function end(Request $request,Trial $trial, EntityManagerInterface $entityManager, TrialService $ts): Response
+    {
+        if(!$this->isCsrfTokenValid('endTrial'.$trial->getId(), $request->request->get('_token'))){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
+        }
+        if(!$request->request->get('victoryType') || !$request->request->get('fighter')){
+            $this->addFlash('red', "Missing parameters, send confirm form");
+            return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
+        }
+        $ts->endTrial($trial, $entityManager->getRepository(User::class)->findOneBy(['id' => $request->request->get('fighter')]),$request->request->get('victoryType') );
+        $this->addFlash('green', "Ranking modified and trial ended");
+        return $this->redirectToRoute('back_default', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/accept/challenge/{id}', name: 'trial_accept_challenge', methods: ['POST'])]
     #[IsGranted(TrialVoter::CHALLENGE_ANSWER, "trial")]
-    public function acceptChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
+    public function acceptChallenge(Request $request, Trial $trial,EntityManagerInterface $entityManager): Response
     {
         if(!$this->isCsrfTokenValid('acceptChallengeBack'.$trial->getId(), $request->request->get('_token'))){
             $this->addFlash('red', "SecurityError");

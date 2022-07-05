@@ -103,7 +103,8 @@ class TrialController extends AbstractController
     {
         if($trial->getStatus() === "STARTED"){
             return $this->render('front/trial/live.html.twig', [
-                'trial' => $trial
+                'trial' => $trial,
+                'victoryTypes' => Trial::ENUM_VICTORY,
             ]);
         }
         return $this->render('front/trial/show.html.twig', [

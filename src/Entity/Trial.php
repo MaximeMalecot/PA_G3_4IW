@@ -19,6 +19,7 @@ class Trial
     use TimestampableTrait;
 
     const ENUM_STATUS = ["VALIDATED","CREATED","DATE_ACCEPTED","ACCEPTED","AWAITING","STARTED","ENDED","DATE_REFUSED","REFUSED"];
+    const ENUM_VICTORY = ["KO", "TKO", "TIME"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -89,6 +90,11 @@ class Trial
      * @ORM\Column(type="integer", nullable=true)
      */
     private $tournamentStep;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $victoryType;
 
     public function __construct()
     {
@@ -294,6 +300,18 @@ class Trial
     public function setTournamentStep(int $tournamentStep): self
     {
         $this->tournamentStep = $tournamentStep;
+
+        return $this;
+    }
+
+    public function getVictoryType(): ?string
+    {
+        return $this->victoryType;
+    }
+
+    public function setVictoryType(?string $victoryType): self
+    {
+        $this->victoryType = $victoryType;
 
         return $this;
     }
