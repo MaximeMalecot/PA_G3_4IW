@@ -25,13 +25,20 @@ class PaymentController extends AbstractController
 
     #[Route('/payment/{credit}', name: 'payment')]
     public function payment(int $credit): Response
+        
     {
         // $securityContext = $this->container->get('security.authorization_checker');
+        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
 
         // if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
 
         //     return $this->redirect("/login");
         // }
+
+        // if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+        //     return $this->redirect("/login"); 
+        // }
+
 
         $credits = [ 100 => "10", 250 => "25", 500 => "50", 750 => "75", 1000 => "100", 5000 => "500"];
 
