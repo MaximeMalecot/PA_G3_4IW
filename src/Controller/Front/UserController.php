@@ -36,7 +36,7 @@ class UserController extends AbstractController
             'fighters' => $repository->findByRole("ROLE_FIGHTER")
         ]);
     }
-
+    
     #[Route('/challenge/{id}',  name: 'user_challenge', methods: ['GET','POST'])]
     #[IsGranted(UserVoter::CHALLENGE, 'fighter')]
     public function challenge(User $fighter, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response 
