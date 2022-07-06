@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Service\UArray;
 use Faker\Factory;
 use App\Entity\Trial;
-use App\Service\UArray;
 use App\DataFixtures\UserFixtures;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
