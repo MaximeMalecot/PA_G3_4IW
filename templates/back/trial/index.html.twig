@@ -69,18 +69,17 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
     {{ parent() }}
-    document.addEventListener('DOMContentLoaded',  function() {
-        const select = document.getElementById('status');
-        {{status}}.selected = 'selected';
-        let form = document.getElementById('filter');
-        form.addEventListener("change", async() => {
-            let url = "{{ path('back_trial_index', {'status': 'statusValue'})|escape('js') }}";
-            url = url.replace('statusValue', select.value);
-            window.location.href = url;
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            const select = document.getElementById('status');
+            {{status}}.selected = 'selected';
+            let form = document.getElementById('filter');
+            form.addEventListener("change", async() => {
+                let url = "{{ path('back_trial_index', {'status': 'statusValue'})|escape('js') }}";
+                url = url.replace('statusValue', select.value);
+                window.location.href = url;
+            });
         });
-    });
-    
-</script>
+    </script>
 {% endblock %}

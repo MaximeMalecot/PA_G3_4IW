@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Service\UArray;
 use Faker\Factory;
 use App\Entity\Trial;
 use App\DataFixtures\UserFixtures;
