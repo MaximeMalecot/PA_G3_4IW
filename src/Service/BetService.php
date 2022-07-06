@@ -4,9 +4,6 @@ namespace App\Service;
 use App\Entity\Bet;
 use App\Entity\Tournament;
 use App\Entity\Trial;
-use App\Entity\User;
-use App\Repository\BetRepository;
-use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -20,23 +17,15 @@ class BetService {
     /**
      * @throws Exception
      */
-    public function createBet(Bet $bet, Trial $trial = null, Tournament $tournament = null) {
+    public function createBet(Bet $bet, Trial $trial = null, Tournament $tournament = null): void
+    {
+        // TODO: cleanup code
         $better = $this->security->getUser();
         if ($better === $bet->getBettee()) {
             throw new Exception('Tu ne peux pas parier sur toi-même.');
         }
-        if (($trial !== null && $trial->getStatus() !== "AWAITING")
-            || ($tournament !== null && $tournament?->getStatus() !== "AWAITING")) {
-            throw new Exception('Ce match ou ce tournoi est déjà terminé ou pas encore prêt pour recevoir des paris.');
-        }
-        if (in_array("ROLE_ADJUDICATE", $better->getRoles())) {
-            throw new Exception('Vous ne pouvez pas parier car vous avez le rôle ROLE_ADJUDICATE');
-        }
-        if ($trial !== null && !in_array($bet->getBettee(), $trial->getFighters()->toArray())) {
-            throw new Exception("Ce combattant n'est pas dans ce match.");
-        }
-        if ($tournament !== null && !in_array($bet->getBettee(), $tournament->getParticipantFromRole("ROLE_FIGHTER"))) {
-            throw new Exception("Ce combattant n'est pas dans ce tournoi.");
+        if ($this->security->isGranted('ROLE_ADMIN') || $this->security->isGranted('ROLE_ADJUDICATE')) {
+            throw new Exception('Vous ne pouvez pas parier car vous avez un rôle trop élevé.');
         }
         if ($better->getCredits() < $bet->getAmount()) {
             throw new Exception("Vous ne pouvez pas parier plus que vous avez.");
@@ -44,19 +33,43 @@ class BetService {
         if ($bet->getAmount() < 1) {
             throw new Exception("Vous ne pouvez pas parier moins de 1 crédit.");
         }
-        foreach ($better->getBets() as $b) {
-            if ( $trial !== null && $b->getTrial() === $trial) {
-                throw new Exception('Tu as déjà parié sur ce combat.');
+        if ($trial !== null) {
+            if (!in_array($bet->getBettee(), $trial->getFighters()->toArray())) {
+                throw new Exception("Ce combattant n'est pas dans ce match.");
             }
-            if ($tournament !== null && $b->getTournament() === $tournament) {
-                throw new Exception('Tu as déjà parié sur ce tournoi.');
+            if (in_array($better, $trial->getFighters()->toArray())) {
+                throw new Exception("Vous faites partie du match, vous ne pouvez pas parier.");
             }
+            if ($trial->getStatus() !== "AWAITING") {
+                throw new Exception("Ce match est déjà terminé ou pas encore prêt pour recevoir des paris.");
+            }
+            foreach ($better->getBets() as $b) {
+                if ($b->getTrial() === $trial) {
+                    throw new Exception("Vous avez déjà parié sur ce match.");
+                }
+            }
+            $bet->setTrial($trial);
+        }
+        if ($tournament !== null) {
+            if ($tournament->getStatus() !== "AWAITING") {
+                throw new Exception("Ce tournoi est déjà terminé ou pas encore prêt pour recevoir des paris.");
+            }
+            if (!in_array($bet->getBettee(), $tournament->getParticipantFromRole("ROLE_FIGHTER"))) {
+                throw new Exception("Ce combattant n'est pas dans ce tournoi.");
+            }
+            if (in_array($better, $tournament->getParticipantFromRole("ROLE_FIGHTER"))) {
+                throw new Exception("Vous faites partie du tournoi, vous ne pouvez pas parier.");
+            }
+            foreach ($better->getBets() as $b) {
+                if ($b->getTournament() === $tournament) {
+                    throw new Exception("Vous avez déjà parié sur ce tournoi.");
+                }
+            }
+            $bet->setTournament($tournament);
         }
 
         $bet->setBetter($better);
         $better->setCredits($better->getCredits() - $bet->getAmount());
-        if ($trial) $bet->setTrial($trial);
-        if ($tournament) $bet->setTournament($tournament);
         $bet->setCreatedAt(new DateTime());
         $bet->setUpdatedAt(new DateTime());
 
