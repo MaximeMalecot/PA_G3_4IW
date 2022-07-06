@@ -13,7 +13,7 @@
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('back_tournament_index') }}" method="POST">
         <select id="status" name="status">
-            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? 'selected' : '' }}>EN ATTENTE</option>
             <option value="CREATED" id="CREATED">CREER</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
@@ -75,7 +75,6 @@
     document.addEventListener('DOMContentLoaded',  function() {
         var select = document.getElementById('status');
         {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
             let url = "{{ path('back_tournament_index', {'status': 'statusValue'})|escape('js') }}";

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Trial;
 use Faker\Factory;
 use App\Entity\Bet;
 use App\Entity\User;
@@ -20,17 +21,21 @@ class BetFixtures extends Fixture implements DependentFixtureInterface
         // BET CLASSIQUE (TRIAL)
         $faker = Factory::create();
         $users = $manager->getRepository(User::class)->findAll();
-//        $trials = $manager->getRepository(Trial::class)->findAll();
-
-        for ($i = 0; $i<100; $i++) {
+        $trials = $manager->getRepository(Trial::class)->findTrialsWithoutTournament();
+        for ($i = 0; $i<10; $i++) {
             $user = $faker->randomElement($users);
-//            $trial = $faker->randomElement($trials);
+            $trial = $faker->randomElement($trials);
+            $bettee = $faker->randomElement($trial->getFighters());
+
             $object = (new Bet())
                 ->setAmount($faker->numberBetween(1, $user->getCredits()))
-            ->setBetter($user);
+            ->setBetter($user)
+            ->setBettee($bettee);
 
-//            $trial->addBet($object);
+            $trial->addBet($object);
             $user->addBet($object);
+            $bettee->addInverseBet($object);
+
             $manager->persist($object);
         }
 

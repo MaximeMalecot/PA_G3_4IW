@@ -34,7 +34,7 @@ class UserFixtures extends Fixture
         $manager->persist($admin);
 
         /////////ADJUDICATE/////////
-        for($i=0;$i<20;$i++){
+        for($i=0;$i<40;$i++){
             $adjudicate = (new User())
                 ->setEmail("adjudicate{$i}@adjudicate.com")
                 ->setIsVerified(true)
@@ -48,7 +48,7 @@ class UserFixtures extends Fixture
 
         /////////FIGHTER/////////
 
-        for($i=0;$i<40;$i++){
+        for($i=0;$i<100;$i++){
             $fighter = (new User())
                 ->setEmail("fighter{$i}@fighter.com")
                 ->setIsVerified(true)

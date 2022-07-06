@@ -315,4 +315,11 @@ class Trial
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        $result = join(" vs ", $this->getFighters()->toArray());
+        if ($this->getTournament() !== null) $result .= ' - ' . $this->getTournament()->getName();
+        return $result;
+    }
 }

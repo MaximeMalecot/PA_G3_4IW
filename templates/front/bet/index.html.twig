@@ -10,11 +10,13 @@
 
 <div class="example-wrapper">
     <h1>User {{ user.nickname }}</h1>
+    <h2>{{ user.credits ?? 0 }} credits</h2>
     {% if user.bets is defined and user.bets is not empty %}
         <table>
             <thead>
                 <tr>
-                    <th>On</th>
+                    <th>Trial / Tournament</th>
+                    <th>Fighter betted on</th>
                     <th>Amount</th>
                     <th>At</th>
                 </tr>
@@ -23,12 +25,13 @@
             {% for bet in user.bets %}
                 <tr>
                     {% if bet.getTrial() is not null %}
-                        <th>{{ bet.trial.id }}</th>
+                        <th>{{ bet.trial.fighters|join(' vs ') }}</th>
                     {% elseif bet.getTournament() is not null %}
-                        <th>{{ bet.trial.id }}</th>
+                        <th>{{ bet.tournament.name }}</th>
                     {% else %}
                         <th>EMPTY</th>
                     {% endif %}
+                    <th>{{ bet.bettee.nickname }}</th>
                     <th>{{ bet.amount }}</th>
                     <th>{{ bet.createdAt|date('d-m-Y H:i:s') }}</th>
                 </tr>

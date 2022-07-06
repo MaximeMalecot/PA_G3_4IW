@@ -16,7 +16,7 @@
             {% if is_granted('ROLE_FIGHTER') or is_granted('ROLE_ADJUDICATE') %}
                 <option value="CREATED" id="CREATED">CREER</option>
             {% endif %}
-            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
@@ -30,9 +30,7 @@
                 <th>Arbitre</th>
                 <th>Nombre de combattants</th>
                 <th>date</th>
-                {% if is_granted('ROLE_FIGHTER') %}
-                    <th>actions</th>
-                {% endif %}
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +40,7 @@
                         <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
                         <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                         <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
+                        <td><a href="{{ path('front_bet_tournament_create', {'id': tournament.id}) }}" class="waves-effect waves-light btn">Parier</a></td>
                         <th>
                         {% if app.user %}
                         {% if canQuit(tournament, app.user) %}
@@ -60,17 +59,17 @@
 </div>
 {% endblock %}
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.getElementById('status');
-        {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
-        let form = document.getElementById('filter');
-        form.addEventListener("change", async() => {
-            let url = "{{ path('front_tournament_index', {'status': 'statusValue'})|escape('js') }}";
-            url = url.replace('statusValue', select.value);
-            window.location.href = url;
+    {{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            const select = document.getElementById('status');
+            {{status}}.selected = 'selected';
+            let form = document.getElementById('filter');
+            form.addEventListener("change", async() => {
+                let url = "{{ path('front_tournament_index', {'status': 'statusValue'})|escape('js') }}";
+                url = url.replace('statusValue', select.value);
+                window.location.href = url;
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}

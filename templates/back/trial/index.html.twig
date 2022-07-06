@@ -13,7 +13,7 @@
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('back_trial_index') }}" method="POST">
         <select id="status" name="status">
-            <option value="AWAITING" id="AWAITING" { status.value == "AWAITING" ?? selected : null }>EN ATTENTE</option>
+            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
             <option value="CREATED" id="CREATED">CREER</option>
             <option value="DATE_ACCEPTED" id="DATE_ACCEPTED">DATE_ACCEPTED</option>
             <option value="DATE_REFUSED" id="DATE_REFUSED">DATE_REFUSED</option>
@@ -70,10 +70,10 @@
 
 {% block javascripts %}
 <script type="text/javascript">
+    {{ parent() }}
     document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.getElementById('status');
+        const select = document.getElementById('status');
         {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
             let url = "{{ path('back_trial_index', {'status': 'statusValue'})|escape('js') }}";

@@ -128,6 +128,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tickets;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Bet::class, mappedBy="bettee")
+     */
+    private $inverseBets;
+
     public function __construct()
     {
         $this->bets = new ArrayCollection();
@@ -140,6 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->acceptedTrials = new ArrayCollection();
         $this->twitchContents = new ArrayCollection();
         $this->tickets = new ArrayCollection();
+        $this->inverseBets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -573,6 +579,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($ticket->getCreatedBy() === $this) {
                 $ticket->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->getNickname();
+    }
+
+    /**
+     * @return Collection<int, Bet>
+     */
+    public function getInverseBets(): Collection
+    {
+        return $this->inverseBets;
+    }
+
+    public function addInverseBet(Bet $inverseBet): self
+    {
+        if (!$this->inverseBets->contains($inverseBet)) {
+            $this->inverseBets[] = $inverseBet;
+            $inverseBet->setBettee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInverseBet(Bet $inverseBet): self
+    {
+        if ($this->inverseBets->removeElement($inverseBet)) {
+            // set the owning side to null (unless already changed)
+            if ($inverseBet->getBettee() === $this) {
+                $inverseBet->setBettee(null);
             }
         }
 
