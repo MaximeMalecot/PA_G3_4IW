@@ -20,10 +20,6 @@ class BetVoter extends Voter
     const EDIT = 'edit';
     const DELETE = 'delete';
 
-    public function __construct(private Security $security)
-    {
-    }
-
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::SHOW, self::CREATE, self::EDIT, self::DELETE])
@@ -41,11 +37,15 @@ class BetVoter extends Voter
             return false;
         }
 
-        return match ($attribute) {
-            self::SHOW, self::EDIT, self::CREATE => $subject->getBetter() == $user,
-            self::DELETE => $subject->getBetter() == $user || $this->security->isGranted("ROLE_ADMIN"),
-            default => false,
-        };
-
+        switch ($attribute){
+            case self::SHOW:
+            case self::EDIT:
+            case self::CREATE:
+                return $subject->getBetter() == $user;
+                break;
+            case self::DELETE:
+                return $subject->getBetter() == $user || $this->security->isGranted("ROLE_ADMIN");
+                break;
+        }
     }
 }

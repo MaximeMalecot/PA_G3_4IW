@@ -70,7 +70,7 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-    {{ parent() }}
+   
     document.addEventListener('DOMContentLoaded',  function() {
         const select = document.getElementById('status');
         {{status}}.selected = 'selected';
