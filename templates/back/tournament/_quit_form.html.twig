@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('back_tournament_quit', {'id': tournament.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('quit' ~ tournament.id) }}">
+    <button class="btn">Quit</button>
+</form>

@@ -119,11 +119,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $invoices;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="acceptedBy")
-     */
-    private $acceptedTrials;
-
-    /**
      * @ORM\OneToMany(targetEntity=TwitchContent::class, mappedBy="creator", orphanRemoval=true)
      */
     private $twitchContents;
@@ -505,36 +500,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($invoice->getBuyer() === $this) {
                 $invoice->setBuyer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Trial[]
-     */
-    public function getAcceptedTrials(): Collection
-    {
-        return $this->acceptedTrials;
-    }
-
-    public function addAcceptedTrial(Trial $acceptedTrial): self
-    {
-        if (!$this->acceptedTrials->contains($acceptedTrial)) {
-            $this->acceptedTrials[] = $acceptedTrial;
-            $acceptedTrial->setAcceptedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAcceptedTrial(Trial $acceptedTrial): self
-    {
-        if ($this->acceptedTrials->removeElement($acceptedTrial)) {
-            // set the owning side to null (unless already changed)
-            if ($acceptedTrial->getAcceptedBy() === $this) {
-                $acceptedTrial->setAcceptedBy(null);
             }
         }
 

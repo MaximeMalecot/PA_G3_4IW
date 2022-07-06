@@ -68,6 +68,7 @@ class Tournament
 
     /**
      * @ORM\OneToMany(targetEntity=Trial::class, mappedBy="tournament")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $trials;
 
@@ -87,6 +88,11 @@ class Tournament
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $winner;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": "0"})
+     */
+    private $step = 0;
 
     public function __construct()
     {
@@ -289,6 +295,18 @@ class Tournament
             throw new \InvalidArgumentException("Invalid status");
         }
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStep(): ?int
+    {
+        return $this->step;
+    }
+
+    public function setStep(int $step): self
+    {
+        $this->step = $step;
 
         return $this;
     }

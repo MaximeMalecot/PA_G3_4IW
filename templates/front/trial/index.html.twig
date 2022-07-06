@@ -17,7 +17,6 @@
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('trialFilter') }}">
     </form>
     <table>
         <thead>
@@ -38,7 +37,6 @@
                     {% if status is same as "AWAITING" %}
                     <td><a href="{{ path('front_bet_trial_create', {'id': trial.id}) }}" class="waves-effect waves-light btn">Parier</a></td>
                     {% endif %}
-
                 </tr>
             {% endfor %}
         {% endif %}
@@ -49,13 +47,15 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" defer>
-        document.addEventListener('DOMContentLoaded',  function() {
-            {{status}}.selected = 'selected';
-            let form = document.getElementById('filter');
-            form.addEventListener("change", async() => {
-                form.submit();
-            });
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        {{status}}.selected = 'selected';
+        let form = document.getElementById('filter');
+        form.addEventListener("change", async() => {
+            let url = "{{ path('front_trial_index', {'status': 'statusValue'})|escape('js') }}";
+            url = url.replace('statusValue', select.value);
+            window.location.href = url;
         });
-    </script>
+    });
+</script>
 {% endblock %}

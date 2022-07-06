@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Trial;
+use App\Entity\Tournament;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -26,6 +27,7 @@ class TrialRepository extends ServiceEntityRepository
         return $qb->innerJoin('t.fighters', 'f')
             ->where($qb->expr()->in('t.status',array("CREATED","DATE_ACCEPTED","DATE_REFUSED")))
             ->andWhere($qb->expr()->isNotNull('t.adjudicate'))
+            ->andWhere($qb->expr()->isNull('t.tournament'))
             ->andWhere('f.id = :uid')
             ->setParameter('uid', $user->getId())
             ->getQuery()
@@ -55,6 +57,7 @@ class TrialRepository extends ServiceEntityRepository
         return $qb->innerJoin('t.fighters', 'f')
             ->where($qb->expr()->in('t.status',array("CREATED")))
             ->andWhere($qb->expr()->isNull('t.adjudicate'))
+            ->andWhere($qb->expr()->isNull('t.tournament'))
             ->andWhere('f.id = :uid')
             ->setParameter('uid', $user->getId())
             ->getQuery()
@@ -67,6 +70,7 @@ class TrialRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('t');
         return $qb->innerJoin('t.fighters', 'f')
             ->where($qb->expr()->notIn('t.status',array("CREATED","DATE_ACCEPTED","DATE_REFUSED","ACCEPTED","VALIDATED")))
+            ->andWhere($qb->expr()->isNull('t.tournament'))
             ->andWhere('f.id = :uid')
             ->setParameter('uid', $user->getId())
             ->getQuery()
@@ -81,13 +85,30 @@ class TrialRepository extends ServiceEntityRepository
             ->innerJoin('t.fighters', 'f2')
             ->where($qb->expr()->in('t.status',array("CREATED","ACCEPTED","VALIDATED")))
             ->andWhere($qb->expr()->isNull('t.adjudicate'))
+            ->andWhere($qb->expr()->isNull('t.tournament'))
             ->andWhere('(f1.id = :uid1 AND f2.id = :uid2) OR (f1.id = :uid2 AND f2.id = :uid1)')
             ->setParameter('uid1', $fighter->getId())
             ->setParameter('uid2', $target->getId())
             ->getQuery()
             ->getResult()    
         ;
-        }
+    }
+
+    public function findNotFullFighterTrial(Tournament $tournament)
+    {
+        $qb = $this->createQueryBuilder('trial');
+        return $qb->innerJoin('trial.tournament', 'tournament')
+            ->innerJoin('trial.fighters', 'fighters')
+            ->where('tournament.id = :tid')
+            ->andWhere('trial.tournamentStep = :step')
+            ->andWhere("trial.status = :status")
+            ->setParameter('tid', $tournament->getId())
+            ->setParameter('step', 1)
+            ->setParameter('status', "ENDED")
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
     // /**
     //  * @return Trial[] Returns an array of Trial objects

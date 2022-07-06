@@ -17,20 +17,20 @@ class TrialVoter extends Voter
     const EDIT = 'edit';
     const DELETE = 'delete';
     const CREATE = 'create';
+    const CONSULT = 'consult';
     const TRIAL_ANSWER = "trial_answer";
     const CHALLENGE_ANSWER = "challenge_answer";
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::EDIT, self::DELETE, self::CREATE, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])){
-            if($attribute == self::CREATE){
+        if(in_array($attribute, [self::EDIT, self::DELETE, self::CREATE, self::CONSULT, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])){
+            if(in_array($attribute, [self::CREATE, self::CONSULT])){
                 return true;
             } else {
                 return $subject instanceof Trial;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -51,11 +51,14 @@ class TrialVoter extends Voter
             case self::DELETE:
                 return in_array('ROLE_ADMIN', $user->getRoles()) || $this->canEdit($subject, $user);
                 break;
-            case self::TRIAL_ANSWER :
-                return canAnswerTrial($user, $subject);
+            case self::CONSULT:
+                return in_array('ROLE_FIGHTER', $user->getRoles());
                 break;
-            case self::CHALLENGE_ANSWER :
-                return canAnswerChallenge($user, $subject);
+            case self::TRIAL_ANSWER:
+                return in_array('ROLE_FIGHTER', $user->getRoles()) && $subject->getFighters()->contains($user);
+                break;
+            case self::CHALLENGE_ANSWER:
+                return $this->canAnswerChallenger($subject, $user);
                 break;
         }
 
@@ -75,7 +78,7 @@ class TrialVoter extends Voter
                 return true;
             }
             return false;
-        }else if( $trial->getStatus() == 'REFUSER'){
+        }else if( $trial->getStatus() === 'REFUSED'){
             return false;
         } else {
             if($user == $trial->getAdjudicate()){
@@ -85,26 +88,14 @@ class TrialVoter extends Voter
         }
     }
 
-    protected function canAnswerTrial(User $user, Trial $trial): bool 
+    protected function canAnswerChallenger(Trial $trial, User $user): bool
     {
-        if( in_array('ROLE_FIGHTER', $user->getRoles())){
-            if($trial->getStatus() === "CREATED"){
-                return true;
-            } 
-            if ($trial->getStatus() === "DATE_ACCEPTED" && $trial->getUpdatedBy()->getId() !== $user->getId()){
-                return true;
-            }
+        if($trial->getStatus() === "CREATED"){
+            return in_array('ROLE_FIGHTER', $user->getRoles()) && $trial->getFighters()->contains($user) && $trial->getUpdatedBy() !== $user;
         }
-        return false;
-    }
-
-    protected function canAnswerChallenge(User $user, Trial $trial): bool 
-    {
-        if( in_array('ROLE_FIGHTER', $user->getRoles())){
-            if($trial->getStatus() === "CREATED"  && $trial->getCreatedBy()->getId() !== $user->getId()){
-                return true;
-            } 
+        if($trial->getStatus() === "ACCEPTED"){
+            return in_array("ROLE_ADJUDICATE", $user->getRoles());
         }
-        return false;
     }
+    
 }

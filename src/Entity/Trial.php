@@ -19,6 +19,7 @@ class Trial
     use TimestampableTrait;
 
     const ENUM_STATUS = ["VALIDATED","CREATED","DATE_ACCEPTED","ACCEPTED","AWAITING","STARTED","ENDED","DATE_REFUSED","REFUSED"];
+    const ENUM_VICTORY = ["KO", "TKO", "TIME"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -48,6 +49,7 @@ class Trial
 
     /**
      * @ORM\ManyToOne(targetEntity=Tournament::class, inversedBy="trials")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $tournament;
 
@@ -85,10 +87,14 @@ class Trial
     private $winner;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="acceptedTrials")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $acceptedBy;
+    private $tournamentStep;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $victoryType;
 
     public function __construct()
     {
@@ -286,14 +292,26 @@ class Trial
         return $this;
     }
 
-    public function getAcceptedBy(): ?User
+    public function getTournamentStep(): ?int
     {
-        return $this->acceptedBy;
+        return $this->tournamentStep;
     }
 
-    public function setAcceptedBy(?User $acceptedBy): self
+    public function setTournamentStep(int $tournamentStep): self
     {
-        $this->acceptedBy = $acceptedBy;
+        $this->tournamentStep = $tournamentStep;
+
+        return $this;
+    }
+
+    public function getVictoryType(): ?string
+    {
+        return $this->victoryType;
+    }
+
+    public function setVictoryType(?string $victoryType): self
+    {
+        $this->victoryType = $victoryType;
 
         return $this;
     }
