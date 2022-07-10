@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TrialService
 {
+    const BASE_POINTS = 10.00;
+    const WINS = [ "TIME" => 0, "KO" => 0.1, "TKO" => 0.2];
+    const WIN_KO = 0.10;
+    const WIN_TIME = 0;
     private $entityManager;
     private $userRepository;
 
@@ -26,13 +30,20 @@ class TrialService
 
         $nbFighter = count($this->userRepository->findByRole("ROLE_FIGHTER"));
 
-        $ratioRankWinner = ($nbFighter * $winner->getFightingStats()->getRank())/100;
-        $ratioRankLooser = ($nbFighter * $loser->getFightingStats()->getRank())/100;
+        $ratioRankWinner = ($winner->getFightingStats()->getRank() / $nbFighter);
+        $ratioRankLooser = ($loser->getFightingStats()->getRank() / $nbFighter);
+        $diffRank = abs($ratioRankWinner - $ratioRankLooser);
 
-        $ratioTrialWinner = $winner->getFightingStats()->getVictories() - $winner->getFightingStats()->getDefeats();
-        $ratioTrialLooser = $loser->getFightingStats()->getVictories() - $loser->getFightingStats()->getDefeats();
+        $diffRank = $ratioRankWinner < $ratioRankLooser ? -($diffRank) : $diffRank;
 
-        dd($ratioRankWinner, $ratioRankLooser);
+        $ratioTrialWinner = $winner->getFightingStats()->getVictories() / $winner->getFightingStats()->getDefeats() > 1.1 ? 0.2 : -0.2;
+        $ratioTrialLooser = $loser->getFightingStats()->getVictories() / $loser->getFightingStats()->getDefeats() > 1.1 ? -0.2 : 0.2;
+
+        $winPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialWinner + self::WINS[$winType]));
+        $lossPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialLooser));
+
+        /* ALGO DE COMPTAGE DE POINTS FINIS, NEED BET CONFIRMATION HERE */
+        dd($winPoints, $lossPoints);
 
     }
 }

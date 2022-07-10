@@ -42,7 +42,7 @@
                     <th>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</th>
                     <th>
                     {% if trial.status == "DATE_REFUSED" %}
-                        <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
+                        {{ include('back/trial/_modify_date_form.html.twig') }}
                     {% endif %}
                     {% if trial.status == "ACCEPTED" %}
                         {{ include('back/trial/_accept_challenge_form.html.twig') }}

@@ -132,6 +132,11 @@ class TrialController extends AbstractController
     public function modifyDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if ($request->isMethod('POST')) {
+            if($this->isCsrfTokenValid('modifyDate'.$trial->getId(), $request->request->get('_token'))){
+                return $this->render('back/trial/edit.html.twig', [
+                    'trial' => $trial,
+                ]);
+            }
             if(!$this->isCsrfTokenValid('editTrial'.$trial->getId(), $request->request->get('_token')) || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
                 $this->addFlash('red', "SecurityError");
                 return $this->render('back/trial/edit.html.twig', [

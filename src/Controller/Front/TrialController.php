@@ -62,7 +62,7 @@ class TrialController extends AbstractController
     }
 
     #[Route('/refuse/date/{id}', name: 'trial_refuse_date', methods: ['POST'])]
-    #[IsGranted(TrialVoter::CHALLENGE_ANSWER, "trial")]
+    #[IsGranted(TrialVoter::TRIAL_ANSWER, "trial")]
     public function refuseDate(Request $request, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('refuseDate'.$trial->getId(), $request->request->get('_token'))) {
