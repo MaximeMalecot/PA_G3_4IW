@@ -10,73 +10,31 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Stripe\Checkout;
 use App\Repository\UserRepository;
-
+use App\Form\PaymentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class PaymentController extends AbstractController
 {
     #[Route('/credit', name: 'credit')]
-    public function credit(): Response
+    public function credit(Request $request): Response
     {
+        $form = $this->createForm(PaymentType::class);
+        $form->handleRequest($request);
 
-        return $this->render('front/payment/index.html.twig');
-    }
-
-    #[Route('/payment/{credit}', name: 'payment')]
-    public function payment(int $credit): Response
-        
-    {
-        // $securityContext = $this->container->get('security.authorization_checker');
-        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-
-        // if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
-
-        //     return $this->redirect("/login");
-        // }
-
-        // if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-        //     return $this->redirect("/login"); 
-        // }
-
-
-        $credits = [ 100 => "10", 250 => "25", 500 => "50", 750 => "75", 1000 => "100", 5000 => "500"];
-
-        if (!in_array($credit, array_keys($credits))){
-            return $this->redirect("/login");
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            return $this->redirectToRoute('payment', ["credit" => $form->get('credits')->getData() ], Response::HTTP_SEE_OTHER);
         }
 
-        $session = new Session();
-    
-        $price = $credits[$credit];
-       
-        \Stripe\Stripe::setApiKey('sk_test_51LGVfsBYnbPwVzITdZ1beyU8wGKOFIZDYQNHbysLI7wof5e2n3SPGhdkPVsOvkzsfFWnb8btlVhoCuG5X3Kk1OqA004NNlVIXq');
-        $YOUR_DOMAIN = 'http://localhost:81/';
-        $checkout_session = \Stripe\Checkout\Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'unit_amount' => 100 * $price,
-                    'product_data' => [
-                        'name' => 'Achat de crédits',
-                        'images' => ["https://conseils.casalsport.com/wp-content/uploads/2019/05/entretenir-ses-gants-de-boxe.jpg"],
-                    ],
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . 'success',
-            'cancel_url' => $YOUR_DOMAIN . 'cancel',
+        return $this->renderForm('Front/payment/index.html.twig', [
+            'form' => $form,
         ]);
-        
-        $session->set('credit', $credit);
-        $session->set('payment_intent', $checkout_session["payment_intent"]);
 
-        return $this->redirect($checkout_session->url);
     }
 
-    #[Route('/success', name: 'success')]
+    
+    #[Route('/payment/success', name: 'success')]
     public function success(Request $request, UserRepository $userRepository, InvoiceRepository $invoiceRepository): Response
     {
 
@@ -87,7 +45,7 @@ class PaymentController extends AbstractController
         }
 
         $stripe = new \Stripe\StripeClient(
-            'sk_test_51LGVfsBYnbPwVzITdZ1beyU8wGKOFIZDYQNHbysLI7wof5e2n3SPGhdkPVsOvkzsfFWnb8btlVhoCuG5X3Kk1OqA004NNlVIXq'
+            $_ENV['STRIPE_KEY']
         );
         
         $payment_intent = $stripe->paymentIntents->retrieve(
@@ -123,10 +81,59 @@ class PaymentController extends AbstractController
 
     }
 
-    #[Route('/cancel', name: 'cancel')]
+    #[Route('/payment/cancel', name: 'cancel')]
     public function cancel(): Response
     {
 
         return $this->render('front/payment/cancel.html.twig');
     }
+
+    #[Route('/payment/{credit}', name: 'payment')]
+    public function payment(int $credit): Response
+        
+    {
+
+       
+        // $securityContext = $this->container->get('security.authorization_checker');
+        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+
+        // if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+
+        //     return $this->redirect("/login");
+        // }
+
+        // if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+        //     return $this->redirect("/login"); 
+        // }
+
+        $session = new Session();
+    
+        $price = $credit / 10;
+       
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
+        $YOUR_DOMAIN = 'http://localhost:81/';
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'unit_amount' => 100 * $price,
+                    'product_data' => [
+                        'name' => 'Achat de crédits',
+                        'images' => ["https://conseils.casalsport.com/wp-content/uploads/2019/05/entretenir-ses-gants-de-boxe.jpg"],
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $YOUR_DOMAIN . 'payment/success',
+            'cancel_url' => $YOUR_DOMAIN . 'payment/cancel',
+        ]);
+        
+        $session->set('credit', $credit);
+        $session->set('payment_intent', $checkout_session["payment_intent"]);
+
+        return $this->redirect($checkout_session->url);
+    }
+
 }
