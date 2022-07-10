@@ -29,14 +29,14 @@ class InvoiceController extends AbstractController
     // #[IsGranted(InvoiceVoter::SHOW, 'user')]
     public function show(Invoice $invoice, InvoiceRepository $invoiceRepository, int $id): Response
     {
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-        $invoice = $invoiceRepository->find($id);
+        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        // $invoice = $invoiceRepository->find($id);
        
-        if($userConnected->getId() != $invoice->getBuyer()->getId()){
-            return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
-        }
+        // if($userConnected->getId() != $invoice->getBuyer()->getId()){
+        //     return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
+        // }
         
-        if ($invoice){
+        // if ($invoice){
 
             $pdfOptions = new Options();
             $pdfOptions->set('defaultFont', 'Arial');
@@ -52,9 +52,9 @@ class InvoiceController extends AbstractController
                 "Attachment" => true
                 
             ]);
-        }else{
-            return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
-        }
+        // }else{
+        //     return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
+        // }
        
        
     }
