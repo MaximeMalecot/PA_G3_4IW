@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class UserBackType extends AbstractType
+class UserAdjudicateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -25,6 +25,7 @@ class UserBackType extends AbstractType
             ])
             ->add('nickname')
             ->add('description')
+            ->add('twitch_channel')
         ;
 
         $builder->get('roles')

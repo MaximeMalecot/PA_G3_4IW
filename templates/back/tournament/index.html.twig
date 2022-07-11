@@ -11,7 +11,7 @@
 <div class="example-wrapper">
     <h1>Les tournois</h1>
     <label for="filter">Status</label>
-    <form id="filter" action="{{ path('back_tournament_index') }}" method="POST">
+    <form id="filter">
         <select id="status" name="status">
             <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? 'selected' : '' }}>EN ATTENTE</option>
             <option value="CREATED" id="CREATED">CREER</option>
@@ -71,16 +71,17 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.getElementById('status');
-        {{status}}.selected = 'selected';
-        let form = document.getElementById('filter');
-        form.addEventListener("change", async() => {
-            let url = "{{ path('back_tournament_index', {'status': 'statusValue'})|escape('js') }}";
-            url = url.replace('statusValue', select.value);
-            window.location.href = url;
+    {{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            var select = document.getElementById('status');
+            {{status}}.selected = 'selected';
+            let form = document.getElementById('filter');
+            form.addEventListener("change", async() => {
+                let url = "{{ path('back_tournament_index', {'status': 'statusValue'})|escape('js') }}";
+                url = url.replace('statusValue', select.value);
+                window.location.href = url;
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}

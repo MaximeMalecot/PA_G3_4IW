@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\UserPwdType;
 use App\Form\UserBackType;
+use App\Form\UserAdjudicateType;
 use App\Security\Voter\UserVoter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,10 +27,14 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'user_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'user_show', methods: ['GET', 'POST'])]
     #[IsGranted(UserVoter::SHOW, 'user')]
-    public function show(User $user): Response
+    public function show(Request $request,User $user): Response
     {
+        if(!$this->isCsrfTokenValid('show'.$user->getId(), $request->request->get('_token'))){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('back/user/show.html.twig', [
             'user' => $user,
         ]);
@@ -39,12 +44,16 @@ class UserController extends AbstractController
     #[IsGranted(UserVoter::EDIT, 'user')]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserBackType::class, $user);
+        
+        $form = in_array("ROLE_ADJUDICATE", $user->getRoles()) ? $this->createForm(UserAdjudicateType::class, $user) : $this->createForm(UserBackType::class, $user);
         $form->handleRequest($request);
+        if(!$this->isCsrfTokenValid('edit'.$user->getId(), $request->request->get('_token')) && !$form->isSubmitted()){
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -60,6 +69,14 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(UserPwdType::class, $user);
         $form->handleRequest($request);
+
+        if($this->isCsrfTokenValid('redirectEdit'.$user->getId(), $request->request->get('_token'))){
+            return $this->render('back/user/edit.html.twig', [
+                'user'=>$user,
+                'form' => $form->createView()
+            ]);
+        }
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasherInterface->hashPassword(
@@ -83,7 +100,7 @@ class UserController extends AbstractController
          ]);
     }
 
-    #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
     #[IsGranted(UserVoter::DELETE, 'user')]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

@@ -99,20 +99,14 @@ class TournamentController extends AbstractController
             count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2 ))
         {
             $this->addFlash('red', "Missing participants");
-            return $this->render('back/tournament/index.html.twig', [
-                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => "CREATED"], ["dateStart" => "ASC"]),
-                'status' => "CREATED"
-            ]);
+            return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         if ($this->isCsrfTokenValid('lock'.$tournament->getId(), $request->request->get('_token'))) {
             $ts->createTrialsForTournament($tournament);
             $tournament->setStatus("AWAITING");
             $em->flush();
             $this->addFlash('green', "Tournament initialized");
-            return $this->render('back/tournament/index.html.twig', [
-                'tournaments' => $em->getRepository(Tournament::class)->findBy(["status" => "AWAITING"], ["dateStart" => "ASC"]),
-                'status' => "AWAITING"
-            ]);
+            return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
         }
         $this->addFlash('red', "Security error");
         return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);

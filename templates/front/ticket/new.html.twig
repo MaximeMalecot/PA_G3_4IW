@@ -14,13 +14,3 @@
 
     <a href="{{ path('ticket_index') }}">back to list</a>
 {% endblock %}
-
-{% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.querySelector("select");
-        var instances = M.FormSelect.init(select);
-    });
-    
-</script>
-{% endblock %}

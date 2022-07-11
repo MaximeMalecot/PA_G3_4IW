@@ -13,6 +13,6 @@ import M from "materialize-css";
 window.M = M;
 
 document.addEventListener('DOMContentLoaded', function() {
-    const elems = document.querySelectorAll('select');
-    M.FormSelect.init(elems, null, {});
+    const selects = document.querySelectorAll('select');
+    M.FormSelect.init(selects, null, {});
 });

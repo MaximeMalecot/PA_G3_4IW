@@ -3,13 +3,14 @@
 namespace App\Controller\Front;
 
 use App\Entity\Ticket;
-use App\Form\TicketType;
+use App\Form\TicketUserType;
+use App\Form\TicketFighterType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/ticket')]
 class TicketController extends AbstractController
@@ -19,7 +20,7 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository): Response
     {
         return $this->render('front/ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findAll(),
+            'tickets' => $this->getUser()->getTickets(),
         ]);
     }
 
@@ -27,7 +28,7 @@ class TicketController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ticket = new Ticket();
-        $form = $this->createForm(TicketType::class, $ticket);
+        $form = in_array("ROLE_FIGHTER", $this->getUser()->getRoles()) ? $this->createForm(TicketFighterType::class, $ticket):$this->createForm(TicketUserType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -8,14 +8,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class TicketType extends AbstractType
+class TicketFighterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('roleWanted', ChoiceType::class, [
                 'choices'  => [
-                    'Fighter' => 'Fighter',
                     'Adjudicate' => 'Adjudicate'
                 ],
             ])

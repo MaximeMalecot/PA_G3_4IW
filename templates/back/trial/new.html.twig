@@ -33,63 +33,60 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        let form = document.getElementById('createTrial');
-        let selectFighter1 = document.getElementById('fighter1');
-        let selectFighter2 = document.getElementById('fighter2');
-        let datepicker = document.getElementById('dateStart');
-        let timepicker = document.getElementById('timeStart');
-        let minDate = new Date();
-        minDate.setDate(minDate.getDate()+1)
+{{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            let form = document.getElementById('createTrial');
+            let selectFighter1 = document.getElementById('fighter1');
+            let selectFighter2 = document.getElementById('fighter2');
+            let datepicker = document.getElementById('dateStart');
+            let timepicker = document.getElementById('timeStart');
+            let minDate = new Date();
+            minDate.setDate(minDate.getDate()+1)
 
-        selectFighter1.selectedIndex = 0;
-        selectFighter2.selectedIndex = 0;
-        M.FormSelect.init(selectFighter1);
-        M.FormSelect.init(selectFighter2);
-        var dateInstance = M.Datepicker.init(datepicker, {
-            format: 'dd-mm-yyyy',
-            autoClose : "true",
-            minDate : minDate,
-            setDefaultDate: true
-        })
-        var timeInstance = M.Timepicker.init(timepicker, {
-            autoClose: "true",
-            twelveHour: false,
-            defaultTime: "00:00"
-        });
-
-        selectFighter1.addEventListener('change', (e) => {
-            selectFighter2.querySelectorAll('option').forEach(opt => {
-                if(opt.disabled == true){
-                    opt.disabled = false;
-                }
+            let dateInstance = M.Datepicker.init(datepicker, {
+                format: 'dd-mm-yyyy',
+                autoClose : "true",
+                minDate : minDate,
+                setDefaultDate: true
+            })
+            let timeInstance = M.Timepicker.init(timepicker, {
+                autoClose: "true",
+                twelveHour: false,
+                defaultTime: "00:00"
             });
-            let tmpDisabled = document.getElementById('select2-'+e.target.value);
-            tmpDisabled.disabled = true;
-            M.FormSelect.init(selectFighter2);
-        });
 
-        selectFighter2.addEventListener('change', (e) => {
-            selectFighter1.querySelectorAll('option').forEach(opt => {
-                if(opt.disabled == true){
-                    opt.disabled = false;
-                }
+            selectFighter1.addEventListener('change', (e) => {
+                selectFighter2.querySelectorAll('option').forEach(opt => {
+                    if(opt.disabled == true){
+                        opt.disabled = false;
+                    }
+                });
+                let tmpDisabled = document.getElementById('select2-'+e.target.value);
+                tmpDisabled.disabled = true;
+                M.FormSelect.init(selectFighter2);
             });
-            let tmpDisabled = document.getElementById('select1-'+e.target.value);
-            tmpDisabled.disabled = true;
-            M.FormSelect.init(selectFighter1);
+
+            selectFighter2.addEventListener('change', (e) => {
+                selectFighter1.querySelectorAll('option').forEach(opt => {
+                    if(opt.disabled == true){
+                        opt.disabled = false;
+                    }
+                });
+                let tmpDisabled = document.getElementById('select1-'+e.target.value);
+                tmpDisabled.disabled = true;
+                M.FormSelect.init(selectFighter1);
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(selectFighter1.value == "default" || selectFighter2.value == "default"){
+                    alert('Veuiller choisir des combattants');
+                }else{
+                    form.submit();
+                }
+            })
+
         });
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if(selectFighter1.value == "default" || selectFighter2.value == "default"){
-                alert('Veuiller choisir des combattants');
-            }else{
-                form.submit();
-            }
-        })
-
-    });
-</script>
+    </script>
 {% endblock %}

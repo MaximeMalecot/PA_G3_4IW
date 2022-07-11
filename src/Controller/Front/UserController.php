@@ -30,8 +30,6 @@ class UserController extends AbstractController
     #[Route('/', name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $repository): Response
     {
-        $fighters = $repository->findByRole("ROLE_FIGHTER");
-
         return $this->render('front/user/index.html.twig', [
             'fighters' => $repository->findByRole("ROLE_FIGHTER")
         ]);

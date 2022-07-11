@@ -68,13 +68,12 @@
     </table>
 {% endblock %}
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        var select = document.querySelectorAll("select");
-        {{roleWanted}}.selected = 'selected';
-        {{status}}.selected = 'selected';
-        var instances = M.FormSelect.init(select);
-    });
-    
-</script>
+    {{ parent() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',  function() {
+            var select = document.querySelectorAll("select");
+            {{roleWanted}}.selected = 'selected';
+            {{status}}.selected = 'selected';
+        });
+    </script>
 {% endblock %}
