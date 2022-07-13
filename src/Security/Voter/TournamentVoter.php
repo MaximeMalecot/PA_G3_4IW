@@ -21,10 +21,11 @@ class TournamentVoter extends Voter
     const JOIN = 'join';
     const QUIT = 'quit';
     const LOCK = 'lock';
+    const START = 'start';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::LOCK])){
+        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::LOCK, self::START])){
             if($attribute == self::CREATE){
                 return true;
             } else {
@@ -57,6 +58,9 @@ class TournamentVoter extends Voter
                 break;
             case self::LOCK:
                 return $subject->getCreatedBy() === $user && count($subject->getParticipantFromRole("ROLE_ADJUDICATE")) === $subject->getNbMaxParticipants() / 2 && count($subject->getParticipantFromRole("ROLE_FIGHTER")) > ($subject->getNbMaxParticipants() / 2 );
+                break;
+            case self::START:
+                return $subject->getCreatedBy() === $user && $subject->getStep() === 0 && count($subject->getTrials()) > 0;
                 break;
             case self::EDIT:
                 return $this->canEdit($subject, $user);

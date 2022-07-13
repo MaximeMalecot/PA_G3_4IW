@@ -36,11 +36,20 @@ class TournamentController extends AbstractController
                 $this->addFlash('red', "SecurityError");
                 return $this->render('back/tournament/new.html.twig');
             }
-            if(is_float(log($request->request->get('nbMaxParticipants'),2))){
-                $this->addFlash('red', "Set max participants number to a natural exp of 2 (2,4,8,16,32,64,128,256,512,1024)");
+            if($request->request->get('nbMaxParticipants') <= 2){
+                $this->addFlash('red', "Min number is 2, number must be pow of 2 (ex: 4 or 8)");
                 return $this->render('back/tournament/new.html.twig');
+
             }
-            /* ADD VERIF ON NUMBER */
+            if(is_float(log($request->request->get('nbMaxParticipants'),2))){
+                $log = log($request->request->get('nbMaxParticipants'),2);
+                $int = floor($log);
+                $decimals = $log - $int;
+                if($decimals != 0){
+                    $this->addFlash('red', "Set max participants number to a natural exp of 2 (2,4,8,16,32,64,128,256,512,1024)");
+                    return $this->render('back/tournament/new.html.twig');
+                }
+            }
             $tournament = new Tournament();
             $tournament->setName($request->request->get('name'));
             $tournament->addParticipant($this->getUser());
@@ -111,6 +120,28 @@ class TournamentController extends AbstractController
         $this->addFlash('red', "Security error");
         return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/start', name: 'tournament_start', methods: ['POST'])]
+    #[IsGranted(TournamentVoter::START, 'tournament')]
+    public function start(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
+    {
+        dd("start");/*
+        if(count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) !== $tournament->getNbMaxParticipants() / 2 && 
+            count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2 ))
+        {
+            $this->addFlash('red', "Missing participants");
+            return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
+        }
+        if ($this->isCsrfTokenValid('lock'.$tournament->getId(), $request->request->get('_token'))) {
+            $ts->createTrialsForTournament($tournament);
+            $tournament->setStatus("AWAITING");
+            $em->flush();
+            $this->addFlash('green', "Tournament initialized");
+            return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
+        }
+        $this->addFlash('red', "Security error");
+        return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
+    */}
 
     #[Route('/{id}', name: 'tournament_delete', methods: ['POST'])]
     public function delete(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response

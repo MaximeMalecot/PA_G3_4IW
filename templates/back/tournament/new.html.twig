@@ -1,6 +1,6 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}New Trial{% endblock %}
+{% block title %}New Tournament{% endblock %}
 
 {% block body %}
 <style>
@@ -25,6 +25,7 @@
 {% endblock %}
 
 {% block javascripts %}
+{{ parent() }}
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
         let form = document.getElementById('createTournament');
@@ -62,8 +63,8 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            if(nbMaxParticipants.value < 2 || Math.log2(nbMaxParticipants.value)%1 > 0 ){
-                alert('Seulement les multiples de 2');
+            if(nbMaxParticipants.value <= 2 || Math.log2(nbMaxParticipants.value)%1 > 0 ){
+                alert('Seulement les multiples de 2 supérieur à 2');
             }else{
                 form.submit();
             }

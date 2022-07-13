@@ -42,7 +42,10 @@ class TrialService
         $winPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialWinner + self::WINS[$winType]));
         $lossPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialLooser));
 
-        /* ALGO DE COMPTAGE DE POINTS FINIS, NEED BET CONFIRMATION HERE */
+        /*  ALGO DE COMPTAGE DE POINTS FINIS 
+            AJOUT DE FightinStatService -> modifyRank needed
+            AJOUT DE PAYEMENT DES BETS REUSSIS NEEDED
+        */
         dd($winPoints, $lossPoints);
 
     }

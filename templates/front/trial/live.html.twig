@@ -17,14 +17,9 @@
 {% endblock %}
 
 {% block javascripts %}
+{{ parent() }}
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
-        let selects = document.querySelectorAll('select');
-        let instances = [];
-        for( select of selects){
-            instances.push(M.FormSelect.init(select));
-        }
-
         let form = document.querySelector('form');
         if(form){
             form.addEventListener('submit', (e) => {
