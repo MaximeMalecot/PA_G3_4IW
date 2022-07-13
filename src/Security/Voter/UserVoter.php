@@ -14,13 +14,15 @@ class UserVoter extends Voter
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
     private $trialRepository;
+
     const DELETE = 'delete';
     const EDIT = 'edit';
     const SHOW = 'show';
     const UPGRADE = 'upgrade';
     const CHALLENGE = 'challenge';
 
-    public function __construct(TrialRepository $trialRepository){
+    public function __construct(TrialRepository $trialRepository)
+    {
         $this->trialRepository = $trialRepository;
     }
 

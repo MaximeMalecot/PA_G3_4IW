@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Ticket;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,6 +26,16 @@ class TicketRepository extends ServiceEntityRepository
             ->where('t.status != "CREATED"')
             ->getQuery();
         return $q->getResult();
+    }
+
+    public function findOpenTickets(User $user)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb->where('t.createdBy = :user')
+                ->andWhere($qb->expr()->in('t.status', array('CREATED', 'ACCEPTED')))
+                ->setParameter('user', $user)
+                ->getQuery()
+                ->getResult();
     }
 
     // /**

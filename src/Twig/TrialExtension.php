@@ -3,11 +3,9 @@
 namespace App\Twig;
 
 use App\Entity\User;
-use Twig\TwigFilter;
 use App\Entity\Trial;
 use Twig\TwigFunction;
 use App\Repository\TrialRepository;
-use DateTime;
 use Twig\Extension\AbstractExtension;
 
 class TrialExtension extends AbstractExtension
@@ -17,16 +15,6 @@ class TrialExtension extends AbstractExtension
     public function __construct(TrialRepository $trialRepository)
     {
         $this->trialRepository = $trialRepository;
-    }
-
-    public function getFilters(): array
-    {
-        return [
-            // If your filter generates SAFE HTML, you should add a third
-            // parameter: ['is_safe' => ['html']]
-            // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
-            new TwigFilter('filter_name', [$this, 'doSomething']),
-        ];
     }
 
     public function getFunctions(): array
@@ -39,11 +27,11 @@ class TrialExtension extends AbstractExtension
 
     public function canChallenge(User $currentUser, User $target)
     {
-        if( $currentUser === $target){
+        if ($currentUser === $target) {
             return false;
         }
         $challenges = $this->trialRepository->findChallenge($currentUser, $target);
-        if(!empty($challenges)){
+        if (!empty($challenges)) {
             return false;
         }
         return true;
@@ -51,7 +39,7 @@ class TrialExtension extends AbstractExtension
 
     public function canStart(User $user, Trial $trial)
     {
-        if($trial->getAdjudicate() === $user){
+        if ($trial->getAdjudicate() === $user) {
             $startDate = \DateTime::createFromInterface($trial->getDateStart());
             $now = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
             $now = new \DateTime($now->format('Y-m-d H:i:s'));
@@ -61,11 +49,11 @@ class TrialExtension extends AbstractExtension
             $min->add(new \DateInterval("P1D"));
             $max->add(new \DateInterval("PT1H"));
             $max->add(new \DateInterval("P1D"));
-            if($min < $now &&  $max > $now){
+            if ($min < $now &&  $max > $now) {
                 return true;
             }
         }
-        
+
 
         return false;
     }

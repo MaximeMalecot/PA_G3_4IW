@@ -12,9 +12,8 @@ class UserUpgradeAdjudicateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description')
-            ->add('twitch_channel')
-        ;
+            ->add('description', null, ['label' => 'Decrivez vous'])
+            ->add('twitch_channel', null, ['label' => 'Si la chaine twitch est indisponible vous pourrez être retrogradé']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

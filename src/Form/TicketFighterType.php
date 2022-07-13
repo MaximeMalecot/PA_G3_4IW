@@ -18,7 +18,7 @@ class TicketFighterType extends AbstractType
                     'Adjudicate' => 'Adjudicate'
                 ],
             ])
-            ->add('description')
+            ->add('description', null, ['label' => 'Décrivez pourquoi vous pensez pouvoir avoir ce rôle'])
             ;
     }
 

@@ -6,10 +6,12 @@ use App\Entity\Ticket;
 use App\Form\TicketUserType;
 use App\Form\TicketFighterType;
 use App\Repository\TicketRepository;
+use App\Security\Voter\TicketVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/ticket')]
@@ -25,10 +27,11 @@ class TicketController extends AbstractController
     }
 
     #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
+    #[IsGranted(TicketVoter::NEW)]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ticket = new Ticket();
-        $form = in_array("ROLE_FIGHTER", $this->getUser()->getRoles()) ? $this->createForm(TicketFighterType::class, $ticket):$this->createForm(TicketUserType::class, $ticket);
+        $form = in_array("ROLE_FIGHTER", $this->getUser()->getRoles()) ? $this->createForm(TicketFighterType::class, $ticket) : $this->createForm(TicketUserType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -47,7 +50,7 @@ class TicketController extends AbstractController
     #[Route('/{id}', name: 'ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
             $entityManager->remove($ticket);
             $entityManager->flush();
         }

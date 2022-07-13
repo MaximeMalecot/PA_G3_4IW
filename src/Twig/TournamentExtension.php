@@ -2,24 +2,13 @@
 
 namespace App\Twig;
 
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\User;
 use App\Entity\Tournament;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigTest;
 
 class TournamentExtension extends AbstractExtension
 {
-    public function getFilters(): array
-    {
-        return [
-            // If your filter generates SAFE HTML, you should add a third
-            // parameter: ['is_safe' => ['html']]
-            // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
-            new TwigFilter('filter_name', [$this, 'doSomething']),
-        ];
-    }
 
     public function getFunctions(): array
     {
@@ -45,7 +34,7 @@ class TournamentExtension extends AbstractExtension
 
     public function canStart(Tournament $tournament, User $user): bool
     {
-        if($tournament->getCreatedBy() === $user && $tournament->getStep() === 0 && count($tournament->getTrials()) > 0){
+        if ($tournament->getCreatedBy() === $user && $tournament->getStep() === 0 && count($tournament->getTrials()) > 0) {
             $startDate = \DateTime::createFromInterface($tournament->getDateStart());
             $now = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
             $now = new \DateTime($now->format('Y-m-d H:i:s'));
@@ -54,7 +43,7 @@ class TournamentExtension extends AbstractExtension
             $max = clone $startDate;
             $min->sub(new \DateInterval("PT1H"));
             $max->add(new \DateInterval("PT1H"));
-            if($min < $now &&  $max > $now){
+            if ($min < $now &&  $max > $now) {
                 return true;
             }
         }
@@ -62,20 +51,20 @@ class TournamentExtension extends AbstractExtension
     }
     public function canLock(Tournament $tournament, User $user): bool
     {
-        return $tournament->getCreatedBy() === $user && $tournament->getStatus() === "CREATED" && count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) === $tournament->getNbMaxParticipants() / 2 && count($tournament->getParticipantFromRole("ROLE_FIGHTER")) > ($tournament->getNbMaxParticipants() / 2 );
+        return $tournament->getCreatedBy() === $user && $tournament->getStatus() === "CREATED" && count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) === $tournament->getNbMaxParticipants() / 2 && count($tournament->getParticipantFromRole("ROLE_FIGHTER")) > ($tournament->getNbMaxParticipants() / 2);
     }
 
-    public function canJoin(Tournament $tournament, User $user): bool 
+    public function canJoin(Tournament $tournament, User $user): bool
     {
-        if(in_array('ROLE_FIGHTER', $user->getRoles())){
-            return ($tournament->getStatus() === "CREATED" || $tournament->getStatus() === "AWAITING") && 
-            !$tournament->getParticipants()->contains($user) && 
-            (count($tournament->getParticipantFromRole("ROLE_FIGHTER")) < $tournament->getNbMaxParticipants());
+        if (in_array('ROLE_FIGHTER', $user->getRoles())) {
+            return ($tournament->getStatus() === "CREATED" || $tournament->getStatus() === "AWAITING") &&
+                !$tournament->getParticipants()->contains($user) &&
+                (count($tournament->getParticipantFromRole("ROLE_FIGHTER")) < $tournament->getNbMaxParticipants());
         } else if (in_array('ROLE_ADJUDICATE', $user->getRoles())) {
-            return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < ($tournament->getNbMaxParticipants()/2));
+            return $tournament->getStatus() === "CREATED" && !$tournament->getParticipants()->contains($user) && (count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) < ($tournament->getNbMaxParticipants() / 2));
         } else {
             return false;
-        } 
+        }
     }
 
     public function canQuit(Tournament $tournament, User $user): bool

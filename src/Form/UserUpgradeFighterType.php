@@ -12,8 +12,7 @@ class UserUpgradeFighterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description')
-        ;
+            ->add('description', null, ['label' => 'Decrivez vous']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

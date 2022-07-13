@@ -32,18 +32,10 @@
                     {% if is_granted('ROLE_FIGHTER') %}
                         <li><a href="{{ path('front_trial_consult') }}">my trials</a></li>
                     {% endif %}
-                {# 
-                    {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}
-                        {% for trial in app.user.trials if not break %}
-                            {% if trial.status == "CREATED" %}
-                                <li><a href="{{ path('front_ticket_new') }}"></a></li>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    #}
-                    {% if app.user.tickets is defined and app.user.tickets is empty%}
+                    {% if canCreateTicket(app.user) %}
                         <li><a href="{{ path('front_ticket_new') }}">upgrade</a></li>
-                    {% elseif app.user.tickets[0].status == "ACCEPTED" %}
+                    {% endif %}
+                    {% if canUpgradeTicket(app.user) %}
                         <li><a href="{{ path('front_user_upgrade', { "id": app.user.id }) }}">change your account</a></li>
                     {% endif %}
                 {% endif %}

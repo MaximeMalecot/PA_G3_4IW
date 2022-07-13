@@ -20,6 +20,7 @@
     <div class="nav-wrapper">
         <ul id="nav-mobile" class="left hide-on-med-and-down">
             <li><a href="{{ path("front_default") }}">front</a></li>
+            <li><a href="{{ path("back_default") }}">back</a></li>
             {% if is_granted('ROLE_ADMIN') %}
                 <li><a href="{{ path("back_user_index") }}">utilisateurs</a></li>
                 <li><a href="{{ path("back_ticket_index") }}">tickets</a></li>
