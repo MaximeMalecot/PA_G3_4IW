@@ -24,6 +24,32 @@
     {% endfor %}
     <b>Date de début :</b></br>
      {{ tournament.dateStart|date('d-m-Y H:i:s') }}</br>
-    <b>Match:</b></br>
+    <b>Match:</b>
+    {% if trials is defined and trials is not empty %}
+        <div>
+        {% set index = 1 %}
+        {% for trial in trials %}
+            <div>
+            {% if trial.tournamentStep > index %}
+            </div>
+                <br/>
+                {% set index = trial.tournamentStep %}
+            {% endif %}
+            {% set fighters = trial.fighters.getValues %}
+            {% if fighters is not empty %}
+                [
+                {% if fighters[0] %}
+                    {{fighters[0].nickname}}
+                {% endif %}
+                {% if fighters.1 is defined %}
+                    &nbsp;vs&nbsp;{{fighters[1].nickname}}
+                {% endif %}
+                ]
+            {% else %}
+                [ INCOMING ]
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

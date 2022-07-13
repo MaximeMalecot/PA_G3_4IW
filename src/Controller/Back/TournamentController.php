@@ -2,11 +2,12 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\Trial;
 use App\Entity\Tournament;
 use App\Repository\UserRepository;
+use App\Service\TournamentService;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
-use App\Service\TournamentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,10 +68,11 @@ class TournamentController extends AbstractController
 
     #[Route('/{id}', name: 'tournament_show', methods: ['GET'])]
     #[IsGranted(TournamentVoter::EDIT, 'tournament')]
-    public function show(Tournament $tournament): Response
+    public function show(Tournament $tournament, EntityManagerInterface $em): Response
     {
         return $this->render('back/tournament/show.html.twig', [
             'tournament' => $tournament,
+            'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament], ['tournamentStep' => 'ASC'])
         ]);
     }
 
@@ -125,23 +127,12 @@ class TournamentController extends AbstractController
     #[IsGranted(TournamentVoter::START, 'tournament')]
     public function start(Request $request, Tournament $tournament, TournamentService $ts, EntityManagerInterface $em): Response
     {
-        dd("start");/*
-        if(count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) !== $tournament->getNbMaxParticipants() / 2 && 
-            count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2 ))
-        {
-            $this->addFlash('red', "Missing participants");
-            return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
-        }
-        if ($this->isCsrfTokenValid('lock'.$tournament->getId(), $request->request->get('_token'))) {
-            $ts->createTrialsForTournament($tournament);
-            $tournament->setStatus("AWAITING");
-            $em->flush();
-            $this->addFlash('green', "Tournament initialized");
-            return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
-        }
-        $this->addFlash('red', "Security error");
-        return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
-    */}
+        $tournament->setStatus("STARTED");
+        $tournament->setStep(1);
+        $em->flush();
+
+        return $this->redirectToRoute('back_tournament_show', [ 'id' => $tournament->getId()], Response::HTTP_SEE_OTHER);
+    }
 
     #[Route('/{id}', name: 'tournament_delete', methods: ['POST'])]
     public function delete(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
