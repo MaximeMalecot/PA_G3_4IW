@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use DateTime;
@@ -11,9 +12,11 @@ use App\Repository\BetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class BetService {
+class BetService
+{
 
-    public function __construct(private Security $security, private EntityManagerInterface $em, private BetRepository $betRepository) {
+    public function __construct(private Security $security, private EntityManagerInterface $em, private BetRepository $betRepository)
+    {
     }
 
     /**
@@ -79,22 +82,20 @@ class BetService {
         $this->em->flush();
     }
 
-    public function closeBets(Trial $trial = null, Tournament $tournament = null, string $winType = null) : void
+    public function closeBets(Trial $trial = null, Tournament $tournament = null, string $winType = null): void
     {
-        if($trial !== null){
+        if ($trial !== null) {
             $winningBets = $this->betRepository->findTrialWinners($trial);
-            $betters = count($trial->getBets()); 
-            if(count($winningBets) === 0){
+            $betters = count($trial->getBets());
+            if (count($winningBets) === 0) {
                 return;
             }
             $ratioWinningPoints = ($betters / count($winningBets));
-            foreach($winningBets as $winningBet){
+            foreach ($winningBets as $winningBet) {
                 $winningBet->getBetter()->setCredits($winningBet->getBetter()->getCredits() + ($winningBet->getAmount() * $ratioWinningPoints));
             }
             $this->em->flush();
             return;
         }
     }
-
-
 }

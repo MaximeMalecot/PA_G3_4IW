@@ -12,7 +12,6 @@ class TournamentExtension extends AbstractExtension
 {
     public function __construct(protected TournamentRepository $tournamentRepository)
     {
-        
     }
 
     public function getFunctions(): array
@@ -78,12 +77,12 @@ class TournamentExtension extends AbstractExtension
         return $tournament->getStatus() === "CREATED" && $tournament->getParticipants()->contains($user);
     }
 
-    public function canBetTournament(Tournament $tournament, User $user): bool 
+    public function canBetTournament(Tournament $tournament, User $user): bool
     {
-        return count($this->tournamentRepository->findBetTournamentForUser($tournament, $user)) === 0 && 
-        $tournament->getStatus() === "AWAITING" && 
-        !$tournament->getParticipants()->contains($user) && 
-        (in_array("ROLE_USER", $user->getRoles()) || 
-        in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->tournamentRepository->findBetTournamentForUser($tournament, $user)) === 0 &&
+            $tournament->getStatus() === "AWAITING" &&
+            !$tournament->getParticipants()->contains($user) &&
+            (in_array("ROLE_USER", $user->getRoles()) ||
+                in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }

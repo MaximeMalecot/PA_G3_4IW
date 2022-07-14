@@ -58,10 +58,10 @@ class TrialExtension extends AbstractExtension
 
     public function canBetTrial(Trial $trial, User $user)
     {
-        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 && 
-        $trial->getStatus() === "AWAITING" && 
-        !$trial->getFighters()->contains($user) && 
-        (in_array("ROLE_USER", $user->getRoles()) || 
-        in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 &&
+            $trial->getStatus() === "AWAITING" &&
+            !$trial->getFighters()->contains($user) &&
+            (in_array("ROLE_USER", $user->getRoles()) ||
+                in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }

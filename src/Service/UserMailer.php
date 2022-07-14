@@ -16,9 +16,12 @@ class UserMailer
         $this->emailVerifier = $emailVerifier;
     }
 
-    public function sendEmailConfirmation(User $user){
+    public function sendEmailConfirmation(User $user)
+    {
         // generate a signed url and email it to the user
-        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+        $this->emailVerifier->sendEmailConfirmation(
+            'app_verify_email',
+            $user,
             (new TemplatedEmail())
                 ->from(new Address('mail@mail.com', 'Mailer registration'))
                 ->to($user->getEmail())

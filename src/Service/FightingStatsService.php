@@ -17,14 +17,15 @@ class FightingStatsService
         $this->entityManager = $entityManager;
         $this->fightingStatsRepository = $fightingStatsRepository;
     }
-    
-    public function modifyRank(FightingStats $fs, int $points){//IF LOSE POINTS = -100 ELSE POINTS = 100
+
+    public function modifyRank(FightingStats $fs, int $points)
+    { //IF LOSE POINTS = -100 ELSE POINTS = 100
         $incomingPoints = $fs->getRankingPoints() + $points < 0 ? 0 : $fs->getRankingPoints() + $points;
         $conn = $this->entityManager->getConnection();
         $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
         $res = $conn->executeQuery($select, [$incomingPoints])->fetchAllAssociative();
-         if( !empty($res)){
-            if($res[0]["ranking_points"] == $fs->getRankingPoints() + $points){
+        if (!empty($res)) {
+            if ($res[0]["ranking_points"] == $fs->getRankingPoints() + $points) {
                 $incomingRank = $res[0]["rank"];
             } else {
                 $incomingRank = $res[0]["rank"] + 1;
@@ -33,10 +34,10 @@ class FightingStatsService
             $incomingRank = 1;
         }
 
-        if($fs->getRankingPoints() < $incomingPoints){ //UPRANK
+        if ($fs->getRankingPoints() < $incomingPoints) { //UPRANK
             $update = "UPDATE fighting_stats SET rank = rank + 1 WHERE ranking_points < ? AND ranking_points >= ? AND id <> ?";
             $conn->executeStatement($update, [$incomingPoints, $fs->getRankingPoints(), $fs->getId()]);
-        } else if($fs->getRankingPoints() > $incomingPoints) { //DOWNRANK
+        } else if ($fs->getRankingPoints() > $incomingPoints) { //DOWNRANK
             $update = "UPDATE fighting_stats SET rank = rank - 1 WHERE ranking_points >= ?  AND ranking_points < ? AND id <> ?";
             $conn->executeStatement($update, [$incomingPoints, $fs->getRankingPoints(), $fs->getId()]);
             $incomingRank = $incomingRank - 1;
@@ -49,12 +50,12 @@ class FightingStatsService
     }
 
     public function placeRank(FightingStats $fs)
-    {   
+    {
         $conn = $this->entityManager->getConnection();
         $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
         $res = $conn->executeQuery($select, [$fs->getRankingPoints()])->fetchAllAssociative();
-        if( !empty($res)){
-            if($res[0]["ranking_points"] == $fs->getRankingPoints()){
+        if (!empty($res)) {
+            if ($res[0]["ranking_points"] == $fs->getRankingPoints()) {
                 $fs->setRank($res[0]["rank"]);
             } else {
                 $fs->setRank($res[0]["rank"] + 1);
@@ -66,12 +67,12 @@ class FightingStatsService
         $conn->executeStatement($update, [$fs->getRankingPoints()]);
     }
 
-    public function setNewFighter(User $user){
+    public function setNewFighter(User $user)
+    {
         $user->setRoles(['ROLE_FIGHTER']);
         $fs = new FightingStats();
         $fs->setRank($this->fightingStatsRepository->findMinRank());
         $fs->setTarget($user);
         $this->entityManager->persist($fs);
     }
-
 }

@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class TrialService
 {
     const BASE_POINTS = 10.00;
-    const WINS = [ "TIME" => 0, "KO" => 0.1, "TKO" => 0.2];
+    const WINS = ["TIME" => 0, "KO" => 0.1, "TKO" => 0.2];
     const WIN_KO = 0.10;
     const WIN_TIME = 0;
     private $entityManager;
@@ -19,7 +19,7 @@ class TrialService
     private $betService;
     private $fightingStatsService;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, BetService $betService,FightingStatsService $fightingStatsService)
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, BetService $betService, FightingStatsService $fightingStatsService)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
@@ -38,13 +38,13 @@ class TrialService
         $ratioRankLooser = ($loser->getFightingStats()->getRank() / $nbFighter);
         $diffRank = abs($ratioRankWinner - $ratioRankLooser);
 
-        $diffRank = $ratioRankWinner < $ratioRankLooser ? -($diffRank) : $diffRank;
+        $diffRank = $ratioRankWinner < $ratioRankLooser ? - ($diffRank) : $diffRank;
 
         $ratioTrialWinner = $winner->getFightingStats()->getVictories() / $winner->getFightingStats()->getDefeats() > 1.1 ? 0.2 : -0.2;
         $ratioTrialLooser = $loser->getFightingStats()->getVictories() / $loser->getFightingStats()->getDefeats() > 1.1 ? -0.2 : 0.2;
 
         $winPoints = self::BASE_POINTS + (self::BASE_POINTS * ($diffRank + $ratioTrialWinner + self::WINS[$winType]));
-        $lossPoints = -(self::BASE_POINTS + (self::BASE_POINTS * ($diffRank + $ratioTrialLooser)));
+        $lossPoints = - (self::BASE_POINTS + (self::BASE_POINTS * ($diffRank + $ratioTrialLooser)));
 
         $this->fightingStatsService->modifyRank($loser->getFightingStats(), $lossPoints);
         $this->fightingStatsService->modifyRank($winner->getFightingStats(), $winPoints);
