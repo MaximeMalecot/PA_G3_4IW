@@ -1,0 +1,52 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Combat en cours !{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="example-wrapper">
+    <h1>{{ tournament.name }}</h1></br>
+    <b>Arbitre du tournoi:</b></br> 
+    {{ tournament.createdBy.nickname ?? "null"}}</br>
+    {% if tournament.status == "STARTED" %}
+        <div>
+        {% for trial in trials %}
+            {% if trial.status == "STARTED" %}
+            <div>  
+                <iframe
+                    src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent=localhost"
+                    height="400px"
+                    width="300px"
+                    allowfullscreen>
+                </iframe>
+
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        let form = document.querySelector('form');
+        if(form){
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(form.fighter.value === "default" || form.victoryType.value === "default"){
+                    alert("Select a possible value in form");
+                    return;
+                }
+                form.submit();
+            })
+        }
+    });
+</script>
+{% endblock %}

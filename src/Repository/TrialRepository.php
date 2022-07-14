@@ -121,6 +121,18 @@ class TrialRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findStepOpenedTrialsForTournament(Tournament $tournament)
+    {
+        $qb = $this->createQueryBuilder('tr');
+        return $qb->innerJoin('tr.tournament', 'tn')
+            ->where('tn.id = :tournamentId')
+            ->andWhere('tr.tournamentStep = tn.step')
+            ->andWhere($qb->expr()->in('tr.status',array("STARTED","AWAITING")))
+            ->setParameter('tournamentId',$tournament->getId())
+            ->getQuery()
+            ->getResult();
+    }   
+
     // /**
     //  * @return Trial[] Returns an array of Trial objects
     //  */

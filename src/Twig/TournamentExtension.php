@@ -19,7 +19,7 @@ class TournamentExtension extends AbstractExtension
         return [
             new TwigFunction('getNbFromRole', [$this, 'getNbFromRole']),
             new TwigFunction('isInTournament', [$this, 'isInTournament']),
-            new TwigFunction('canStartTournament', [$this, 'canStart']),
+            new TwigFunction('canStartTournament', [$this, 'canStartTournament']),
             new TwigFunction('canLock', [$this, 'canLock']),
             new TwigFunction('canJoin', [$this, 'canJoin']),
             new TwigFunction('canQuit', [$this, 'canQuit']),
@@ -37,13 +37,12 @@ class TournamentExtension extends AbstractExtension
         return $tournament->getParticipants()->contains($user);
     }
 
-    public function canStart(Tournament $tournament, User $user): bool
+    public function canStartTournament(Tournament $tournament, User $user): bool
     {
         if ($tournament->getCreatedBy() === $user && $tournament->getStep() === 0 && count($tournament->getTrials()) > 0) {
             $startDate = \DateTime::createFromInterface($tournament->getDateStart());
             $now = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
             $now = new \DateTime($now->format('Y-m-d H:i:s'));
-            $now->add(new \DateInterval("P1D"));
             $min = clone $startDate;
             $max = clone $startDate;
             $min->sub(new \DateInterval("PT1H"));

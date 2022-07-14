@@ -112,7 +112,9 @@ class TournamentVoter extends Voter
 
     protected function canShow(Tournament $tournament, User $user): bool 
     {
-        return in_array($tournament->getStatus(), ["AWAITING","STARTED","ENDED"]) ? true : in_array('ROLE_FIGHTER', $user->getRoles());
+        return in_array("ROLE_ADJUDICATE", $user->getRoles()) || 
+        in_array("ROLE_ADMIN", $user->getRoles()) ||
+        in_array($tournament->getStatus(), ["AWAITING","STARTED","ENDED"]) ? true : in_array('ROLE_FIGHTER', $user->getRoles());
     }
 
     /**

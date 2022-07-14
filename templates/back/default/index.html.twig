@@ -20,6 +20,7 @@
                         <th>nombre de combattants inscrits</th>
                         <th>nombre d'arbitre participants</th>
                         <th>date</th>
+                        <th>status</th>
                         <th>actions</th>
                     </tr>
                 </thead>
@@ -30,6 +31,7 @@
                         <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
                         <th>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</th>
                         <th>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</th>
+                        <th>{{ tournament.status}}</th>
                         <th>
                         {% if app.user %}
                             {% if canStartTournament(tournament, app.user)%}
@@ -67,6 +69,7 @@
                     <tr>
                         <th>combattants</th>
                         <th>date</th>
+                        <th>status</th>
                         <th>actions</th>
                     </tr>
                 </thead>
@@ -75,6 +78,7 @@
                     <tr>
                             <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</th>
                             <th>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</th>
+                            <th>{{ trial.status}}</th>
                             <th>
                             {% if trial.status == "DATE_REFUSED" %}
                                 {{ include('back/trial/_modify_date_form.html.twig') }}

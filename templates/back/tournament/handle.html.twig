@@ -1,0 +1,51 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Tournament {{ tournament.name }}{% endblock %}
+
+{% block body %}
+
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>HANDLE</h1>
+    <b>Name:</b></br>
+    {{ tournament.name }}</br>
+    <b>Match:</b>
+    {% if trials is defined and trials is not empty %}
+        <div>
+        {% set index = 1 %}
+        {% for trial in trials %}
+            <div>
+            {% if trial.tournamentStep > index %}
+            </div>
+                <br/>
+                {% set index = trial.tournamentStep %}
+            {% endif %}
+            {% set fighters = trial.fighters.getValues %}
+            {% if fighters is not empty %}
+                [
+                {% if fighters[0] %}
+                    {{fighters[0].nickname}}
+                {% endif %}
+                {% if fighters.1 is defined %}
+                    &nbsp;vs&nbsp;{{fighters[1].nickname}}
+                {% endif %}
+                ]
+            {% else %}
+                [ INCOMING ]
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% if startTrial is defined %}
+        {{ include('back/tournament/_start_trial_form.html.twig') }}
+    {% endif %}
+    {% if endTrial is defined %}
+        {{ include('back/tournament/_end_trial_form.html.twig') }}
+    {% endif %}
+    
+</div>
+{% endblock %}
