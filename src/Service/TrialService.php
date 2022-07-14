@@ -16,11 +16,15 @@ class TrialService
     const WIN_TIME = 0;
     private $entityManager;
     private $userRepository;
+    private $betService;
+    private $fightingStatsService;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, BetService $betService,FightingStatsService $fightingStatsService)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->betService = $betService;
+        $this->fightingStatsService = $fightingStatsService;
     }
 
     public function endTrial(Trial $trial, User $winner, string $winType)
@@ -39,14 +43,18 @@ class TrialService
         $ratioTrialWinner = $winner->getFightingStats()->getVictories() / $winner->getFightingStats()->getDefeats() > 1.1 ? 0.2 : -0.2;
         $ratioTrialLooser = $loser->getFightingStats()->getVictories() / $loser->getFightingStats()->getDefeats() > 1.1 ? -0.2 : 0.2;
 
-        $winPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialWinner + self::WINS[$winType]));
-        $lossPoints = self::BASE_POINTS * (1 + ($diffRank + $ratioTrialLooser));
+        $winPoints = self::BASE_POINTS + (self::BASE_POINTS * ($diffRank + $ratioTrialWinner + self::WINS[$winType]));
+        $lossPoints = -(self::BASE_POINTS + (self::BASE_POINTS * ($diffRank + $ratioTrialLooser)));
 
-        /*  ALGO DE COMPTAGE DE POINTS FINIS 
-            AJOUT DE FightinStatService -> modifyRank needed
-            AJOUT DE PAYEMENT DES BETS REUSSIS NEEDED
-        */
-        dd($winPoints, $lossPoints);
+        $this->fightingStatsService->modifyRank($loser->getFightingStats(), $lossPoints);
+        $this->fightingStatsService->modifyRank($winner->getFightingStats(), $winPoints);
 
+        $trial->setWinner($winner);
+        $trial->setVictoryType($winType);
+        $trial->setStatus("ENDED");
+        $this->entityManager->flush();
+
+        $this->betService->closeBets(trial: $trial, winType: $winType);
+        return;
     }
 }

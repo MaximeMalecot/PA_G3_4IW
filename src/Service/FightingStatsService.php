@@ -17,9 +17,9 @@ class FightingStatsService
         $this->entityManager = $entityManager;
         $this->fightingStatsRepository = $fightingStatsRepository;
     }
-
+    
     public function modifyRank(FightingStats $fs, int $points){//IF LOSE POINTS = -100 ELSE POINTS = 100
-        $incomingPoints = $fs->getRankingPoints() + $points;
+        $incomingPoints = $fs->getRankingPoints() + $points < 0 ? 0 : $fs->getRankingPoints() + $points;
         $conn = $this->entityManager->getConnection();
         $select = "SELECT * FROM fighting_stats WHERE ranking_points >= ? ORDER BY rank DESC";
         $res = $conn->executeQuery($select, [$incomingPoints])->fetchAllAssociative();
@@ -41,10 +41,10 @@ class FightingStatsService
             $conn->executeStatement($update, [$incomingPoints, $fs->getRankingPoints(), $fs->getId()]);
             $incomingRank = $incomingRank - 1;
         }
-        $fs->setRankingPoints($fs->getRankingPoints() + $points);
+        $fs->setRankingPoints($incomingPoints);
         $fs->setRank($incomingRank);
-        $this->_em->persist($fs);
-        $this->_em->flush();
+        $this->entityManager->persist($fs);
+        $this->entityManager->flush();
         return;
     }
 

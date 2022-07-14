@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Bet;
+use App\Entity\User;
+use App\Entity\Trial;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -17,6 +19,17 @@ class BetRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Bet::class);
+    }
+
+    public function findTrialWinners(Trial $trial)
+    {
+        $qb = $this->createQueryBuilder('b');
+        return $qb->innerJoin('b.trial', 'tr')
+            ->where('tr.id = :tid')
+            ->andWhere('b.bettee = :winnerId')
+            ->setParameters(['tid' => $trial->getId(), 'winnerId' => $trial->getWinner()->getId()])
+            ->getQuery()
+            ->getResult();
     }
 
     // /**
