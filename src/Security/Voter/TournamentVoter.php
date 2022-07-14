@@ -22,10 +22,11 @@ class TournamentVoter extends Voter
     const QUIT = 'quit';
     const LOCK = 'lock';
     const START = 'start';
+    const BET = 'bet';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::LOCK, self::START])){
+        if(in_array($attribute, [self::BET, self::CREATE, self::EDIT, self::DELETE, self::SHOW, self::JOIN, self::QUIT, self::LOCK, self::START])){
             if($attribute == self::CREATE){
                 return true;
             } else {
@@ -65,6 +66,9 @@ class TournamentVoter extends Voter
             case self::EDIT:
                 return $this->canEdit($subject, $user);
                 break;
+            case self::BET:
+                return $this->canBet($subject, $user);
+                break;
             case self::DELETE:
                 return in_array('ROLE_ADMIN', $user->getRoles()) || $this->canEdit($subject, $user);
                 break;
@@ -84,6 +88,11 @@ class TournamentVoter extends Voter
         } else {
             return false;
         } 
+    }
+
+    protected function canBet(Tournament $tournament, User $user) : bool 
+    {
+        return $tournament->getStatus() === "AWAITING" && !$tournament->getParticipants()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 
     protected function canQuit(Tournament $tournament, User $user): bool

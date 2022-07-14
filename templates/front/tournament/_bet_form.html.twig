@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('front_tournament_bet', {'id': tournament.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('bet' ~ tournament.id) }}">
+    <button class="btn">Bet</button>
+</form>

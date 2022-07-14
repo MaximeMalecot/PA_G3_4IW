@@ -16,13 +16,12 @@ class BetVoter extends Voter
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
     const SHOW = 'show';
-    const CREATE = 'create';
     const EDIT = 'edit';
     const DELETE = 'delete';
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::SHOW, self::CREATE, self::EDIT, self::DELETE])
+        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE])
             && $subject instanceof Bet;
     }
 
@@ -33,18 +32,16 @@ class BetVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-        if ($this->security->isGranted('ROLE_ADJUDICATE')) {
-            return false;
-        }
 
         switch ($attribute){
             case self::SHOW:
-            case self::EDIT:
-            case self::CREATE:
-                return $subject->getBetter() == $user;
+                return $subject->getBetter() === $user || in_array("ROLE_ADMIN", $user->getRoles());
                 break;
+            case self::EDIT:
+                return $subject->getBetter() === $user;
+                break;   
             case self::DELETE:
-                return $subject->getBetter() == $user || $this->security->isGranted("ROLE_ADMIN");
+                return $subject->getBetter() === $user || in_array("ROLE_ADMIN", $user->getRoles());
                 break;
         }
     }

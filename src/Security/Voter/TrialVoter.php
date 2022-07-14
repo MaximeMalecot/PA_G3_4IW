@@ -17,13 +17,14 @@ class TrialVoter extends Voter
     const EDIT = 'edit';
     const DELETE = 'delete';
     const CREATE = 'create';
+    const BET = 'bet';
     const CONSULT = 'consult';
     const TRIAL_ANSWER = "trial_answer";
     const CHALLENGE_ANSWER = "challenge_answer";
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::EDIT, self::DELETE, self::CREATE, self::CONSULT, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])){
+        if(in_array($attribute, [self::EDIT, self::BET, self::DELETE, self::CREATE, self::CONSULT, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])){
             if(in_array($attribute, [self::CREATE, self::CONSULT])){
                 return true;
             } else {
@@ -47,6 +48,9 @@ class TrialVoter extends Voter
                 break;
             case self::EDIT:
                 return $this->canEdit($subject, $user);
+                break;
+            case self::BET:
+                return $this->canBet($subject, $user);
                 break;
             case self::DELETE:
                 return in_array('ROLE_ADMIN', $user->getRoles()) || $this->canEdit($subject, $user);
@@ -96,6 +100,11 @@ class TrialVoter extends Voter
         if($trial->getStatus() === "ACCEPTED"){
             return in_array("ROLE_ADJUDICATE", $user->getRoles());
         }
+    }
+
+    protected function canBet(Trial $trial, User $user): bool 
+    {
+        return $trial->getStatus() === "AWAITING" && !$trial->getFighters()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
     }
     
 }

@@ -2,8 +2,11 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Bet;
 use App\Entity\User;
 use App\Entity\Trial;
+use App\Form\BetType;
+use App\Service\BetService;
 use App\Repository\UserRepository;
 use App\Security\Voter\TrialVoter;
 use App\Repository\TrialRepository;
@@ -96,6 +99,41 @@ class TrialController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/trial/{id}/create', name: 'trial_bet', methods: ['GET', 'POST'])]
+    #[IsGranted(TrialVoter::BET, "trial")]
+    public function bet(Trial $trial, Request $request, BetService $betService): Response
+    {
+        $bet = new Bet();
+        $form = $this->createForm(BetType::class, $bet, [
+            'bet_type' => 'trial',
+            'entity' => $trial
+        ]);
+        $form->handleRequest($request);
+        if (!$form->isSubmitted() && !$this->isCsrfTokenValid('bet'.$trial->getId(), $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('front_trial_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $bet = $form->getData();
+                try {
+                    $betService->createBet($bet, trial: $trial);
+                    $this->addFlash('green', 'Pari effectué avec succès');
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $e->getMessage());
+                }
+            } else {
+                $this->addFlash('red', $form->getErrors(false));
+            }
+            return $this->redirectToRoute('front_trial_index', status: Response::HTTP_SEE_OTHER);
+        }
+        return $this->render('front/bet/create.html.twig', [
+            'user' => $this->getUser(),
+            'form' => $form->createView()
+        ]);
     }
 
     #[Route('/{id}',  name: 'trial_show', methods: ['GET'])]

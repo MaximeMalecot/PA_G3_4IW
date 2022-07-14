@@ -34,8 +34,8 @@
                     <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                     <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                     <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
-                    {% if app.user and status is same as "AWAITING" %}
-                        <td><a href="{{ path('front_bet_trial_create', {'id': trial.id}) }}" class="waves-effect waves-light btn">Parier</a></td>
+                    {% if app.user and canBetTrial(trial, app.user) %}
+                        <th>{{ include('front/trial/_bet_form.html.twig') }}</th>
                     {% endif %}
                 </tr>
             {% endfor %}

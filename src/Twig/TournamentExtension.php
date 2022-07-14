@@ -18,7 +18,8 @@ class TournamentExtension extends AbstractExtension
             new TwigFunction('canStartTournament', [$this, 'canStart']),
             new TwigFunction('canLock', [$this, 'canLock']),
             new TwigFunction('canJoin', [$this, 'canJoin']),
-            new TwigFunction('canQuit', [$this, 'canQuit'])
+            new TwigFunction('canQuit', [$this, 'canQuit']),
+            new TwigFunction('canBetTournament', [$this, 'canBetTournament'])
         ];
     }
 
@@ -70,5 +71,10 @@ class TournamentExtension extends AbstractExtension
     public function canQuit(Tournament $tournament, User $user): bool
     {
         return $tournament->getStatus() === "CREATED" && $tournament->getParticipants()->contains($user);
+    }
+
+    public function canBetTournament(Tournament $tournament, User $user): bool 
+    {
+        return $tournament->getStatus() === "AWAITING" && !$tournament->getParticipants()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }

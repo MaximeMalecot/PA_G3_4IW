@@ -22,6 +22,7 @@ class TrialExtension extends AbstractExtension
         return [
             new TwigFunction('canChallenge', [$this, 'canChallenge']),
             new TwigFunction('canStart', [$this, 'canStart']),
+            new TwigFunction('canBetTrial', [$this, 'canBetTrial']),
         ];
     }
 
@@ -53,8 +54,11 @@ class TrialExtension extends AbstractExtension
                 return true;
             }
         }
-
-
         return false;
+    }
+
+    public function canBetTrial(Trial $trial, User $user)
+    {
+        return $trial->getStatus() === "AWAITING" && !$trial->getFighters()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Bet;
 use App\Entity\User;
-use App\Entity\Tournament;
 use App\Entity\Trial;
+use App\Form\BetType;
+use App\Entity\Tournament;
+use App\Service\BetService;
+use App\Service\TournamentService;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
-use App\Service\TournamentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +70,41 @@ class TournamentController extends AbstractController
         return $this->render('front/tournament/show.html.twig', [
             'tournament' => $tournament,
             'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament], ['tournamentStep' => 'ASC'])
+        ]);
+    }
+
+    #[Route('/{id}/bet', name: 'tournament_bet', methods: ['GET', 'POST'])]
+    #[IsGranted(TournamentVoter::BET, 'tournament')]
+    public function bet(Tournament $tournament, Request $request, BetService $betService): Response
+    {
+        $bet = new Bet();
+        $form = $this->createForm(BetType::class, $bet, [
+            'bet_type' => 'tournament',
+            'entity' => $tournament,
+        ]);
+        $form->handleRequest($request);
+        if (!$form->isSubmitted() && !$this->isCsrfTokenValid('bet'.$tournament->getId(), $request->request->get('_token'))) {
+            $this->addFlash('red', "SecurityError");
+            return $this->redirectToRoute('front_tournament_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $bet = $form->getData();
+                try {
+                    $betService->createBet($bet, tournament: $tournament);
+                    $this->addFlash('success', 'Pari effectué avec succès');
+                } catch (\Exception $e) {
+                    $this->addFlash('error', $e->getMessage());
+                }
+            } else {
+                $this->addFlash('red', $form->getErrors(false));
+            }
+            return $this->redirectToRoute('front_trial_index', status: Response::HTTP_SEE_OTHER);
+        }
+        return $this->render('front/bet/create.html.twig', [
+            'user' => $this->getUser(),
+            'form' => $form->createView(),
         ]);
     }
 }
