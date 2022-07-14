@@ -48,6 +48,7 @@ class Trial
 
     /**
      * @ORM\ManyToOne(targetEntity=Tournament::class, inversedBy="trials")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $tournament;
 
@@ -85,10 +86,9 @@ class Trial
     private $winner;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="acceptedTrials")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $acceptedBy;
+    private $tournamentStep;
 
     public function __construct()
     {
@@ -286,14 +286,14 @@ class Trial
         return $this;
     }
 
-    public function getAcceptedBy(): ?User
+    public function getTournamentStep(): ?int
     {
-        return $this->acceptedBy;
+        return $this->tournamentStep;
     }
 
-    public function setAcceptedBy(?User $acceptedBy): self
+    public function setTournamentStep(int $tournamentStep): self
     {
-        $this->acceptedBy = $acceptedBy;
+        $this->tournamentStep = $tournamentStep;
 
         return $this;
     }

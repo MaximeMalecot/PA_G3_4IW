@@ -23,7 +23,6 @@
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('trialFilter') }}">
     </form>
     <table>
         <thead>
@@ -45,18 +44,19 @@
                     {% if trial.status == "DATE_REFUSED" %}
                         <a href="{{ path('back_trial_modify_date', {'id': trial.id} ) }}">modifier la date</a>
                     {% endif %}
+                    {% if trial.status == "ACCEPTED" %}
+                        {{ include('back/trial/_accept_challenge_form.html.twig') }}
+                        {{ include('back/trial/_refuse_challenge_form.html.twig') }}
+                    {% endif %}
                     {% if trial.dateStart is defined and trial.dateStart is not null %}
-                        {% if date() < limitRefuseTrialDate(trial.dateStart)%}
-                                {{ include('back/trial/_delete_form.html.twig') }}
+                        {% if date() < limitRefuseDelete(trial.dateStart)%}
+                            {{ include('back/trial/_delete_form.html.twig') }}
+                        {% endif %}
+                        {% if trial.status == "AWAITING" and canStart(app.user, trial) %}
+                            {{ include('back/trial/_start_form.html.twig') }}
                         {% endif %}
                     {% else %}
                         {{ include('back/trial/_delete_form.html.twig') }}
-                    {% endif %}
-                    </th>
-                    <th>
-                    {% if trial.status == "CREATED" %}
-                        <a href="{{ path('back_trial_accept_challenge', {'id': trial.id} ) }}">Accept</a>
-                        <a href="{{ path('back_trial_refuse_challenge', {'id': trial.id} ) }}">Refuse</a>
                     {% endif %}
                     </th>
                 </tr>
@@ -76,7 +76,9 @@
         var instances = M.FormSelect.init(select);
         let form = document.getElementById('filter');
         form.addEventListener("change", async() => {
-            form.submit();
+            let url = "{{ path('back_trial_index', {'status': 'statusValue'})|escape('js') }}";
+            url = url.replace('statusValue', select.value);
+            window.location.href = url;
         });
     });
     
