@@ -4,6 +4,7 @@ namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Entity\Tournament;
+use App\Repository\TournamentRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -23,6 +24,11 @@ class TournamentVoter extends Voter
     const LOCK = 'lock';
     const START = 'start';
     const BET = 'bet';
+
+    public function __construct(private TournamentRepository $tournamentRepository)
+    {
+        
+    }
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -92,7 +98,11 @@ class TournamentVoter extends Voter
 
     protected function canBet(Tournament $tournament, User $user) : bool 
     {
-        return $tournament->getStatus() === "AWAITING" && !$tournament->getParticipants()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->tournamentRepository->findBetTournamentForUser($tournament, $user)) === 0 && 
+        $tournament->getStatus() === "AWAITING" && 
+        !$tournament->getParticipants()->contains($user) && 
+        (in_array("ROLE_USER", $user->getRoles()) || 
+        in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 
     protected function canQuit(Tournament $tournament, User $user): bool

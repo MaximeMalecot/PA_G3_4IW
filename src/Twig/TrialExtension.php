@@ -10,9 +10,8 @@ use Twig\Extension\AbstractExtension;
 
 class TrialExtension extends AbstractExtension
 {
-    protected $trialRepository;
 
-    public function __construct(TrialRepository $trialRepository)
+    public function __construct(protected TrialRepository $trialRepository)
     {
         $this->trialRepository = $trialRepository;
     }
@@ -59,6 +58,10 @@ class TrialExtension extends AbstractExtension
 
     public function canBetTrial(Trial $trial, User $user)
     {
-        return $trial->getStatus() === "AWAITING" && !$trial->getFighters()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 && 
+        $trial->getStatus() === "AWAITING" && 
+        !$trial->getFighters()->contains($user) && 
+        (in_array("ROLE_USER", $user->getRoles()) || 
+        in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }

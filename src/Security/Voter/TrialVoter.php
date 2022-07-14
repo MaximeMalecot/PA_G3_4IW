@@ -4,6 +4,7 @@ namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Entity\Trial;
+use App\Repository\TrialRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,6 +22,11 @@ class TrialVoter extends Voter
     const CONSULT = 'consult';
     const TRIAL_ANSWER = "trial_answer";
     const CHALLENGE_ANSWER = "challenge_answer";
+
+    public function __construct(private TrialRepository $trialRepository)
+    {
+        
+    }
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -104,7 +110,11 @@ class TrialVoter extends Voter
 
     protected function canBet(Trial $trial, User $user): bool 
     {
-        return $trial->getStatus() === "AWAITING" && !$trial->getFighters()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 && 
+        $trial->getStatus() === "AWAITING" && 
+        !$trial->getFighters()->contains($user) && 
+        (in_array("ROLE_USER", $user->getRoles()) || 
+        in_array("ROLE_FIGHTER", $user->getRoles()));
     }
     
 }

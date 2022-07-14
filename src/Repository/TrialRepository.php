@@ -110,6 +110,17 @@ class TrialRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findBetTrialForUser(Trial $trial, User $user)
+    {
+        $qb = $this->createQueryBuilder('tr');
+        return $qb->innerJoin('tr.bets', 'b')
+            ->where('tr.id = :tid')
+            ->andWhere('b.better = :user')
+            ->setParameters(['tid' => $trial->getId(), 'user' => $user])
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Trial[] Returns an array of Trial objects
     //  */

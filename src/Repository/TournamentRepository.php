@@ -46,6 +46,17 @@ class TournamentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findBetTournamentForUser(Tournament $tournament, User $user)
+    {
+        $qb = $this->createQueryBuilder('tn');
+        return $qb->innerJoin('tn.bets', 'b')
+            ->where('tn.id = :tid')
+            ->andWhere('b.better = :user')
+            ->setParameters(['tid' => $tournament->getId(), 'user' => $user])
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Tournament[] Returns an array of Tournament objects
     //  */

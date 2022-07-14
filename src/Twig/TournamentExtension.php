@@ -2,13 +2,18 @@
 
 namespace App\Twig;
 
-use Twig\TwigFunction;
 use App\Entity\User;
+use Twig\TwigFunction;
 use App\Entity\Tournament;
 use Twig\Extension\AbstractExtension;
+use App\Repository\TournamentRepository;
 
 class TournamentExtension extends AbstractExtension
 {
+    public function __construct(protected TournamentRepository $tournamentRepository)
+    {
+        
+    }
 
     public function getFunctions(): array
     {
@@ -75,6 +80,10 @@ class TournamentExtension extends AbstractExtension
 
     public function canBetTournament(Tournament $tournament, User $user): bool 
     {
-        return $tournament->getStatus() === "AWAITING" && !$tournament->getParticipants()->contains($user) && (in_array("ROLE_USER", $user->getRoles()) || in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->tournamentRepository->findBetTournamentForUser($tournament, $user)) === 0 && 
+        $tournament->getStatus() === "AWAITING" && 
+        !$tournament->getParticipants()->contains($user) && 
+        (in_array("ROLE_USER", $user->getRoles()) || 
+        in_array("ROLE_FIGHTER", $user->getRoles()));
     }
 }
