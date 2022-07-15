@@ -12,6 +12,10 @@
 <div class="example-wrapper">
     <b>Name:</b></br>
     {{ tournament.name }}</br>
+    {% if tournament.winner %}
+    <b>Winner:</b></br>
+    {{ tournament.winner }}</br>
+    {% endif %}
     <b>Arbitre du tournoi:</b></br> 
     {{ tournament.createdBy.nickname ?? "null"}}</br>
     <b>Combattants:</b></br>

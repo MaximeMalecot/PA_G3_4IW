@@ -78,7 +78,7 @@ class BetService
             if (count($winningBets) === 0) {
                 return;
             }
-            $ratioWinningPoints = ($betters / count($winningBets));
+            $ratioWinningPoints = ($betters-count($winningBets) / count($winningBets));
             foreach ($winningBets as $winningBet) {
                 $winningBet->getBetter()->setCredits($winningBet->getBetter()->getCredits() + ($winningBet->getAmount() * $ratioWinningPoints));
             }

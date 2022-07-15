@@ -28,7 +28,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create();
         /////////CLASSICTOURNAMENT/////////
-        $adjudicateMain = $this->userRepository->findBy(["email" => "adjudicate0@adjudicate.com"],null,1);
+        $adjudicateMain = $this->userRepository->findOneBy(["email" => "adjudicate0@adjudicate.com"]);
         $fighters = $this->userRepository->findByRole("ROLE_FIGHTER");
         $adjudicates = $this->userRepository->findByRole("ROLE_ADJUDICATE");
         $tournaments = [];
@@ -38,7 +38,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
                 ->setNbMaxParticipants(16)
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'))
                 ->setStatus("AWAITING")
-                ->setCreatedBy($adjudicateMain[0]);
+                ->setCreatedBy($adjudicateMain);
             for($j=0; $j<16; $j++){
                 $object->addParticipant(UArray::getRandomElem($fighters));
             }
@@ -51,18 +51,19 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
         foreach($tournaments as $tournament){
             $this->tournamentService->createTrialsForTournament($tournament);
         }
-
+        $date = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
+        $date->add(new \DateInterval("PT1H"));
         $object = (new Tournament())
             ->setName($faker->realText(99,1))
-            ->setNbMaxParticipants(8)
-            ->setDateStart($faker->dateTimeBetween('+1 week', '+3 month'))
+            ->setNbMaxParticipants(4)
+            ->setDateStart($date)
             ->setStatus("CREATED")
-            ->setCreatedBy($adjudicateMain[0]);
-        for($i=0; $i<7; $i++){
-            if($i < 4){
-                $object->addParticipant(UArray::getRandomElem($adjudicates));
+            ->setCreatedBy($adjudicateMain);
+        for($i=0; $i<4; $i++){
+            if($i < 2){
+                $object->addParticipant($this->userRepository->findOneBy(["email" => "adjudicate".$i."@adjudicate.com"]));
             }
-            $object->addParticipant(UArray::getRandomElem($fighters));
+            $object->addParticipant($this->userRepository->findOneBy(["email" => "fighter".$i."@fighter.com"]));
         }
         $manager->persist($object);
         $manager->flush();

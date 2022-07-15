@@ -23,7 +23,7 @@ class TrialController extends AbstractController
     #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        $status = in_array($request->query->get('status'),["AWAITING","STARTED","ENDED"]) ? $request->query->get('status') : "AWAITING";
+        $status = in_array($request->query->get('status'),["AWAITING","STARTED","ENDED"]) ? $request->query->get('status') : "STARTED";
         return $this->render('front/trial/index.html.twig', [
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
             'status' => $status

@@ -22,6 +22,7 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
+        $twitchChannels = [ "gotaga", "doigby", "damnitsegon", "amouranth"];
         /////////ADMIN/////////
         $admin = (new User())
             ->setEmail('admin@admin.com')
@@ -40,6 +41,7 @@ class UserFixtures extends Fixture
                 ->setIsVerified(true)
                 ->setRoles(['ROLE_ADJUDICATE'])
                 ->setNickname($faker->userName)
+                ->setTwitchChannel($faker->randomElement($twitchChannels))
                 ->setDescription($faker->realText(400,2))
             ;
             $adjudicate->setPassword($this->userPasswordHasher->hashPassword($adjudicate, 'test'));

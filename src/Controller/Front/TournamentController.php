@@ -26,9 +26,9 @@ class TournamentController extends AbstractController
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
         if($this->getUser()){
-            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "AWAITING";
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "STARTED";
         } else {
-            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED"]) ? $request->query->get('status') : "AWAITING";
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED"]) ? $request->query->get('status') : "STARTED";
         }
         return $this->render('front/tournament/index.html.twig', [
             'tournaments' => $tournamentRepository->findBy(["status" => $status ], ["dateStart" => "ASC"]),
