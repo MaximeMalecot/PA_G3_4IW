@@ -52,6 +52,8 @@ class TrialService
         $trial->setWinner($winner);
         $trial->setVictoryType($winType);
         $trial->setStatus("ENDED");
+        $winner->getFightingStats()->setVictories($winner->getFightingStats()->getVictories() + 1);
+        $loser->getFightingStats()->setDefeats($loser->getFightingStats()->getDefeats() + 1);
         $this->entityManager->flush();
 
         $this->betService->closeBets(trial: $trial);

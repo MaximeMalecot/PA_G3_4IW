@@ -10,6 +10,9 @@
             <th>points</th>
             <th>victories</th>
             <th>defeats</th>
+            {% if is_granted('ROLE_FIGHTER') %}
+                <th>action</th>
+            {% endif %}
         </tr>
         {% for stat in fs %}
             <tr>
@@ -18,6 +21,16 @@
                 <td>{{ stat.rankingPoints }}</td>
                 <td>{{ stat.victories }}</td>
                 <td>{{ stat.defeats }}</td>
+                {% if is_granted('ROLE_FIGHTER') %}
+                    <th>
+                        {% if canChallenge(app.user, stat.getTarget()) %}
+                            {% set fighter = stat.getTarget() %}
+                            {{ include('front/user/_challenge_form.html.twig') }}
+                        {% elseif app.user.id != stat.getTarget().id %}
+                            Challenge already waiting
+                        {% endif %}
+                    </th>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
