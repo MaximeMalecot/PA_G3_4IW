@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Bet;
+use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\Trial;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,10 +28,23 @@ class BetRepository extends ServiceEntityRepository
         return $qb->innerJoin('b.trial', 'tr')
             ->where('tr.id = :tid')
             ->andWhere('b.bettee = :winnerId')
-            ->setParameters(['tid' => $trial->getId(), 'winnerId' => $trial->getWinner()->getId()])
+            ->andWhere('b.victoryType = :victoryType')
+            ->setParameters(['tid' => $trial->getId(), 'winnerId' => $trial->getWinner()->getId(), 'victoryType' => $trial->getVictoryType()])
             ->getQuery()
             ->getResult();
     }
+
+    public function findTournamentWinners(Tournament $tournament)
+    {
+        $qb = $this->createQueryBuilder('b');
+        return $qb->innerJoin('b.tournament', 'tn')
+            ->where('tn.id = :tid')
+            ->andWhere('b.bettee = :winnerId')
+            ->setParameters(['tid' => $tournament->getId(), 'winnerId' => $tournament->getWinner()->getId()])
+            ->getQuery()
+            ->getResult();
+    }
+
 
     // /**
     //  * @return Bet[] Returns an array of Bet objects

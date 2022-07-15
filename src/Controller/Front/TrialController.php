@@ -84,6 +84,7 @@ class TrialController extends AbstractController
                 $trial->setStatus("DATE_ACCEPTED");
             } else if($trial->getStatus() == "DATE_ACCEPTED"){
                 $trial->setStatus("AWAITING");
+                $trial->setBetStatus(1);
             }
             $entityManager->flush();
         }
@@ -101,7 +102,7 @@ class TrialController extends AbstractController
         return $this->redirectToRoute('front_trial_consult', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/trial/{id}/create', name: 'trial_bet', methods: ['GET', 'POST'])]
+    #[Route('/{id}/bet', name: 'trial_bet', methods: ['GET', 'POST'])]
     #[IsGranted(TrialVoter::BET, "trial")]
     public function bet(Trial $trial, Request $request, BetService $betService): Response
     {
@@ -128,7 +129,7 @@ class TrialController extends AbstractController
             } else {
                 $this->addFlash('red', $form->getErrors(false));
             }
-            return $this->redirectToRoute('front_trial_index', status: Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_default', status: Response::HTTP_SEE_OTHER);
         }
         return $this->render('front/bet/create.html.twig', [
             'user' => $this->getUser(),

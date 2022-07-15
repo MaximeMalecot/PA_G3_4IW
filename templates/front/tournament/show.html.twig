@@ -45,6 +45,9 @@
                     &nbsp;vs&nbsp;{{fighters[1].nickname}}
                 {% endif %}
                 ]
+                {% if app.user and canBetTrial(trial, app.user) %}
+                    <th>{{ include('front/trial/_bet_form.html.twig') }}</th>
+                {% endif %}
             {% else %}
                 [ INCOMING ]
             {% endif %}

@@ -54,7 +54,7 @@ class TrialService
         $trial->setStatus("ENDED");
         $this->entityManager->flush();
 
-        $this->betService->closeBets(trial: $trial, winType: $winType);
+        $this->betService->closeBets(trial: $trial);
         return;
     }
 }

@@ -1,0 +1,45 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Combat en cours !{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="example-wrapper">
+    <h1>Trial</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ trial.id }}</td>
+            </tr>
+            {% if trial.adjudicate is defined and trial.adjudicate is not null %}
+            <tr>
+                <th>Adjudicate</th>
+                <td>{{ trial.adjudicate.nickname }}</td>
+            </tr>
+            {% endif %}
+            {% if trial.fighters is defined and trial.fighters is not empty and trial.fighters|length > 1 %}
+            <tr>
+                <th>Fighters</th>
+                <td>{{ trial.fighters[0] }} vs {{ trial.fighters[1] }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Status</th>
+                <td>{{ trial.status }}</td>
+            </tr>
+            <tr>
+                <th>BetStatus</th>
+                <td>{{ trial.betStatus }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% if app.user and canBetTrial(trial, app.user) %}
+        <th>{{ include('front/trial/_bet_form.html.twig') }}</th>
+    {% endif %}
+    <a href="{{ path('front_trial_index') }}">back to list</a>
+{% endblock %}

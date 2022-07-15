@@ -106,7 +106,7 @@ class TournamentController extends AbstractController
             } else {
                 $this->addFlash('red', $form->getErrors(false));
             }
-            return $this->redirectToRoute('front_trial_index', status: Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('front_tournament_index', status: Response::HTTP_SEE_OTHER);
         }
         return $this->render('front/bet/create.html.twig', [
             'user' => $this->getUser(),

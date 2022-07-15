@@ -12,6 +12,7 @@ use App\Service\TournamentService;
 use App\Repository\TrialRepository;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
+use App\Service\BetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -130,7 +131,7 @@ class TournamentController extends AbstractController
 
     #[Route('/{tournament}/end/{trial}', name: 'tournament_trial_end', methods: ['POST'])]
     #[IsGranted(TrialVoter::EDIT, "trial")]
-    public function endTrial(Request $request, Tournament $tournament, Trial $trial, EntityManagerInterface $entityManager, TrialRepository $trialRepository, TrialService $ts): Response
+    public function endTrial(Request $request, Tournament $tournament, Trial $trial, EntityManagerInterface $entityManager, TrialRepository $trialRepository, TrialService $ts, BetService $betService): Response
     {
         if (!$this->isCsrfTokenValid('endTrial' . $trial->getId(), $request->request->get('_token'))) {
             $this->addFlash('red', "SecurityError");
@@ -149,7 +150,7 @@ class TournamentController extends AbstractController
                 $tournament->setWinner($winner);
                 $tournament->setStatus("ENDED");
                 $this->addFlash('green', "Tournament finished");
-                dd('fdp');
+                $betService->closeBets(tournament: $tournament);
             }
         }
         if ($next) {

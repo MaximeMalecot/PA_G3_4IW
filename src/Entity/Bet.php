@@ -46,6 +46,11 @@ class Bet
      */
     private $bettee;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $victoryType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -107,6 +112,18 @@ class Bet
     public function setBettee(?User $bettee): self
     {
         $this->bettee = $bettee;
+
+        return $this;
+    }
+
+    public function getVictoryType(): ?string
+    {
+        return $this->victoryType;
+    }
+
+    public function setVictoryType(?string $victoryType): self
+    {
+        $this->victoryType = $victoryType;
 
         return $this;
     }

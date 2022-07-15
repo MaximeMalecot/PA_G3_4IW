@@ -26,12 +26,6 @@ class BetService
     {
         // TODO: cleanup code
         $better = $this->security->getUser();
-        if ($better === $bet->getBettee()) {
-            throw new Exception('Tu ne peux pas parier sur toi-même.');
-        }
-        if ($this->security->isGranted('ROLE_ADMIN') || $this->security->isGranted('ROLE_ADJUDICATE')) {
-            throw new Exception('Vous ne pouvez pas parier car vous avez un rôle trop élevé.');
-        }
         if ($better->getCredits() < $bet->getAmount()) {
             throw new Exception("Vous ne pouvez pas parier plus que vous avez.");
         }
@@ -42,10 +36,7 @@ class BetService
             if (!in_array($bet->getBettee(), $trial->getFighters()->toArray())) {
                 throw new Exception("Ce combattant n'est pas dans ce match.");
             }
-            if (in_array($better, $trial->getFighters()->toArray())) {
-                throw new Exception("Vous faites partie du match, vous ne pouvez pas parier.");
-            }
-            if ($trial->getStatus() !== "AWAITING") {
+            if ($trial->getBetStatus() !== 1) {
                 throw new Exception("Ce match est déjà terminé ou pas encore prêt pour recevoir des paris.");
             }
             foreach ($better->getBets() as $b) {
@@ -61,9 +52,6 @@ class BetService
             }
             if (!in_array($bet->getBettee(), $tournament->getParticipantFromRole("ROLE_FIGHTER"))) {
                 throw new Exception("Ce combattant n'est pas dans ce tournoi.");
-            }
-            if (in_array($better, $tournament->getParticipantFromRole("ROLE_FIGHTER"))) {
-                throw new Exception("Vous faites partie du tournoi, vous ne pouvez pas parier.");
             }
             foreach ($better->getBets() as $b) {
                 if ($b->getTournament() === $tournament) {
@@ -82,11 +70,24 @@ class BetService
         $this->em->flush();
     }
 
-    public function closeBets(Trial $trial = null, Tournament $tournament = null, string $winType = null): void
+    public function closeBets(Trial $trial = null, Tournament $tournament = null): void
     {
         if ($trial !== null) {
             $winningBets = $this->betRepository->findTrialWinners($trial);
             $betters = count($trial->getBets());
+            if (count($winningBets) === 0) {
+                return;
+            }
+            $ratioWinningPoints = ($betters / count($winningBets));
+            foreach ($winningBets as $winningBet) {
+                $winningBet->getBetter()->setCredits($winningBet->getBetter()->getCredits() + ($winningBet->getAmount() * $ratioWinningPoints));
+            }
+            $this->em->flush();
+            return;
+        }
+        if($tournament !== null){
+            $winningBets = $this->betRepository->findTournamentWinners($tournament);
+            $betters = count($tournament->getBets());
             if (count($winningBets) === 0) {
                 return;
             }

@@ -21,6 +21,7 @@
     <table>
         <thead>
             <tr>
+                <th>id/lien</th>
                 <th>arbitre</th>
                 <th>combattants</th>
                 <th>date</th>
@@ -31,6 +32,7 @@
         {% if trials is defined and trials is not empty %}
             {% for trial in trials %}
                 <tr>
+                    <th><a href="{{path('front_trial_show', {'id': trial.id}) }}">{{ trial.id }}</a></th>
                     <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
                     <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
                     <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
