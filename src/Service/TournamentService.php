@@ -34,6 +34,7 @@ class TournamentService
                 ->setTournament($tournament)
                 ->setTournamentStep($stepIndex)
                 ->setStatus("AWAITING")
+                ->setBetStatus(1)
                 ->setCreatedBy($tournament->getCreatedBy());
             $baseTrials[] = $object;
             $manager->persist($object);
@@ -73,6 +74,7 @@ class TournamentService
                 $trial->getNextTrial()->addFighter($trial->getFighters()[0]);
                 $trial->setWinner($trial->getFighters()[0]);
                 $trial->setStatus("ENDED");
+                $trial->setBetStatus(0);
             }
         }
         $manager->flush();

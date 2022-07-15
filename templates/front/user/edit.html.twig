@@ -9,7 +9,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Edit User</h1>
+    <h1>User {{user.nickname}}</h1>
+    {% if app.user == user %}
+    <h2>Credits {{user.credits}}</h2>
+    {% endif %}
+    <h2>Edit User</h2>
 
     {{ include('front/user/_form.html.twig', {'button_label': 'Update'}) }}
 

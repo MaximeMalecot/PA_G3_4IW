@@ -8,6 +8,17 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 <div class="example-wrapper">
+    {% if trial.status == "STARTED" %}
+        <div>  
+            <iframe
+                src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent=localhost"
+                height="400px"
+                width="300px"
+                allowfullscreen>
+            </iframe>
+
+        </div>
+    {% endif %}
 
     {% if trial.status == "STARTED" and trial.adjudicate == app.user %}
         {{ include('front/trial/_end_trial_form.html.twig') }}

@@ -38,6 +38,7 @@ class TrialFixtures extends Fixture implements DependentFixtureInterface
                 ->addFighter($fighter2)
                 ->setAdjudicate($adjudicate)
                 ->setStatus("AWAITING")
+                ->setBetStatus(1)
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'));
             $object->setCreatedBy($object->getAdjudicate());
             $manager->persist($object);
@@ -48,12 +49,12 @@ class TrialFixtures extends Fixture implements DependentFixtureInterface
                 ->addFighter(UArray::getRandomElem($fighters))
                 ->setAdjudicate($adjudicateMain[0])
                 ->setStatus("AWAITING")
+                ->setBetStatus(1)
                 ->setDateStart($faker->dateTimeBetween('+1 month', '+3 month'));
             $object->setCreatedBy($object->getAdjudicate());
             $manager->persist($object);
         }
         $manager->flush();
-        $trials = $manager->getRepository(Trial::class)->findAll();
     }
 
     public function getDependencies()

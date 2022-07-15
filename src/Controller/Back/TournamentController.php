@@ -156,7 +156,7 @@ class TournamentController extends AbstractController
         if ($next) {
             $next->addFighter($winner);
             $next->setStatus("AWAITING");
-            $next->setBetStatus(0);
+            $next->setBetStatus(1);
         }
         $entityManager->flush();
         $ts->endTrial($trial, $winner, $request->request->get('victoryType'));

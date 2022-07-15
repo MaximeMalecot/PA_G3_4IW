@@ -11,6 +11,7 @@ use App\Service\BetService;
 use App\Service\TournamentService;
 use App\Security\Voter\TournamentVoter;
 use App\Repository\TournamentRepository;
+use App\Repository\TrialRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,13 +66,16 @@ class TournamentController extends AbstractController
     }
 
     #[Route('/{id}', name: 'tournament_show', methods: ['GET'])]
-    public function show(Tournament $tournament, EntityManagerInterface $em): Response 
+    public function show(Tournament $tournament,TrialRepository $trialRepository, EntityManagerInterface $em): Response 
     {
         if($tournament->getStatus() === "STARTED"){
-            return $this->render('front/tournament/live.html.twig', [
-                'tournament' => $tournament,
-                'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament, 'tournamentStep' => $tournament->getStep()], ['tournamentStep' => 'ASC'])
-            ]);
+            $startedTrial = $trialRepository->findBy(["tournament" => $tournament->getId(), "tournamentStep" => $tournament->getStep(), "status" => "STARTED"]);
+            if(count($startedTrial) > 0){
+                return $this->render('front/tournament/live.html.twig', [
+                    'tournament' => $tournament,
+                    'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament, 'tournamentStep' => $tournament->getStep()], ['tournamentStep' => 'ASC'])
+                ]);
+            }
         }
         return $this->render('front/tournament/show.html.twig', [
             'tournament' => $tournament,
