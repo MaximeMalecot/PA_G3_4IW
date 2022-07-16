@@ -15,37 +15,69 @@
     {% endblock %}
 </head>
 <body>
-<nav class="blue">
-    <div class="nav-wrapper">
-        <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="{{ path("front_default") }}">front</a></li>
-            <li><a href="{{ path("back_default") }}">back</a></li>
-            {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path("back_user_index") }}">utilisateurs</a></li>
-                <li><a href="{{ path("back_ticket_index") }}">tickets</a></li>
-            {% endif %}
-            <li><a href="{{ path("back_trial_index") }}">gestion des combats</a></li>
-            <li><a href="{{ path("back_tournament_index") }}">gestion des tournois</a></li>
-            <li><a href="{{ path('app_logout') }}">logout</a></li>
-        </ul>
-        <a href="{{ path("back_default") }}" class="brand-logo right">Logo</a>
+
+<header class="mb-4">
+    <div class="px-3 py-3 bg-dark text-white shadow">
+        <div class="container">
+            <nav class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="{{ path("back_default") }}" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                    <p class="m-0 fs-4">Bettle</p>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li>
+                        <a href="{{ path("back_user_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_user_index" ? "text-secondary" : "text-white"}}">
+                            Utilisateurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("back_ticket_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_ticket_index" ? "text-secondary" : "text-white"}}">
+                            Tickets
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a href="{{ path("back_trial_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_trial_index" ? "text-secondary" : "text-white"}}">
+                            Gestion des combats
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("back_tournament_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_tournament_index" ? "text-secondary" : "text-white"}}">
+                            Gestion des tournois
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path("front_default") }}" class="nav-link text-white">
+                            Retourner sur le front-office
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}" class="nav-link text-white">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-</nav> 
+</header>
 
-
-
-<div class="container">
+<main class="container">
     {% block body %}{% endblock %}
-</div>
+</main>
 
-<script defer>
-    document.addEventListener("DOMContentLoaded", function() {
-        {% for type, messages in app.flashes() %}
-        {% for message in messages %}
-        M.toast({html: '{{ message }}', classes: '{{ type }}'})
-        {% endfor %}
-        {% endfor %}
-    });
-</script>
+{% for type, messages in app.flashes() %}
+    {% for message in messages %}
+        <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
 </body>
 </html>

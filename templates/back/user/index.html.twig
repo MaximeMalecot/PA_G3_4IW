@@ -3,40 +3,32 @@
 {% block title %}Users{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
     <h1>User index</h1>
 
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>IsVerified</th>
-                <th>Nickname</th>
-                <th>Description</th>
-                <th>Twitch_channel</th>
-                <th>Credits</th>
-                <th>actions</th>
+                <th scope="col">Id</th>
+                <th scope="col">Email</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Is verified</th>
+                <th scope="col">Nickname</th>
+                <th scope="col">Twitch Channel</th>
+                <th scope="col">Credits</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
-                <td>{{ user.id }}</td>
+                <th scope="row">{{ user.id }}</th>
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
                 <td>{{ user.nickname }}</td>
-                <td>{{ user.description }}</td>
                 <td>{{ user.twitchChannel }}</td>
                 <td>{{ user.credits }}</td>
-                <td>
+                <td class="d-flex flex-column gap-2">
                     {{ include('back/user/_show_form.html.twig') }}
                     {{ include('back/user/_edit_form.html.twig') }}
                     {{ include('back/user/_delete_form.html.twig') }}
@@ -49,5 +41,4 @@
         {% endfor %}
         </tbody>
     </table>
-</div>
 {% endblock %}

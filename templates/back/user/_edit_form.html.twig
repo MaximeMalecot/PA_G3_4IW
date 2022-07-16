@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('back_user_edit', { 'id': user.id }) }}">
+<form method="post" action="{{ path('back_user_edit', { 'id': user.id }) }}" >
     <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ user.id) }}">
-    <button class="btn">Edit</button>
+    <button type="submit" class="btn btn-primary w-100">Edit</button>
 </form>

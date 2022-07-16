@@ -6,13 +6,21 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
+import './styles/app.scss';
 
 // If you need Materialize's JS features you can import them here
-import M from "materialize-css";
-window.M = M;
+import {Toast} from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const selects = document.querySelectorAll('select');
-    M.FormSelect.init(selects, null, {});
+    const toastElList = document.querySelectorAll('.toast');
+    const toastList = [...toastElList].map(toastEl => new Toast(toastEl, {}));
+    toastList.forEach(toast => toast.show());
 });
+
+// import M from "materialize-css";
+// window.M = M;
+//
+// document.addEventListener('DOMContentLoaded', function() {
+//     const selects = document.querySelectorAll('select');
+//     M.FormSelect.init(selects, null, {});
+// });

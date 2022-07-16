@@ -1,70 +1,84 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Trial index{% endblock %}
+{% block title %}Bettle - Gestion des combats{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Les combats</h1>
-    <label for="filter">Status</label>
-    <form id="filter">
-        <select id="status" name="status">
-            <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
-            <option value="CREATED" id="CREATED">CREER</option>
-            <option value="DATE_ACCEPTED" id="DATE_ACCEPTED">DATE_ACCEPTED</option>
-            <option value="DATE_REFUSED" id="DATE_REFUSED">DATE_REFUSED</option>
-            <option value="REFUSED" id="REFUSED">REFUSED</option>
-            <option value="ACCEPTED" id="ACCEPTED">ACCEPTED</option>
-            <option value="VALIDATED" id="VALIDATED">VALIDATED</option>
-            <option value="STARTED" id="STARTED">EN COURS</option>
-            <option value="ENDED" id="ENDED">FINIS</option>
-        </select>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>arbitre</th>
-                <th>combattants</th>
-                <th>date</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody id="trial_data">
+<div class="card">
+    <div class="card-header">
+        <h1>Les combats</h1>
+    </div>
+    <div class="card-body">
+        <form id="filter">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select">
+                <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
+                <option value="CREATED" id="CREATED">CREER</option>
+                <option value="DATE_ACCEPTED" id="DATE_ACCEPTED">DATE_ACCEPTED</option>
+                <option value="DATE_REFUSED" id="DATE_REFUSED">DATE_REFUSED</option>
+                <option value="REFUSED" id="REFUSED">REFUSED</option>
+                <option value="ACCEPTED" id="ACCEPTED">ACCEPTED</option>
+                <option value="VALIDATED" id="VALIDATED">VALIDATED</option>
+                <option value="STARTED" id="STARTED">EN COURS</option>
+                <option value="ENDED" id="ENDED">FINIS</option>
+            </select>
+        </form>
+        <hr>
         {% if trials is defined and trials is not empty %}
-            {% for trial in trials %}
+        <table class="table">
+            <thead>
                 <tr>
-                    <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
-                    <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</th>
-                    <th>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</th>
-                    <th>
-                    {% if trial.status == "DATE_REFUSED" %}
-                        {{ include('back/trial/_modify_date_form.html.twig') }}
-                    {% endif %}
-                    {% if trial.status == "ACCEPTED" %}
-                        {{ include('back/trial/_accept_challenge_form.html.twig') }}
-                        {{ include('back/trial/_refuse_challenge_form.html.twig') }}
-                    {% endif %}
-                    {% if trial.dateStart is defined and trial.dateStart is not null %}
-                        {% if date() < limitRefuseDelete(trial.dateStart)%}
-                            {{ include('back/trial/_delete_form.html.twig') }}
-                        {% endif %}
-                        {% if trial.status == "AWAITING" and canStart(app.user, trial) %}
-                            {{ include('back/trial/_start_form.html.twig') }}
-                        {% endif %}
-                    {% else %}
-                        {{ include('back/trial/_delete_form.html.twig') }}
-                    {% endif %}
-                    </th>
+                    <th scope="col">Arbitre</th>
+                    <th scope="col">Combattants</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody id="trial_data">
+
+                {% for trial in trials %}
+                    <tr>
+                        <td>{{ trial.adjudicate.nickname ?? "null" }}</td>
+                        <td>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</td>
+                        <td>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</td>
+                        <td>
+                            {% if trial.status == "DATE_REFUSED" %}
+                                {{ include('back/trial/_modify_date_form.html.twig') }}
+                            {% endif %}
+                            {% if trial.status == "ACCEPTED" %}
+                                {{ include('back/trial/_accept_challenge_form.html.twig') }}
+                                {{ include('back/trial/_refuse_challenge_form.html.twig') }}
+                            {% endif %}
+                            {% if trial.dateStart is defined and trial.dateStart is not null %}
+                                {% if date() < limitRefuseDelete(trial.dateStart)%}
+                                    {{ include('back/trial/_delete_form.html.twig') }}
+                                {% endif %}
+                                {% if trial.status == "AWAITING" and canStart(app.user, trial) %}
+                                    {{ include('back/trial/_start_form.html.twig') }}
+                                {% endif %}
+                            {% else %}
+                                {{ include('back/trial/_delete_form.html.twig') }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-danger">
+            <p>Aucun combat n'a été trouvé</p>
+        </div>
         {% endif %}
-        </tbody>
-    </table>
-    <a href="{{ path('back_trial_new') }}">Create new</a>
+
+    </div>
+    <div class="card-footer">
+        <a href="{{ path('back_trial_new') }}">
+            <button class="btn btn-primary">
+                <i class="bi bi-plus"></i>
+                Créer un nouveau combat
+            </button>
+        </a>
+    </div>
 </div>
 {% endblock %}
 

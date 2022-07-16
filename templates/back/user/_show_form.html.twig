@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_user_show', { 'id': user.id }) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('show' ~ user.id) }}">
-    <button class="btn">Show</button>
+    <button type="submit" class="btn btn-secondary w-100">Show</button>
 </form>
