@@ -1,0 +1,45 @@
+.tournament-bracket {
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacers, 5);
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
+
+  &__round {
+    flex: 1;
+    display: block;
+  }
+
+  &__list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    @include media-breakpoint-up(md) {
+      flex-flow: column nowrap;
+      height: fit-content;
+    }
+
+    padding: 0;
+  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 42%;
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    padding: $list-group-item-padding-y $list-group-item-padding-x;
+    &:only-child {
+      width: 100%;
+    }
+    @include media-breakpoint-up(md) {
+      width: 100%;
+    }
+  }
+}
