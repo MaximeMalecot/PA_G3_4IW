@@ -16,9 +16,20 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class PaymentController extends AbstractController
 {
-    #[Route('/credit', name: 'credit')]
+    #[Route('/payment/credit', name: 'credit', methods: ['GET','POST'])]
     public function credit(Request $request): Response
     {
+        $securityContext = $this->container->get('security.authorization_checker');
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+            return $this->redirect("/login");
+        }
+
+        if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+             return $this->redirect("/login"); 
+        }
+
+
         $form = $this->createForm(PaymentType::class);
         $form->handleRequest($request);
 
@@ -37,6 +48,15 @@ class PaymentController extends AbstractController
     #[Route('/payment/success', name: 'success')]
     public function success(Request $request, UserRepository $userRepository, InvoiceRepository $invoiceRepository): Response
     {
+        $securityContext = $this->container->get('security.authorization_checker');
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+            return $this->redirect("/login");
+        }
+
+        if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+             return $this->redirect("/login"); 
+        }
 
         $session = new Session();
 
@@ -53,18 +73,16 @@ class PaymentController extends AbstractController
             []
         );
 
-        //$userConnected = $this->get('security.token_storage')->getToken()->getUser();
        if ($payment_intent->status == "succeeded"){
 
             $entityManager = $this->getDoctrine()->getManager();
-            $user = $entityManager->getRepository(User::class)->find(129);
+            $user = $entityManager->getRepository(User::class)->find($this->getUser()->getId());
             $credits = $user->getCredits();
             $credits += $session->get('credit');
             $user->setCredits($credits);
 
             $entityManager->flush();
             $invoice = new Invoice();
-            // $invoice->setUser($user);
             $invoice->setBuyer($user);
             $invoice->setCreditAmount($session->get('credit'));
             $invoice->setPrice($session->get('credit') / 10);
@@ -85,6 +103,16 @@ class PaymentController extends AbstractController
     public function cancel(): Response
     {
 
+        $securityContext = $this->container->get('security.authorization_checker');
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+            return $this->redirect("/login");
+        }
+
+        if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+             return $this->redirect("/login"); 
+        }
         return $this->render('front/payment/cancel.html.twig');
     }
 
@@ -92,19 +120,16 @@ class PaymentController extends AbstractController
     public function payment(int $credit): Response
         
     {
+        $securityContext = $this->container->get('security.authorization_checker');
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
 
-       
-        // $securityContext = $this->container->get('security.authorization_checker');
-        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+            return $this->redirect("/login");
+        }
 
-        // if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
-
-        //     return $this->redirect("/login");
-        // }
-
-        // if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-        //     return $this->redirect("/login"); 
-        // }
+        if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
+             return $this->redirect("/login"); 
+        }
 
         $session = new Session();
     
