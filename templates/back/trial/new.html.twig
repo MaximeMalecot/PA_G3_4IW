@@ -1,37 +1,48 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}New Trial{% endblock %}
+{% block title %}Bettle - New Trial{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Create new Trial</h1>
-    <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST">
-        <select id="fighter1" name="fighter1" required>
-            <option id="select1-default" value="default" disabled selected>---</option>
-            {% for fighter in fighters %}
-                <option id="select1-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
-            {% endfor %}
-        </select>
-        <select id="fighter2" name="fighter2" required>
-            <option id="select2-default" value="default" disabled selected>---</option>
-            {% for fighter in fighters %}
-                <option id="select2-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
-            {% endfor %}
-        </select>
-        <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="Pick a date" required/>
-        <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="Pick a time" required/>
-        <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
-        <input type="submit" value="Create"/>
-    </form>
-    <a href="{{ path('back_trial_index') }}">back to list</a>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">New Trial</h3>
+    </div>
+    <div class="card-body">
+        <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST">
+            <label for="fighter1" class="form-label">Fighter 1</label>
+            <select id="fighter1" name="fighter1" class="form-select" required>
+                <option id="select1-default" value="default" disabled selected>---</option>
+                {% for fighter in fighters %}
+                    <option id="select1-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
+                {% endfor %}
+            </select>
+            <label for="fighter2">Fighter 2</label>
+            <select id="fighter2" name="fighter2" class="form-select" required>
+                <option id="select2-default" value="default" disabled selected>---</option>
+                {% for fighter in fighters %}
+                    <option id="select2-{{fighter.id}}" value={{fighter.id}}>{{fighter.nickname}}</option>
+                {% endfor %}
+            </select>
+            <label for="dateStart">Date de début</label>
+            <input type="date" class="form-control" id="dateStart" name="dateStart" required/>
+            <label for="timeStart">Heure de début</label>
+            <input type="time" class="form-control" id="timeStart" name="timeStart" required/>
+            <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
+            <button type="submit" value="Create" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a href="{{ path('back_trial_index') }}">
+            <button class="btn btn-secondary">back to list</button>
+        </a>
+    </div>
+
+
 </div>
 {% endblock %}
 
+{# TODO retirer ce code JS pour retirer Materialize#}
 {% block javascripts %}
 {{ parent() }}
     <script type="text/javascript">

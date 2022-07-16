@@ -1,43 +1,50 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Show ticket {{ ticket.id }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Ticket</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ ticket.id }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ ticket.description }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ ticket.status }}</td>
+                </tr>
+                <tr>
+                    <th>CreatedAt</th>
+                    <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>UpdatedAt</th>
+                    <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{{ path('ticket_index') }}">back to list</a>
+
+            <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
+
+            {{ include('back/ticket/_delete_form.html.twig') }}
+        </div>
+    </div>
     <h1>Ticket</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ticket.id }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ ticket.description }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ ticket.status }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('ticket_index') }}">back to list</a>
 
-    <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
 
-    {{ include('back/ticket/_delete_form.html.twig') }}
 {% endblock %}

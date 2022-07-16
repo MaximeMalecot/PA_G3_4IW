@@ -1,57 +1,64 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Bettle - {{ user.nickname }}{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{{ user.nickname }}</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Roles</th>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                </tr>
+                <tr>
+                    <th>IsVerified</th>
+                    <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                </tr>
+                <tr>
+                    <th>Nickname</th>
+                    <td>{{ user.nickname }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ user.description }}</td>
+                </tr>
+                <tr>
+                    <th>Twitch_channel</th>
+                    <td>{{ user.twitchChannel }}</td>
+                </tr>
+                <tr>
+                    <th>Credits</th>
+                    <td>{{ user.credits }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ path('back_user_index') }}">
+                    <button class="btn btn-secondary w-100">Back to the list</button>
+                </a>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Nickname</th>
-                <td>{{ user.nickname }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ user.description }}</td>
-            </tr>
-            <tr>
-                <th>Twitch_channel</th>
-                <td>{{ user.twitchChannel }}</td>
-            </tr>
-            <tr>
-                <th>Credits</th>
-                <td>{{ user.credits }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="d-flex flex-column gap-2">
-        <a href="{{ path('back_user_index') }}">
-            <button class="btn btn-secondary w-100">Back to the list</button>
-        </a>
-
-        <a href="{{ path('back_user_edit', {'id': user.id}) }}">
-            <button class="btn btn-primary w-100">Edit</button>
-        </a>
-        {{ include('back/user/_delete_form.html.twig') }}
+                <a href="{{ path('back_user_edit', {'id': user.id}) }}">
+                    <button class="btn btn-primary w-100">Edit</button>
+                </a>
+                {{ include('back/user/_delete_form.html.twig') }}
+            </div>
+        </div>
     </div>
+
 
 
 {% endblock %}

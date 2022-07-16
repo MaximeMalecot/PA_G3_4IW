@@ -1,24 +1,28 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Edit Trial {% endblock %}
+{% block title %}Bettle - Edit Trial{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{#TODO#}
 
-<div class="example-wrapper">
-    {% if trial is defined %}
-    <h1>Modifiez la date pour correspondre à l'agenda des combattants</h1>
-    <form id="editTrial" action="{{ path('back_trial_modify_date', { id: trial.id}) }}" method="POST">
-        <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="{{ trial.dateStart|date('d-m-Y') }}" required/>
-        <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
-        <input type="hidden" name="_token" value="{{ csrf_token('editTrial'~ trial.id ) }}"/>
-        <input type="submit" value="Edit"/>
-    </form>
-    <a href="{{ path('back_trial_index') }}">back to list</a>
-    {% endif %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Modifiez la date pour correspondre à l'agenda des combattants</h3>
+    </div>
+
+    <div class="card-body">
+        {% if trial is defined %}
+        <form id="editTrial" action="{{ path('back_trial_modify_date', { id: trial.id}) }}" method="POST">
+            <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="{{ trial.dateStart|date('d-m-Y') }}" required/>
+            <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
+            <input type="hidden" name="_token" value="{{ csrf_token('editTrial'~ trial.id ) }}"/>
+            <input type="submit" value="Edit"/>
+        </form>
+        {% endif %}
+        <div class="card-footer">
+            <a href="{{ path('back_trial_index') }}">back to list</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

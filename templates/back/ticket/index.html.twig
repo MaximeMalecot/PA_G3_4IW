@@ -1,71 +1,76 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Bettle - Gestion des Tickets{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-    <h1>Ticket index</h1>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Gestion des Tickets</h3>
+        </div>
+        <div class="card-body">
+            <form id="filter" action="{{ path('back_ticket_index') }}" method="POST">
+                <label class="form-label" for="roleWanted">Filtrer</label>
+                <select class="form-select mb-2" id="roleWanted" name="roleWanted">
+                    <option value="Role" id="Role">---</option>
+                    <option value="Adjudicate" id="Adjudicate">Adjudicate</option>
+                    <option value="Fighter" id="Fighter">Fighter</option>
+                </select>
+                <label class="form-label" for="status">Status</label>
+                <select class="form-select mb-2" id="status" name="status">
+                    <option value="Status" id="Status">---</option>
+                    <option value="CREATED" id="CREATED">Créer</option>
+                    <option value="ACCEPTED" id="ACCEPTED">Accepter</option>
+                    <option value="ENDED" id="ENDED">Finis</option>
+                    <option value="REFUSED" id="REFUSED">Refuser</option>
+                </select>
+                <input type="hidden" name="_token" value="{{ csrf_token('ticketFilter') }}">
+                <button class="btn btn-primary" type="submit" value="Filtrer">Filtrer</button>
+            </form>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Description</th>
+                        <th>Role voulu</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Created By</th>
+                        <th>Updated By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td>{{ ticket.description }}</td>
+                        <td>{{ ticket.roleWanted }}</td>
+                        <td>{{ ticket.status }}</td>
+                        <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ ticket.createdBy.email }}</td>
+                        <td>{{ ticket.updatedBy.email }}</td>
+                        <td>
+                            {% if ticket.status == "CREATED" %}
+                                {{ include('back/ticket/_accept_form.html.twig') }}
+                                {{ include('back/ticket/_reject_form.html.twig') }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="100">no tickets found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
 
-    <label for="filter">Filtrer</label>
-    <form id="filter" action="{{ path('back_ticket_index') }}" method="POST">
-        <select id="roleWanted" name="roleWanted">
-            <option value="Role" id="Role">---</option>
-            <option value="Adjudicate" id="Adjudicate">Adjudicate</option>
-            <option value="Fighter" id="Fighter">Fighter</option>
-        </select>
-        <select id="status" name="status">
-            <option value="Status" id="Status">---</option>
-            <option value="CREATED" id="CREATED">Créer</option>
-            <option value="ACCEPTED" id="ACCEPTED">Accepter</option>
-            <option value="ENDED" id="ENDED">Finis</option>
-            <option value="REFUSED" id="REFUSED">Refuser</option>
-        </select>
-        <input type="hidden" name="_token" value="{{ csrf_token('ticketFilter') }}">
-        <input type="submit" value="Filtrer"/>
-    </form>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Role voulu</th>
-                <th>Status</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>CreatedBy</th>
-                <th>UpdatedBy</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ticket in tickets %}
-            <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.description }}</td>
-                <td>{{ ticket.roleWanted }}</td>
-                <td>{{ ticket.status }}</td>
-                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.createdBy.email }}</td>
-                <td>{{ ticket.updatedBy.email }}</td>
-                <td>
-                    {% if ticket.status == "CREATED" %}
-                        {{ include('back/ticket/_accept_form.html.twig') }}
-                        {{ include('back/ticket/_reject_form.html.twig') }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
