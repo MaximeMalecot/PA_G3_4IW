@@ -12,14 +12,10 @@
             <th>points</th>
             <th>victories</th>
             <th>defeats</th>
-<<<<<<< HEAD
             {% if is_granted('ROLE_FIGHTER') %}
                 <th>action</th>
             {% endif %}
         </tr>
-=======
-        </tr> #}
->>>>>>> 3edd6ba ( design in progress)
         {% for stat in fs %}
             <tr>
                 <td>{{ stat.rank }}</td>
