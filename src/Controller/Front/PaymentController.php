@@ -86,7 +86,6 @@ class PaymentController extends AbstractController
             $invoice->setBuyer($user);
             $invoice->setCreditAmount($session->get('credit'));
             $invoice->setPrice($session->get('credit') / 10);
-            $invoice->setIdPaypal('123456789');
             $entityManager->persist($invoice);
             $entityManager->flush();
             $session->remove('credit');

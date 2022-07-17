@@ -27,8 +27,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 
             $object = (new Invoice())
                 ->setCreditAmount($priceInDollars * 100)
-                ->setPrice($priceInDollars * 100)
-                ->setIdPaypal($faker->uuid());
+                ->setPrice($priceInDollars * 100);
 
             $user->addInvoice($object);
             $user->setCredits($user->getCredits() + $priceInDollars * 100);

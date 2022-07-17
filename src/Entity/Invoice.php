@@ -30,11 +30,6 @@ class Invoice
     private $price;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $idPaypal;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false, onDelete="cascade")
      */
@@ -65,18 +60,6 @@ class Invoice
     public function setPrice(int $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getIdPaypal(): ?string
-    {
-        return $this->idPaypal;
-    }
-
-    public function setIdPaypal(string $idPaypal): self
-    {
-        $this->idPaypal = $idPaypal;
 
         return $this;
     }
