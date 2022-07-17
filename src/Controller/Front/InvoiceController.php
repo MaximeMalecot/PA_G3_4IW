@@ -18,8 +18,13 @@ class InvoiceController extends AbstractController
 {
     #[Route('/user/{id}', name: 'invoice_user', methods: ['GET'])]
     // #[IsGranted(InvoiceVoter::SHOW, 'user')]
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
     public function index(User $user): Response
     {
+
+        if ($user->getId() != $this->getUser()->getId()){
+            return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('front/invoice/index.html.twig', [
             'user' => $user,
         ]);
@@ -27,16 +32,18 @@ class InvoiceController extends AbstractController
 
     #[Route('/show/{id}', name: 'invoice_show')]
     // #[IsGranted(InvoiceVoter::SHOW, 'user')]
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
     public function show(Invoice $invoice, InvoiceRepository $invoiceRepository, int $id): Response
     {
-        // $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-        // $invoice = $invoiceRepository->find($id);
+        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        $invoice = $invoiceRepository->find($id);
        
-        // if($userConnected->getId() != $invoice->getBuyer()->getId()){
-        //     return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
-        // }
+        if($userConnected->getId() != $invoice->getBuyer()->getId()){
+            return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        }
+      
         
-        // if ($invoice){
+        if ($invoice){
 
             $pdfOptions = new Options();
             $pdfOptions->set('defaultFont', 'Arial');
@@ -52,9 +59,9 @@ class InvoiceController extends AbstractController
                 "Attachment" => true
                 
             ]);
-        // }else{
-        //     return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
-        // }
+        }else{
+            return $this->redirectToRoute('front_invoice_user', [], Response::HTTP_SEE_OTHER);
+        }
        
        
     }
