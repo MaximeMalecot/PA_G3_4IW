@@ -19,7 +19,7 @@ class PaymentController extends AbstractController
     {
         if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
-            return $this->redirect("/login");
+            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
         }
         $form = $this->createForm(PaymentType::class);
         $form->handleRequest($request);
@@ -35,12 +35,12 @@ class PaymentController extends AbstractController
     }
 
 
-    #[Route('/success', name: 'payment_success')]
+    #[Route('/success', name: 'payment_success', methods: ['GET'])]
     public function success(): Response
     {
         if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
-            return $this->redirect("/login");
+            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
         }
 
         $session = new Session();
@@ -78,27 +78,27 @@ class PaymentController extends AbstractController
         }
     }
 
-    #[Route('/cancel', name: 'payment_cancel')]
+    #[Route('/cancel', name: 'payment_cancel', methods: ['GET'])]
     public function cancel(): Response
     {
         if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
-            return $this->redirect("/login");
+            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('front/payment/cancel.html.twig');
     }
 
-    #[Route('/{credit}', name: 'payment_credit')]
+    #[Route('/{credit}', name: 'payment_credit', methods: ['GET'])]
     public function payment(Request $request, int $credit): Response
     {
         if ($credit < 5) {
             $this->addFlash('danger', 'Vous devez acheter au moins 5 crédits');
-            return $this->redirect("/payment/credit");
+            return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
         }
 
         if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
-            return $this->redirect("/login");
+            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
         }
 
         $session = new Session();

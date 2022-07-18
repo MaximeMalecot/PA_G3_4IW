@@ -29,7 +29,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name: 'invoice_show')]
+    #[Route('/show/{id}', name: 'invoice_show', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::SHOW, 'invoice')]
     public function show(Invoice $invoice): void
     {
