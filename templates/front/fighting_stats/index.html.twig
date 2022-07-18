@@ -3,6 +3,10 @@
 {% block title %}Classement{% endblock %}
 
 {% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
 <div class="example-wrapper">
     <h1 class="name-page">Classement</h1>
     <table>
@@ -36,72 +40,5 @@
             </tr>
         {% endfor %}
     </table>
-    <div class="container-compet">
-        <div class="cat-compet">
-            <div class="block">
-                <h2>Catégorie</h2>
-                <h4>"Le monstre" Jean DUPONT</h4>
-                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
-                <div>
-                    <ul>
-                        <li></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="cat-compet">
-            <div class="title">
-                <h2>Catégorie</h2>
-                <h4>"Le monstre" Jean DUPONT</h4>
-                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
-            </div>
-        </div>
-
-        <div class="cat-compet">
-            <div class="title">
-                <h2>Catégorie</h2>
-                <h4>"Le monstre" Jean DUPONT</h4>
-                <img class="fit-picture" src="../../public/img/boxeur.png"alt="TEST">
-            </div>
-        </div>
-
-
-    </div>
-    
-
 </div>
-{% endblock %}
-
-{% block stylesheets%}
-<style>
-.container-compet {
-    display:flex;   
-    flex-direction: row;
-    justify-content: center;
-}
-.cat-compet {
-    display:flex;
-    background-color:#333;
-    color: white;
-    margin: 30px;
-    padding:25px;
-    border-radius: 8px;
-    width:50%;
-}
-h2{
-    color:red;
-    font-size: 25px;
-}
-h4{
-    font-size: 20px;
-}
-.name-page {
-    display: flex;
-    font-size: 50px;
-    font-family: 'Lobster', cursive;
-    font-weight: bold;
-    margin:25px;
-}
-</style>
 {% endblock %}
