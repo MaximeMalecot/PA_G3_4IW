@@ -32,11 +32,13 @@ class Bet
 
     /**
      * @ORM\ManyToOne(targetEntity=Trial::class, inversedBy="bets")
+     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     private $trial;
 
     /**
      * @ORM\ManyToOne(targetEntity=Tournament::class, inversedBy="bets")
+     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     private $tournament;
 
