@@ -52,7 +52,7 @@ services:
     depends_on:
       - php
     ports:
-      - "81:80"
+      - "80:80"
       - "444:443"
 
   adminer:
@@ -64,7 +64,7 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
     ports:
-      - 1081:1080
+      - 1080:1080
 
 volumes:
   db-data: {}
