@@ -61,7 +61,7 @@ class TrialExtension extends AbstractExtension
         return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 &&
             $trial->getBetStatus() === 1 &&
             !$trial->getFighters()->contains($user) &&
-            (in_array("ROLE_USER", $user->getRoles()) ||
-                in_array("ROLE_FIGHTER", $user->getRoles()));
+            (!in_array("ROLE_ADJUDICATE", $user->getRoles()) &&
+            !in_array("ROLE_ADMIN", $user->getRoles()));
     }
 }

@@ -1,8 +1,14 @@
-<!DOCTYPE html>
+{% extends 'base_back.html.twig' %}
 
-<title>Trial</title>
+{% block title %}Trial {{trial.id}} {% endblock %}
 
 {% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
     <h1>Trial</h1>
 
     <table class="table">
@@ -40,7 +46,9 @@
 
     <a href="{{ path('back_trial_index') }}">back to list</a>
 
-    <a href="{{ path('back_trial_edit', {'id': trial.id}) }}">edit</a>
+    {% if trial.status == "DATE_REFUSED" or trial.status == "CREATED"%}
+        {{ include('back/trial/_modify_date_form.html.twig') }}
+    {% endif %}
 
     {{ include('back/trial/_delete_form.html.twig') }}
 {% endblock %}
