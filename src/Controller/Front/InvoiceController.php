@@ -33,15 +33,13 @@ class InvoiceController extends AbstractController
     #[Route('/show/{id}', name: 'invoice_show')]
     // #[IsGranted(InvoiceVoter::SHOW, 'user')]
     #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
-    public function show(Invoice $invoice, InvoiceRepository $invoiceRepository, int $id): Response
+    public function show(Invoice $invoice, InvoiceRepository $invoiceRepository): Response|null
     {
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-        $invoice = $invoiceRepository->find($id);
+        $userConnected = $this->getUser();
        
         if($userConnected->getId() != $invoice->getBuyer()->getId()){
             return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
         }
-      
         
         if ($invoice){
 

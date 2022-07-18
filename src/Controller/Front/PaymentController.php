@@ -4,12 +4,9 @@ namespace App\Controller\Front;
 
 use App\Entity\Invoice;
 use App\Entity\User;
-use App\Repository\InvoiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Stripe\Checkout;
-use App\Repository\UserRepository;
 use App\Form\PaymentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -19,14 +16,14 @@ class PaymentController extends AbstractController
     #[Route('/payment/credit', name: 'credit', methods: ['GET','POST'])]
     public function credit(Request $request): Response
     {
-        $securityContext = $this->container->get('security.authorization_checker');
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+        $userConnected = $this->getUser();
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect("/login");
         }
 
         if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-             return $this->redirect("/login"); 
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
+            return $this->redirect("/login");
         }
 
 
@@ -34,7 +31,6 @@ class PaymentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             return $this->redirectToRoute('payment', ["credit" => $form->get('credits')->getData() ], Response::HTTP_SEE_OTHER);
         }
 
@@ -46,16 +42,16 @@ class PaymentController extends AbstractController
 
     
     #[Route('/payment/success', name: 'success')]
-    public function success(Request $request, UserRepository $userRepository, InvoiceRepository $invoiceRepository): Response
+    public function success(): Response
     {
-        $securityContext = $this->container->get('security.authorization_checker');
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+        $userConnected = $this->getUser();
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect("/login");
         }
 
         if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-             return $this->redirect("/login"); 
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
+            return $this->redirect("/login");
         }
 
         $session = new Session();
@@ -102,32 +98,36 @@ class PaymentController extends AbstractController
     public function cancel(): Response
     {
 
-        $securityContext = $this->container->get('security.authorization_checker');
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        $userConnected = $this->getUser();
         
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect("/login");
         }
 
         if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-             return $this->redirect("/login"); 
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
+            return $this->redirect("/login");
         }
         return $this->render('front/payment/cancel.html.twig');
     }
 
     #[Route('/payment/{credit}', name: 'payment')]
     public function payment(int $credit): Response
-        
     {
-        $securityContext = $this->container->get('security.authorization_checker');
-        $userConnected = $this->get('security.token_storage')->getToken()->getUser();
+        if ($credit < 5){
+            $this->addFlash('danger', 'Vous devez acheter au moins 5 crédits');
+            return $this->redirect("/payment/credit");
+        }
 
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
+        $userConnected = $this->getUser();
+
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect("/login");
         }
 
         if (in_array('ROLE_ADJUDICATE', $userConnected->getRoles())){
-             return $this->redirect("/login"); 
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
+            return $this->redirect("/login");
         }
 
         $session = new Session();
