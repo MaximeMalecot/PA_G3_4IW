@@ -97,7 +97,6 @@ class PaymentController extends AbstractController
     #[Route('/payment/cancel', name: 'cancel')]
     public function cancel(): Response
     {
-
         $userConnected = $this->getUser();
         
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

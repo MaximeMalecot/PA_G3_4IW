@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Entity\Invoice;
 use App\Security\Voter\InvoiceVoter;
+use App\Security\Voter\UserVoter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -17,26 +18,22 @@ use Dompdf\Options;
 class InvoiceController extends AbstractController
 {
     #[Route('/user/{id}', name: 'invoice_user', methods: ['GET'])]
-    // #[IsGranted(InvoiceVoter::SHOW, 'user')]
-    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
+    #[IsGranted(UserVoter::SHOW_INVOICE, 'user')]
     public function index(User $user): Response
     {
-
-        if ($user->getId() != $this->getUser()->getId()){
-            return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
-        }
+//        if ($user->getId() != $this->getUser()->getId()){
+//            return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
+//        }
         return $this->render('front/invoice/index.html.twig', [
             'user' => $user,
         ]);
     }
 
     #[Route('/show/{id}', name: 'invoice_show')]
-    // #[IsGranted(InvoiceVoter::SHOW, 'user')]
-    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
-    public function show(Invoice $invoice, InvoiceRepository $invoiceRepository): Response|null
+    #[IsGranted(InvoiceVoter::SHOW, 'invoice')]
+    public function show(Invoice $invoice): Response|null
     {
         $userConnected = $this->getUser();
-       
         if($userConnected->getId() != $invoice->getBuyer()->getId()){
             return $this->redirectToRoute('front_invoice_user', ["id" => $this->getUser()->getId()], Response::HTTP_SEE_OTHER);
         }

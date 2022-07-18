@@ -13,11 +13,12 @@ class UserVoter extends Voter
         TO IMPLEMENT THE VOTER IN A CONTROLLER JUST DO :
         #[IsGranted(UserVoter::EDIT, 'user')]
     */
-    private $trialRepository;
+    private TrialRepository $trialRepository;
 
     const DELETE = 'delete';
     const EDIT = 'edit';
     const SHOW = 'show';
+    const SHOW_INVOICE = 'show_invoice';
     const UPGRADE = 'upgrade';
     const CHALLENGE = 'challenge';
 
@@ -28,7 +29,7 @@ class UserVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE, self::UPGRADE, self::CHALLENGE])
+        return in_array($attribute, [self::SHOW, self::EDIT, self::DELETE, self::UPGRADE, self::CHALLENGE, self::SHOW_INVOICE])
             && $subject instanceof User;
     }
 
@@ -38,21 +39,16 @@ class UserVoter extends Voter
         $user = $token->getUser();
 
         switch ($attribute) {
+            case self::EDIT:
+            case self::SHOW_INVOICE:
             case self::DELETE:
                 return $this->canManage($subject, $user);
-                break;
-            case self::EDIT:
-                return $this->canManage($subject, $user);
-                break;
             case self::SHOW:
                 return in_array('ROLE_FIGHTER', $subject->getRoles()) || $this->canManage($subject, $user);
-                break;
             case self::UPGRADE:
                 return $subject === $user;
-                break;
             case self::CHALLENGE:
                 return $this->canChallenge($subject, $user);
-                break;
         }
 
         return false;
@@ -66,6 +62,7 @@ class UserVoter extends Voter
     protected function canManage(User $target, User $user): bool
     {
         return ($target === $user || in_array('ROLE_ADMIN', $user->getRoles()));
+
     }
 
     protected function canChallenge(User $target, User $user): bool
