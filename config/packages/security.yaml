@@ -46,4 +46,5 @@ security:
         - { path: ^/admin, roles: ROLE_ADJUDICATE }
         - { path: ^/ticket, roles: ROLE_USER }
         - { path: ^/logout, roles: ROLE_USER}
+        - { path: ^/payment, roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

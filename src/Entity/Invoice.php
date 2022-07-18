@@ -11,6 +11,7 @@ use App\Entity\Traits\TimestampableTrait;
  */
 class Invoice
 {
+    const ENUM_PAYMENT = [100,250,500,750,1000,5000];
     use TimestampableTrait;
     /**
      * @ORM\Id

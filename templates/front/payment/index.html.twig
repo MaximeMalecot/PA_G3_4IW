@@ -7,93 +7,24 @@
 <div class="example-wrapper">
     <h1 class="name-page">Acheter des crédits</h1>
     <div>
-
-
-    {{ include('front/payment/_form.html.twig') }}
-    <div class="container-credit">
-        <div class="cat-credit">
-            <div class="block">
-            <div class="card-title">
-                    <label for="credit">100 crédits </label>
+        {{ include('front/payment/_form.html.twig') }}
+        <div class="container-credit">
+            {% for paymentAmout in amounts %}
+                <div class="cat-credit">
+                    <div class="block">
+                    <div class="card-title">
+                            <label for="credit">{{paymentAmout}} crédits</label>
+                        </div>
+                        <div class="card-text">
+                            <label for="price">{{paymentAmout / 10 }}€</label>
+                        </div>
+                        <div class="btn-credit">
+                            <a href='/payment/{{paymentAmout}}' class="btn btn-danger">Acheter</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-text">
-                    <label for="price">10€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/100' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-
-        <div class="cat-credit">
-            <div class="block">
-            <div class="card-title">
-                    <label for="credit">250 crédits </label>
-                </div>
-                <div class="card-text">
-                    <label for="price">25€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/250' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="cat-credit">
-            <div class="block">
-                <div class="card-title">
-                    <label for="credit">500 crédits </label>
-                </div>
-                <div class="card-text">
-                    <label for="price">50€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/500' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
-        </div>
-   
-         <div class="cat-credit">
-            <div class="block">
-            <div class="card-title">
-                    <label for="credit">750 crédits </label>
-                </div>
-                <div class="card-text">
-                    <label for="price">75€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/750' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
-        </div> 
-
-        <div class="cat-credit">
-            <div class="block">
-            <div class="card-title">
-                    <label for="credit">1000 crédits </label>
-                </div>
-                <div class="card-text">
-                    <label for="price">100€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/1000' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
-        </div> 
-
-        <div class="cat-credit">
-            <div class="block">
-            <div class="card-title">
-                    <label for="credit">5000 crédits </label>
-                </div>
-                <div class="card-text">
-                    <label for="price">500€</label>
-                </div>
-                <div class="btn-credit">
-                    <a href='/payment/5000' class="btn btn-danger">Acheter</a>
-                </div>
-            </div>
-        </div> 
     </div>
 </div>
 {% endblock %}
