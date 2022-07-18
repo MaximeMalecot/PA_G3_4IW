@@ -25,13 +25,12 @@ class TrialVoter extends Voter
 
     public function __construct(private TrialRepository $trialRepository)
     {
-        
     }
 
     protected function supports(string $attribute, $subject): bool
     {
-        if(in_array($attribute, [self::EDIT, self::BET, self::DELETE, self::CREATE, self::CONSULT, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])){
-            if(in_array($attribute, [self::CREATE, self::CONSULT])){
+        if (in_array($attribute, [self::EDIT, self::BET, self::DELETE, self::CREATE, self::CONSULT, self::TRIAL_ANSWER, self::CHALLENGE_ANSWER])) {
+            if (in_array($attribute, [self::CREATE, self::CONSULT])) {
                 return true;
             } else {
                 return $subject instanceof Trial;
@@ -82,16 +81,15 @@ class TrialVoter extends Voter
      */
     protected function canEdit(Trial $trial, User $user): bool
     {
-        if( in_array($trial->getStatus(), ['CREATED', 'DATE_ACCEPTED'])){
-            if( $trial->getFighters()->contains($user) || $user == $trial->getAdjudicate())
-            {
+        if (in_array($trial->getStatus(), ['CREATED', 'DATE_ACCEPTED'])) {
+            if ($trial->getFighters()->contains($user) || $user == $trial->getAdjudicate()) {
                 return true;
             }
             return false;
-        }else if( $trial->getStatus() === 'REFUSED'){
+        } else if ($trial->getStatus() === 'REFUSED') {
             return false;
         } else {
-            if($user == $trial->getAdjudicate()){
+            if ($user == $trial->getAdjudicate()) {
                 return true;
             }
             return false;
@@ -100,21 +98,20 @@ class TrialVoter extends Voter
 
     protected function canAnswerChallenger(Trial $trial, User $user): bool
     {
-        if($trial->getStatus() === "CREATED"){
+        if ($trial->getStatus() === "CREATED") {
             return in_array('ROLE_FIGHTER', $user->getRoles()) && $trial->getFighters()->contains($user) && $trial->getUpdatedBy() !== $user;
         }
-        if($trial->getStatus() === "ACCEPTED"){
+        if ($trial->getStatus() === "ACCEPTED") {
             return in_array("ROLE_ADJUDICATE", $user->getRoles());
         }
     }
 
-    protected function canBet(Trial $trial, User $user): bool 
+    protected function canBet(Trial $trial, User $user): bool
     {
-        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 && 
-        $trial->getBetStatus() === 1 && 
-        !$trial->getFighters()->contains($user) && 
-        (in_array("ROLE_USER", $user->getRoles()) || 
-        in_array("ROLE_FIGHTER", $user->getRoles()));
+        return count($this->trialRepository->findBetTrialForUser($trial, $user)) === 0 &&
+            $trial->getBetStatus() === 1 &&
+            !$trial->getFighters()->contains($user) &&
+            (!in_array("ROLE_ADJUDICATE", $user->getRoles()) &&
+            !in_array("ROLE_ADMIN", $user->getRoles()));
     }
-    
 }
