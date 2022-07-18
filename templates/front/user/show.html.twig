@@ -2,13 +2,62 @@
 
 {% block title %}User{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+        .banner{
+            position:relative;
+        }
 
-<div class="example-wrapper">
+        .banner-text{
+            position:absolute;
+            bottom:0;
+            margin-bottom:5%;
+        }
+
+        .banner-btn{
+            position:absolute;
+            top:0;
+            right:0;
+            margin-right:5%;
+            margin-top:3%;
+        }
+
+        .nickname{
+            color:white;
+        }
+
+        .btn-challenge{
+            background-color:transparent;
+            color:white;
+            border:2px solid white;
+            width:100px;
+        }
+
+        .btn-challenge:hover{
+         
+            color:black;
+            background-color:white;
+         
+        }
+
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="banner">
+    <img src="{{ asset('img/competitor.png') }}"  alt="logo" style="width:100%;">
+    {% if app.user %}     
+    <div class="banner-btn">
+       <a href="#" class="btn btn-challenge">Défier</a>
+    </div>
+    {% endif %}
+    <div class="banner-text mx-5">
+        <h2 class="nickname">{{ user.nickname }}</h2>
+    </div>
+</div>
+
+
+<div class="container pt-5">
     <h1>User</h1>
 
     <table class="table">

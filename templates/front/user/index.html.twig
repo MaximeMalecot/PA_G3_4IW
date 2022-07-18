@@ -28,16 +28,19 @@
                 <h4 class="card-title">{{ fighter.nickname }}</h4>
                 <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                 <p class="card-text description">{{ fighter.description }}</p>
+
+                <div class="d-flex">
                 <a class="card-link btn btn-bettle" href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a>
                 {% if is_granted('ROLE_FIGHTER')%} 
-                    <p>
+                <p class="mx-2">
                         {% if canChallenge(app.user, fighter) %}
                             {{ include('front/user/_challenge_form.html.twig') }}
                         {% elseif app.user.id != fighter.id %}
-                            Challenge already waiting
+                           Challenge en attente
                         {% endif %}
-                    </p>
+                </p>
                 {% endif %}
+                </div>
             </div>
         </div>
 
