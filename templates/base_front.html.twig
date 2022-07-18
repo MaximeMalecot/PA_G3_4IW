@@ -5,7 +5,6 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     {% block stylesheets %}
          {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -50,18 +49,7 @@
 </nav>
 
 {% block body %}
-    {# <div class="home-container">
-        <section class="section1">
-			<div class="container">
-				<div class="title">
-					<h1>Venez vous affronter en direct</h1>
-					<a href="" class="cta-button">Suivez le stream</a>
-				</div>
-			</div>
-		</section>
-    </div> #}
 
-		
 {% endblock %}
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 </body>
