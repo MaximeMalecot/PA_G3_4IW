@@ -2,11 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Bettle{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     {% block stylesheets %}
          {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -18,11 +16,11 @@
 <body>
 <nav class="red">
     <div class="nav-wrapper">
-        <ul id="nav-mobile" class="left hide-on-med-and-down flex">
-            <li><a href="{{ path('front_trial_index') }}">matchs</a></li>
-            <li><a href="{{ path('front_tournament_index') }}">tournois</a></li>
-            <li><a href="{{ path('front_fighting_stats_index') }}">classement</a></li>
-            <li><a href="{{ path('front_user_index') }}">compétiteurs</a></li>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="{{ path('front_trial_index') }}">Matchs</a></li>
+            <li><a href="{{ path('front_tournament_index') }}">Tournois</a></li>
+            <li><a href="{{ path('front_fighting_stats_index') }}">Classement</a></li>
+            <li><a href="{{ path('front_user_index') }}">Compétiteurs</a></li>
             {# <li><a href="{{ path('trial_competitors') }}">challenges</a></li> #}
             {% if app.user %}
                 <li><a href="{{path('front_bet_index')}}">bets</a></li>
@@ -42,8 +40,8 @@
                 <li><a href="{{ path('front_user_edit', { "id": app.user.id }) }}">Votre compte</a></li>
                 <li><a href="{{ path('app_logout') }}">logout</a></li>
             {% else %}
-                <li><a href="{{ path('app_login') }}">login</a></li>
-                <li><a href="{{ path('app_register') }}">register</a></li>
+                <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                <li><a href="{{ path('app_register') }}">Inscription</a></li>
             {% endif %}
         </ul>
         <a href="{{ path('front_default') }}" class="brand-logo right">Logo</a>
@@ -57,9 +55,9 @@
 <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         {% for type, messages in app.flashes() %}
-            {% for message in messages %}
-                M.toast({html: '{{ message }}', classes: '{{ type }}'})
-            {% endfor %}
+        {% for message in messages %}
+        M.toast({html: '{{ message }}', classes: '{{ type }}'})
+        {% endfor %}
         {% endfor %}
     });
 </script>

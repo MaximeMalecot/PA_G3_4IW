@@ -4,6 +4,7 @@ namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Entity\Invoice;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -16,6 +17,9 @@ class InvoiceVoter extends Voter
     */
     const SHOW = 'show';
 
+    public function __construct(private Security $security) {
+    }
+
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, [self::SHOW])
@@ -26,14 +30,13 @@ class InvoiceVoter extends Voter
     {
         /** @var User $user */
         $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof UserInterface || !$this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return false;
         }
 
         switch ($attribute) {
             case self::SHOW:
                 return $subject->getBuyer()->getId() == $user->getId() ;
-                break;
         }
 
         return false;

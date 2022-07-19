@@ -11,6 +11,7 @@ use App\Entity\Traits\TimestampableTrait;
  */
 class Invoice
 {
+    const ENUM_PAYMENT = [100,250,500,750,1000,5000];
     use TimestampableTrait;
     /**
      * @ORM\Id
@@ -28,11 +29,6 @@ class Invoice
      * @ORM\Column(type="integer")
      */
     private $price;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $idPaypal;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="invoices")
@@ -65,18 +61,6 @@ class Invoice
     public function setPrice(int $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getIdPaypal(): ?string
-    {
-        return $this->idPaypal;
-    }
-
-    public function setIdPaypal(string $idPaypal): self
-    {
-        $this->idPaypal = $idPaypal;
 
         return $this;
     }
