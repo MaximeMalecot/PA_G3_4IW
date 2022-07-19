@@ -5,6 +5,7 @@
         "@symfony/webpack-encore": "^1.7.0",
         "autoprefixer": "^10.4.7",
         "bootstrap": "^5.2.0-beta1",
+        "bootstrap-icons": "^1.9.1",
         "core-js": "^3.0.0",
         "materialize-css": "^1.0.0-rc.2",
         "postcss": "^8.4.13",
@@ -22,8 +23,5 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
-    },
-    "dependencies": {
-        "bootstrap-icons": "^1.9.0"
     }
 }

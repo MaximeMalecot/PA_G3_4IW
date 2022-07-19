@@ -4,12 +4,47 @@
     <div class="d-flex flex-column align-items-stretch justify-content-evenly gap-4">
         <div class="card">
             <div class="card-header">
-                <p class="fs-2">Bienvenue sur le back-office, {{ app.user.nickname }} !</p>
+                <h2 class="fs-2">Bienvenue sur le back-office, {{ app.user.nickname }} !</h2>
             </div>
             <div class="card-body">
                 <p>Utilisez la barre de navigation ci-dessus pour naviguer entre les différentes sections.</p>
             </div>
         </div>
+        <hr>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="row gap-4 gap-md-0">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="fs-4">Nombre d'utilisateurs inscrits</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="fs-1">{{ userCount }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="fs-4">Nombre de combats en attente</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="fs-1">{{ awaitingTrialCount }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="fs-4">Nombre de tournois en attente</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="fs-1">{{ awaitingTournamentCount }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         {% if is_granted('ROLE_ADJUDICATE') and not is_granted('ROLE_ADMIN') %}
             {% if tournaments is defined and tournaments is not empty %}
                 <div class="card">

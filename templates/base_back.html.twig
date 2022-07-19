@@ -16,51 +16,55 @@
 </head>
 <body>
 
-<header class="mb-4">
-    <div class="px-3 py-3 bg-dark text-white shadow">
-        <div class="container">
-            <nav class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="{{ path("back_default") }}" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+<header class="mb-4 shadow">
+        <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+            <div class="container-lg">
+                <a href="{{ path("back_default") }}" class="navbar-brand">
                     <p class="m-0 fs-4">Bettle</p>
                 </a>
-
-                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <li>
-                        <a href="{{ path("back_user_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_user_index" ? "text-secondary" : "text-white"}}">
-                            Utilisateurs
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("back_ticket_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_ticket_index" ? "text-secondary" : "text-white"}}">
-                            Tickets
-                        </a>
-                    </li>
-                    {% endif %}
-                    <li>
-                        <a href="{{ path("back_trial_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_trial_index" ? "text-secondary" : "text-white"}}">
-                            Gestion des combats
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("back_tournament_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_tournament_index" ? "text-secondary" : "text-white"}}">
-                            Gestion des tournois
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path("front_default") }}" class="nav-link text-white">
-                            Retourner sur le front-office
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_logout') }}" class="nav-link text-white">
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+                    <ul class="navbar-nav my-2 my-md-0">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a href="{{ path("back_user_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_user_index" ? "active" : ""}}">
+                                    Utilisateurs
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path("back_ticket_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_ticket_index" ? "active" : ""}}">
+                                    Tickets
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="{{ path("back_trial_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_trial_index" ? "active" : ""}}">
+                                Gestion des combats
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path("back_tournament_index") }}" class="nav-link {{ app.request.get('_route') is same as "back_tournament_index" ? "active" : ""}}">
+                                Gestion des tournois
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="{{ path("front_default") }}" class="nav-link">
+                                Retourner sur le front-office
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('app_logout') }}" class="nav-link">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 </header>
 
 <main class="container">
