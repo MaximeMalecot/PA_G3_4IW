@@ -2,8 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Bettle{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     {% block stylesheets %}
          {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -47,8 +48,18 @@
     </div>
 </nav>
 
-{% block body %}
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
 
-{% endblock %}
+<script defer>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for type, messages in app.flashes() %}
+        {% for message in messages %}
+        M.toast({html: '{{ message }}', classes: '{{ type }}'})
+        {% endfor %}
+        {% endfor %}
+    });
+</script>
 </body>
 </html>
