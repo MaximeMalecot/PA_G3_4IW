@@ -7,13 +7,11 @@
         "bootstrap": "^5.2.0-beta1",
         "bootstrap-icons": "^1.9.1",
         "core-js": "^3.0.0",
-        "materialize-css": "^1.0.0-rc.2",
         "postcss": "^8.4.13",
         "postcss-loader": "^6.2.1",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.53.0",
         "sass-loader": "^12.6.0",
-        "tailwindcss": "^3.0.24",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
