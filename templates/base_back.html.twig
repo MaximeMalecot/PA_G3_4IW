@@ -14,7 +14,7 @@
          {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body>
+<body class="position-relative">
 
 <header class="mb-4 shadow">
         <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
@@ -70,18 +70,21 @@
 <main class="container">
     {% block body %}{% endblock %}
 </main>
-
-{% for type, messages in app.flashes() %}
-    {% for message in messages %}
-        <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    {{ message }}
+<div class="toast-container position-fixed bottom-0 end-0 py-5 px-3">
+    {% for type, messages in app.flashes() %}
+            <div class="toast d-flex align-items-start justify-content-between text-bg-{{ type ?? "danger" }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex flex-column w-50">
+                {% for message in messages %}
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <p class="text-truncate m-0">{{ message }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white m-2" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-        </div>
     {% endfor %}
-{% endfor %}
+</div>
 </body>
 </html>

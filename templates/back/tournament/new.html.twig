@@ -1,30 +1,33 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Bettle - New Tournament{% endblock %}
+{% block title %}Bettle - Nouveau Tournoi{% endblock %}
 
 {% block body %}
-{#TODO#}
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">New Tournament</h3>
-        <div class="card-body">
-            <form id="createTournament" action="{{ path('back_tournament_new') }}" method="POST">
-                <input type="text" id="name" name="name" placeholder="Nom du tournoi" required/>
-                <label for="nbMaxParticipants">Seulement les multiples de 2 seront acceptés</label>
-                <input type="number" id="nbMaxParticipants" name="nbMaxParticipants" placeholder="Nombre de participants maximum" required/>
-                <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="Date de début" required/>
-                <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="Heure de début" required/>
-                <input type="text" class="datepicker" id="dateEnd" name="dateEnd" placeholder="Date de fin" required/>
-                <input type="hidden" name="_token" value="{{ csrf_token('newTournament') }}"/>
-                <input type="submit" value="Create"/>
-            </form>
-        </div>
-        <div class="card-footer">
-            <a href="{{ path('back_tournament_index') }}">back to list</a>
-        </div>
+        <h3 class="card-title">Nouveau tournoi</h3>
     </div>
-
+    <div class="card-body">
+        <form id="createTournament" action="{{ path('back_tournament_new') }}" method="POST" class="d-flex flex-column gap-1">
+            <label for="name" class="form-label">Nom</label>
+            <input class="form-control" type="text" id="name" name="name" placeholder="Nom du tournoi" required/>
+            <label for="nbMaxParticipants" class="form-label">Nombre de participants (seuls les multiples de 2 sont acceptés)</label>
+            <input class="form-control" type="number" id="nbMaxParticipants" name="nbMaxParticipants" placeholder="Nombre de participants maximum" required/>
+            <label for="dateStart" class="form-label">Date de début</label>
+            <input type="date" class="form-control" id="dateStart" name="dateStart" placeholder="Date de début" required/>
+            <label for="timeStart" class="form-label">Heure de début</label>
+            <input type="time" class="form-control" id="timeStart" name="timeStart" placeholder="Heure de début" required/>
+            <label for="dateEnd" class="form-label">Date de fin</label>
+            <input type="date" class="form-control" id="dateEnd" name="dateEnd" placeholder="Date de fin" required/>
+            <input type="hidden" name="_token" value="{{ csrf_token('newTournament') }}"/>
+            <button type="submit" class="btn-primary btn mt-2" value="Create">Créer</button>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a href="{{ path('back_tournament_index') }}"><button class="btn-secondary btn w-100">Retourner à la liste</button></a>
+    </div>
 </div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -32,37 +35,9 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded',  function() {
         let form = document.getElementById('createTournament');
-        let datestart = document.getElementById('dateStart');
-        let dateend = document.getElementById('dateEnd');
-        let timepicker = document.getElementById('timeStart');
         let nbMaxParticipants = document.getElementById('nbMaxParticipants');
         let defaultDate = new Date();
         defaultDate.setDate(defaultDate.getDate()+1)
-
-        var dateStartInstance = M.Datepicker.init(datestart, {
-            format: 'dd-mm-yyyy',
-            autoClose : "true",
-            minDate : defaultDate,
-            setDefaultDate: true
-        })
-        var dateEndInstance = M.Datepicker.init(dateend, {
-            format: 'dd-mm-yyyy',
-            autoClose : "true",
-            minDate : defaultDate,
-            setDefaultDate: true
-        })
-        var timeInstance = M.Timepicker.init(timepicker, {
-            autoClose: "true",
-            twelveHour: false,
-            defaultTime: "00:00"
-        });
-
-        datestart.addEventListener('change', () => {
-            let dateStartValue = datestart.value.split(('-'))
-            let minDate = new Date(`${dateStartValue[2]}-${dateStartValue[1]}-${dateStartValue[0]}`);
-            minDate.setDate(minDate.getDate());
-            dateEndInstance.options.minDate = minDate;
-        })
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();

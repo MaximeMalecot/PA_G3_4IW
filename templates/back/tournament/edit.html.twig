@@ -3,20 +3,19 @@
 {% block title %}Bettle - Edit Trial{% endblock %}
 
 {% block body %}
-{#TODO#}
-
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Modifiez la date pour correspondre à l'agenda des combattants</h3>
     </div>
-
     <div class="card-body">
         {% if trial is defined %}
         <form id="editTrial" action="{{ path('back_trial_modify_date', { id: trial.id}) }}" method="POST">
-            <input type="text" class="datepicker" id="dateStart" name="dateStart" placeholder="{{ trial.dateStart|date('d-m-Y') }}" required/>
-            <input type="text" class="timepicker" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
+            <label for="dateStart">Date de début</label>
+            <input type="date" class="datepicker" id="dateStart" name="dateStart" placeholder="{{ trial.dateStart|date('d-m-Y') }}" required/>
+            <label for="timeStart">Heure de début</label>
+            <input type="time" class="timepicker" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
             <input type="hidden" name="_token" value="{{ csrf_token('editTrial'~ trial.id ) }}"/>
-            <input type="submit" value="Edit"/>
+            <button class="btn btn-primary" type="submit" value="Edit">Edit</button>
         </form>
         {% endif %}
         <div class="card-footer">
@@ -24,27 +23,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded',  function() {
-        let form = document.getElementById('editTrial');
-        let datepicker = document.getElementById('dateStart');
-        let timepicker = document.getElementById('timeStart');
-        let minDate = new Date();
-        minDate.setDate(minDate.getDate()+1)
-
-        var dateInstance = M.Datepicker.init(datepicker, {
-            format: 'dd-mm-yyyy',
-            autoClose : "true",
-            minDate : minDate,
-        })
-        var timeInstance = M.Timepicker.init(timepicker, {
-            autoClose: "true",
-            twelveHour: false,
-        });
-
-    });
-</script>
 {% endblock %}

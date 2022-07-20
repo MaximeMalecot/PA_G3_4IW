@@ -1,15 +1,15 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Bettle - New Trial{% endblock %}
+{% block title %}Bettle - Nouveau combat{% endblock %}
 
 {% block body %}
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">New Trial</h3>
+        <h3 class="card-title">Nouveau combat</h3>
     </div>
     <div class="card-body">
-        <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST">
+        <form id="createTrial" action="{{ path('back_trial_new') }}" method="POST" class="d-flex flex-column gap-2">
             <label for="fighter1" class="form-label">Fighter 1</label>
             <select id="fighter1" name="fighter1" class="form-select" required>
                 <option id="select1-default" value="default" disabled selected>---</option>
@@ -29,7 +29,7 @@
             <label for="timeStart">Heure de début</label>
             <input type="time" class="form-control" id="timeStart" name="timeStart" required/>
             <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
-            <button type="submit" value="Create" class="btn btn-primary">Create</button>
+            <button type="submit" value="Create" class="btn btn-primary mt-2">Create</button>
         </form>
     </div>
     <div class="card-footer">
@@ -42,7 +42,6 @@
 </div>
 {% endblock %}
 
-{# TODO retirer ce code JS pour retirer Materialize#}
 {% block javascripts %}
 {{ parent() }}
     <script type="text/javascript">
@@ -50,48 +49,32 @@
             let form = document.getElementById('createTrial');
             let selectFighter1 = document.getElementById('fighter1');
             let selectFighter2 = document.getElementById('fighter2');
-            let datepicker = document.getElementById('dateStart');
-            let timepicker = document.getElementById('timeStart');
             let minDate = new Date();
             minDate.setDate(minDate.getDate()+1)
 
-            let dateInstance = M.Datepicker.init(datepicker, {
-                format: 'dd-mm-yyyy',
-                autoClose : "true",
-                minDate : minDate,
-                setDefaultDate: true
-            })
-            let timeInstance = M.Timepicker.init(timepicker, {
-                autoClose: "true",
-                twelveHour: false,
-                defaultTime: "00:00"
-            });
-
             selectFighter1.addEventListener('change', (e) => {
                 selectFighter2.querySelectorAll('option').forEach(opt => {
-                    if(opt.disabled == true){
+                    if(opt.disabled){
                         opt.disabled = false;
                     }
                 });
                 let tmpDisabled = document.getElementById('select2-'+e.target.value);
                 tmpDisabled.disabled = true;
-                M.FormSelect.init(selectFighter2);
             });
 
             selectFighter2.addEventListener('change', (e) => {
                 selectFighter1.querySelectorAll('option').forEach(opt => {
-                    if(opt.disabled == true){
+                    if(opt.disabled === true){
                         opt.disabled = false;
                     }
                 });
                 let tmpDisabled = document.getElementById('select1-'+e.target.value);
                 tmpDisabled.disabled = true;
-                M.FormSelect.init(selectFighter1);
             });
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                if(selectFighter1.value == "default" || selectFighter2.value == "default"){
+                if(selectFighter1.value === "default" || selectFighter2.value === "default"){
                     alert('Veuiller choisir des combattants');
                 }else{
                     form.submit();

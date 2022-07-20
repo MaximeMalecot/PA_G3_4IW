@@ -1,4 +1,9 @@
+// Variables overrides
+$toast-max-width: 500px;
+
+// Importation de bootstrap
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons";
 
+// Components custom
 @import "assets/styles/components";

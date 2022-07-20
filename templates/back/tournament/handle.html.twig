@@ -1,43 +1,77 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Tournament {{ tournament.name }}{% endblock %}
+{% block title %}Tournoi: {{ tournament.name }}{% endblock %}
 
 {% block body %}
-{#TODO#}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>HANDLE</h1>
-    <b>Name:</b></br>
-    {{ tournament.name }}</br>
-    <b>Match:</b>
-    {% if trials is defined and trials is not empty %}
-        <div>
-        {% set index = 1 %}
+<div class="container-xl d-flex flex-column gap-2">
+    <div class="border rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3">
+        <i class="bi bi-trophy-fill fs-1"></i>
+        <h1 class="fs-4 m-0 text-center text-decoration-underline">{{ tournament.name }}</h1>
+        <i class="bi bi-trophy-fill fs-1"></i>
+    </div>
+    <div class="row">
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Arbitre du tournoi</p>
+            <p class="m-0">{{ tournament.createdBy.nickname ?? "Arbitre non trouvé" }}</p>
+        </div>
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Date de début du tournoi</p>
+            <p class="m-0">{{ tournament.dateStart|date('d-m-Y H:i:s') }}</p>
+        </div>
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Nombres de combattants</p>
+            <p class="m-0">{{ getNbFromRole(tournament, 'ROLE_FIGHTER') }} / {{ tournament.nbMaxParticipants }}</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container-xl">
+{% if trials is defined and trials is not empty %}
+<div class="tournament-bracket">
+    {% set index = 1 %}
+    <div class="round-{{ index }} tournament-bracket__round">
+        <p class="fst-italic fs-6 text-muted fw-bold text-center text-lg-start">Round {{ index }}</p>
         {% for trial in trials %}
-            <div>
-            {% if trial.tournamentStep > index %}
-            </div>
-                <br/>
-                {% set index = trial.tournamentStep %}
-            {% endif %}
-            {% set fighters = trial.fighters.getValues %}
+        {% if trial.tournamentStep > index %}
+    </div>
+    {% set index = trial.tournamentStep %}
+    <div class="round-{{ index }} tournament-bracket__round">
+        <p class="fst-italic fs-6 text-muted fw-bold text-center text-lg-start">Round {{ index }}</p>
+        {% endif %}
+        {% set fighters = trial.fighters.getValues %}
+        <ul class="tournament-bracket__list">
             {% if fighters is not empty %}
-                [
-                {% if fighters[0] %}
-                    {{fighters[0].nickname}}
+                {% if fighters[0] is defined %}
+                    <li class="tournament-bracket__item {{ trial.winner is same as fighters[0] ? "bg-success text-white" : "" }}">
+                        {{ fighters[0].nickname }}
+                    </li>
+                {% else %}
+                    <li class="tournament-bracket__item text-muted">
+                        ...
+                    </li>
                 {% endif %}
-                {% if fighters.1 is defined %}
-                    &nbsp;vs&nbsp;{{fighters[1].nickname}}
+                <span class="fw-bold">VS</span>
+                {% if fighters[1] is defined %}
+                    <li class="tournament-bracket__item {{ trial.winner is same as fighters[1] ? "bg-success text-white" : "" }}">
+                        {{ fighters[1].nickname }}
+                    </li>
+                {% else %}
+                    <li class="tournament-bracket__item text-muted">
+                        ...
+                    </li>
                 {% endif %}
-                ]
             {% else %}
-                [ INCOMING ]
+                <li class="tournament-bracket__item">
+                    <span class="text-muted">Aucun combattant</span>
+                </li>
             {% endif %}
+        </ul>
         {% endfor %}
+    </div>
+    {% else %}
+        <div class="alert alert-danger">
+            <p>Aucun combat n'a été trouvé.</p>
         </div>
     {% endif %}
     {% if startTrial is defined %}
@@ -46,6 +80,5 @@
     {% if endTrial is defined %}
         {{ include('back/tournament/_end_trial_form.html.twig') }}
     {% endif %}
-    
 </div>
 {% endblock %}
