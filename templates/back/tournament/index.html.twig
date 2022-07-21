@@ -38,7 +38,7 @@
                         <td>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</td>
                         <td>{{ getNbFromRole(tournament, 'ROLE_ADJUDICATE')}} / {{tournament.nbMaxParticipants / 2}}</td>
                         <td>{{ tournament.dateStart ? tournament.dateStart|date('d-m-Y H:i:s') : null }}</td>
-                        <td class="d-flex flex-column gap-2">
+                        <td>
                             {% if app.user %}
                                 {% if canStartTournament(tournament, app.user)%}
                                     {{ include('back/tournament/_start_form.html.twig') }}

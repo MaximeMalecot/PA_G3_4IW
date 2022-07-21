@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_tournament_start', {'id': tournament.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('start' ~ tournament.id) }}">
-    <button class="btn">Start</button>
+    <button class="btn btn-primary my-2">Start</button>
 </form>
