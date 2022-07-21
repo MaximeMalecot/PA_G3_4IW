@@ -8,10 +8,13 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 
-import {Toast} from 'bootstrap';
+import {Toast, Tooltip} from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', function() {
     const toastElList = document.querySelectorAll('.toast');
     const toastList = [...toastElList].map(toastEl => new Toast(toastEl, {}));
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+
     toastList.forEach(toast => toast.show());
 });
