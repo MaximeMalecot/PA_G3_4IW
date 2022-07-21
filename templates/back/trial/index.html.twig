@@ -25,12 +25,12 @@
         </form>
         <hr>
         {% if trials is defined and trials is not empty %}
-        <table class="table">
+        <table class="table table-striped table-responsive">
             <thead>
                 <tr>
                     <th scope="col">Arbitre</th>
                     <th scope="col">Combattants</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" class="d-none d-lg-table-cell">Date</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@
                     <tr>
                         <td>{{ trial.adjudicate.nickname ?? "null" }}</td>
                         <td>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null"  }}</td>
-                        <td>{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</td>
+                        <td class="d-none d-lg-table-cell">{{ trial.dateStart ? trial.dateStart|date('d-m-Y H:i:s') : null }}</td>
                         <td>
                             {% if trial.status == "DATE_REFUSED" %}
                                 {{ include('back/trial/_modify_date_form.html.twig') }}
@@ -71,13 +71,15 @@
         {% endif %}
 
     </div>
-    <div class="card-footer">
-        <a href="{{ path('back_trial_new') }}">
-            <button class="btn btn-primary">
-                Créer un nouveau combat
-            </button>
-        </a>
-    </div>
+    {% if is_granted('ROLE_ADJUDICATE') and not is_granted('ROLE_ADMIN') %}
+        <div class="card-footer">
+            <a href="{{ path('back_trial_new') }}">
+                <button class="btn btn-primary">
+                    Créer un nouveau combat
+                </button>
+            </a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 
