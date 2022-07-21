@@ -42,14 +42,11 @@
                 <ul class="tournament-bracket__list">
             {% endif %}
                 {% set fighters = trial.fighters.getValues %}
-{#                <ul class="tournament-bracket__list">#}
                 {% if fighters is not empty %}
                     <li class="tournament-bracket__item">
                         <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
                             {% if fighters[0] is defined %}
                                 <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
-{#                        </div>#}
-{#                        </li>#}
                             {% else %}
                                 <p class="tournament-bracket__fighter m-0 text-muted">...</p>
                             {% endif %}
@@ -70,7 +67,6 @@
                             </div>
                         </li>
                 {% endif %}
-{#            </ul>#}
         {% endfor %}
         </ul>
     </div>
