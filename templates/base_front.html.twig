@@ -75,7 +75,7 @@
                             <li class="nav-item"><a class="nav-link active" href="{{ path('back_default') }}">administration</a></li>
                         {% else %}
                             {% if is_granted('ROLE_FIGHTER') %}
-                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_trial_consult') }}">my trials</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_trial_consult') }}">Mes matchs</a></li>
                             {% endif %}
                         {# 
                             {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}
@@ -87,13 +87,13 @@
                             {% endif %}
                             #}
                             {% if app.user.tickets is defined and app.user.tickets is empty%}
-                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_ticket_new') }}">upgrade</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_ticket_new') }}">Rôle</a></li>
                             {% elseif app.user.tickets[0].status == "ACCEPTED" %}
                                 <li class="nav-item"><a class="nav-link active" href="{{ path('front_user_upgrade', { "id": app.user.id }) }}">change your account</a></li>
                             {% endif %}
                         {% endif %}
                         <li class="nav-item"><a class="nav-link active" href="{{ path('front_user_edit', { "id": app.user.id }) }}">Votre compte</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="{{ path('app_logout') }}">logout</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{{ path('app_logout') }}">Déconnexion</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link active" href="{{ path('app_login') }}">Connexion</a></li>
                         <li class="nav-item"><a class="nav-link active" href="{{ path('app_register') }}">Inscription</a></li>
