@@ -16,7 +16,7 @@
 
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_tournament_index') }}" method="POST">
-        <select id="status" name="status">
+        <select class="form-control" id="status" name="status">
             {% if is_granted('ROLE_FIGHTER') or is_granted('ROLE_ADJUDICATE') %}
                 <option value="CREATED" id="CREATED">CREER</option>
             {% endif %}
@@ -26,26 +26,38 @@
         </select>
         <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
+    <div class="mt-4 d-flex flex-wrap ">
     {% if tournaments is defined %}
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Arbitre</th>
-                <th>Nombre de combattants</th>
-                <th>date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tournament in tournaments %}
-                <tr>
-                        <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
-                        <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
-                        <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
-                        <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
-                        <th>
-                        {% if app.user %}
+   
+        {% for tournament in tournaments %}
+        <div class="card mr-4 mt-4 me-4 shadow-sm " style="width: 18rem;">
+            <div class="card-body">
+
+            <div class="block">
+                    <div class="tl-info">NOM DU TOURNOI</div>
+                    <div class="info">{{ tournament.name }}</div>
+                </div>
+                <hr>
+                
+                <div class="block">
+                    <div class="tl-info">ARBITRE</div>
+                    <div class="info">{{ tournament.createdBy.nickname ?? "null" }}</div>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <div class="tl-info">NOMBRE DE COMBATTANTS</div>
+                    <div class="info">{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</div>
+                </div>
+                <hr>
+              
+                <div class="block">
+                    <div class="tl-info">DATE DEBUT</div>
+                    <p class="info">{{ tournament.dateStart|date('d-m-Y H:i:s') }}</p>
+                </div>
+               
+                
+                {% if app.user %}
                             {% if canQuit(tournament, app.user) %}
                                 {{ include('front/tournament/_quit_form.html.twig') }}
                             {% endif %}
@@ -55,13 +67,15 @@
                             {% if canBetTournament(tournament, app.user)%}
                                 {{ include('front/tournament/_bet_form.html.twig') }}
                             {% endif %}
-                        {% endif %}
-                        </th>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
+                {% endif %}
+              
+            </div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+    </div>
+    
 </div>
 {% endblock %}
 {% block javascripts %}
