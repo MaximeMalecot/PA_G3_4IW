@@ -5,7 +5,10 @@
 {% block body %}
 
 <div class="container">
-    <h1>User {{ user.nickname }}</h1>
+<div class="d-flex ">
+        <h1 class="flex-shrink-0">Factures</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Toutes mes factures<p>
+    </div>
 
     {% if invoices is defined and invoices is not empty %}
         <table id="table_invoice">

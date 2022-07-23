@@ -77,6 +77,10 @@
                             {% if is_granted('ROLE_FIGHTER') %}
                                 <li class="nav-item"><a class="nav-link active" href="{{ path('front_trial_consult') }}">Mes matchs</a></li>
                             {% endif %}
+
+                            {% if ( is_granted('ROLE_ADMIN') == false and is_granted('ROLE_ADJUDICATE') == false) %}
+                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_payment_index') }}">Mes crédits</a></li>
+                            {% endif %}
                         {# 
                             {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}
                                 {% for trial in app.user.trials if not break %}

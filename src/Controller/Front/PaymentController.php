@@ -28,12 +28,52 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('payment_credit', ["credit" => $form->get('credits')->getData()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Front/payment/index.html.twig', [
+        return $this->renderForm('front/payment/index.html.twig', [
             'form' => $form,
             'amounts' => Invoice::ENUM_PAYMENT,
         ]);
     }
 
+    #[Route('/{credit}', name: 'payment_credit', methods: ['GET'])]
+    public function payment(Request $request, int $credit): Response
+    {
+        if ($credit < 5) {
+            $this->addFlash('danger', 'Vous devez acheter au moins 5 crédits');
+            return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
+            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
+            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $session = new Session();
+
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
+        $YOUR_DOMAIN = "http://{$request->getHost()}:{$request->getPort()}";
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'unit_amount' => 100 * ($credit / 10),
+                    'product_data' => [
+                        'name' => 'Achat de crédits',
+                        'images' => ["https://conseils.casalsport.com/wp-content/uploads/2019/05/entretenir-ses-gants-de-boxe.jpg"],
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => "{$YOUR_DOMAIN}/payment/success",
+            'cancel_url' => "{$YOUR_DOMAIN}/payment/cancel",
+        ]);
+
+        $session->set('credit', $credit);
+        $session->set('payment_intent', $checkout_session["payment_intent"]);
+
+        return $this->redirect($checkout_session->url);
+    }
 
     #[Route('/success', name: 'payment_success', methods: ['GET'])]
     public function success(): Response
@@ -88,44 +128,4 @@ class PaymentController extends AbstractController
         return $this->render('front/payment/cancel.html.twig');
     }
 
-    #[Route('/{credit}', name: 'payment_credit', methods: ['GET'])]
-    public function payment(Request $request, int $credit): Response
-    {
-        if ($credit < 5) {
-            $this->addFlash('danger', 'Vous devez acheter au moins 5 crédits');
-            return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        if (in_array('ROLE_ADJUDICATE', $this->getUser()->getRoles())) {
-            $this->addFlash('danger', 'Vous n\'avez pas les droits pour accéder à cette page');
-            return $this->redirectToRoute('default', [], Response::HTTP_SEE_OTHER);
-        }
-
-        $session = new Session();
-
-        \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
-        $YOUR_DOMAIN = "http://{$request->getHost()}:{$request->getPort()}";
-        $checkout_session = \Stripe\Checkout\Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'unit_amount' => 100 * ($credit / 10),
-                    'product_data' => [
-                        'name' => 'Achat de crédits',
-                        'images' => ["https://conseils.casalsport.com/wp-content/uploads/2019/05/entretenir-ses-gants-de-boxe.jpg"],
-                    ],
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => "{$YOUR_DOMAIN}/payment/success",
-            'cancel_url' => "{$YOUR_DOMAIN}/payment/cancel",
-        ]);
-
-        $session->set('credit', $credit);
-        $session->set('payment_intent', $checkout_session["payment_intent"]);
-
-        return $this->redirect($checkout_session->url);
-    }
 }
