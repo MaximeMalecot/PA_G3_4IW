@@ -40,6 +40,28 @@
          
         }
 
+        .profile-img{
+            border-radius:3px;
+        }
+
+        .profile-tl{
+            font-weight:bold;
+            font-size:45px;
+            margin-bottom:50px;
+        }
+
+        .tl-info{ 
+            font-weight:bold;
+            font-size:20px;
+            margin:20px 0px;
+
+        }
+
+        .info{
+            font-size:15px;
+            margin:30px 0px;
+        }
+
 </style>
 {% endblock %}
 {% block body %}
@@ -57,30 +79,43 @@
 </div>
 
 
-<div class="container pt-5">
-    <h1>User</h1>
+<div class="container pt-5 pb-3">
+    <h2 class="profile-tl text-center">LA BIOGRAPHIE</h2>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Pseudo</th>
-                <td>{{ user.nickname }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ user.description }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('front_user_index') }}">back to list</a>
+    <div class="container section1">
+        <div class="row">
+            <div class="col col-md-6">
+                <img class="profile-img" src="{{ asset('img/profile.jpg') }}"  alt="user" style="width:80%">
+            </div>  
+            
+            <div class="col col-md-6 align-self-center">
+           
 
-    <a href="{{ path('front_user_edit', {'id': user.id}) }}">edit</a>
+                <div class="info">
+                            <div>
+                                <div class="tl-info">EMAIL</div>
+                                <div class="info">{{ user.email }}</div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="tl-info">PSEUDO</div>
+                                <div class="info">{{ user.nickname }}</div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="tl-info">DESCRIPTION</div>
+                                <div class="info">{{ user.description }}</div>
+                            </div>
+                          
+                </div>
+                <a class="btn btn-bettle" href="{{ path('front_user_edit', {'id': user.id}) }}">Modifier</a>
 
-    {{ include('front/user/_delete_form.html.twig') }}
+                {{ include('front/user/_delete_form.html.twig') }}
+            </div>
+        
+        </div>
+    </div>
+   
 </div>
 {% endblock %}
