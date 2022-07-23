@@ -15,11 +15,11 @@
             <label for="timeStart">Heure de début</label>
             <input type="time" class="timepicker" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
             <input type="hidden" name="_token" value="{{ csrf_token('editTrial'~ trial.id ) }}"/>
-            <button class="btn btn-primary" type="submit" value="Edit">Edit</button>
+            <button class="btn btn-primary" type="submit" value="Edit">Modifier</button>
         </form>
         {% endif %}
         <div class="card-footer">
-            <a href="{{ path('back_trial_index') }}">back to list</a>
+            <a href="{{ path('back_trial_index') }}">Retour à la liste</a>
         </div>
     </div>
 </div>

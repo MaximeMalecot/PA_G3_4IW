@@ -13,11 +13,11 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Email</th>
-                    <th scope="col" class="d-none d-xxl-table-cell">Roles</th>
-                    <th scope="col" class="d-none d-xxl-table-cell">Is verified</th>
-                    <th scope="col" class="d-none d-lg-table-cell">Nickname</th>
-                    <th scope="col" class="d-none d-xxl-table-cell">Twitch Channel</th>
-                    <th scope="col" class="d-none d-xxl-table-cell">Credits</th>
+                    <th scope="col" class="d-none d-xxl-table-cell">Rôles</th>
+                    <th scope="col" class="d-none d-xxl-table-cell">Vérifié</th>
+                    <th scope="col" class="d-none d-lg-table-cell">Surnom</th>
+                    <th scope="col" class="d-none d-xxl-table-cell">Chaîne Twitch</th>
+                    <th scope="col" class="d-none d-xxl-table-cell">Crédits</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -27,7 +27,7 @@
                         <th scope="row">{{ user.id }}</th>
                         <td>{{ user.email }}</td>
                         <td class="d-none d-xxl-table-cell">{{ user.roles ? user.roles|json_encode : '' }}</td>
-                        <td class="d-none d-xxl-table-cell">{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                        <td class="d-none d-xxl-table-cell">{{ user.isVerified ? 'Oui' : 'Non' }}</td>
                         <td class="d-none d-lg-table-cell">{{ user.nickname }}</td>
                         <td class="d-none d-xxl-table-cell">{{ user.twitchChannel }}</td>
                         <td class="d-none d-xxl-table-cell">{{ user.credits }}</td>

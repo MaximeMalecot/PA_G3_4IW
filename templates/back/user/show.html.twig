@@ -19,15 +19,15 @@
                     <td>{{ user.email }}</td>
                 </tr>
                 <tr>
-                    <th>Roles</th>
+                    <th>Rôles</th>
                     <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 </tr>
                 <tr>
-                    <th>IsVerified</th>
-                    <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                    <th>Vérifié</th>
+                    <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
                 </tr>
                 <tr>
-                    <th>Nickname</th>
+                    <th>Surnom</th>
                     <td>{{ user.nickname }}</td>
                 </tr>
                 <tr>
@@ -35,11 +35,11 @@
                     <td>{{ user.description }}</td>
                 </tr>
                 <tr>
-                    <th>Twitch_channel</th>
+                    <th>Chaîne Twitch</th>
                     <td>{{ user.twitchChannel }}</td>
                 </tr>
                 <tr>
-                    <th>Credits</th>
+                    <th>Crédits</th>
                     <td>{{ user.credits }}</td>
                 </tr>
                 </tbody>
@@ -48,11 +48,11 @@
         <div class="card-footer">
             <div class="d-flex flex-column gap-2">
                 <a href="{{ path('back_user_index') }}">
-                    <button class="btn btn-secondary w-100">Back to the list</button>
+                    <button class="btn btn-secondary w-100">Retour à la liste</button>
                 </a>
 
                 <a href="{{ path('back_user_edit', {'id': user.id}) }}">
-                    <button class="btn btn-primary w-100">Edit</button>
+                    <button class="btn btn-primary w-100">Modifier</button>
                 </a>
                 {{ include('back/user/_delete_form.html.twig') }}
             </div>

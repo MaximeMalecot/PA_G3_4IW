@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_user_pwd_edit', { 'id': user.id }) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('redirectEdit' ~ user.id) }}">
-    <button class="btn btn-secondary">Edit password</button>
+    <button class="btn btn-secondary">Modifier le mot de passe</button>
 </form>

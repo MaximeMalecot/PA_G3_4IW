@@ -1,6 +1,6 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Bettle - Edit Trial{% endblock %}
+{% block title %}Bettle - Modifier combat{% endblock %}
 
 {% block body %}
 
@@ -16,12 +16,12 @@
                 <label for="timeStart">Heure</label>
                 <input type="time" class="form-control" id="timeStart" name="timeStart" placeholder="{{ trial.dateStart|date('H:i') }}" required/>
                 <input type="hidden" name="_token" value="{{ csrf_token('editTrial'~ trial.id ) }}"/>
-                <button type="submit" class="btn btn-primary" value="Edit">Edit</button>
+                <button type="submit" class="btn btn-primary" value="Edit">Modifier</button>
             </form>
         </div>
         <div class="card-footer">
             <a href="{{ path('back_trial_index') }}">
-                <button class="btn btn-secondary">back to list</button>
+                <button class="btn btn-secondary">Retour à la liste</button>
             </a>
         </div>
     {% endif %}

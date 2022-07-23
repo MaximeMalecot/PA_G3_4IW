@@ -29,12 +29,12 @@
             <label for="timeStart">Heure de début</label>
             <input type="time" class="form-control" id="timeStart" name="timeStart" required/>
             <input type="hidden" name="_token" value="{{ csrf_token('newTrial') }}"/>
-            <button type="submit" value="Create" class="btn btn-primary mt-2">Create</button>
+            <button type="submit" value="Create" class="btn btn-primary mt-2">Créer</button>
         </form>
     </div>
     <div class="card-footer">
         <a href="{{ path('back_trial_index') }}">
-            <button class="btn btn-secondary">back to list</button>
+            <button class="btn btn-secondary">Retour à la liste</button>
         </a>
     </div>
 

@@ -9,7 +9,7 @@
             <h3 class="card-title">Ticket</h3>
         </div>
         <div class="card-body">
-            <table class="table">
+            <table class="table table-borderless">
                 <tbody>
                 <tr>
                     <th>Id</th>
@@ -20,31 +20,28 @@
                     <td>{{ ticket.description }}</td>
                 </tr>
                 <tr>
-                    <th>Status</th>
+                    <th>Statut</th>
                     <td>{{ ticket.status }}</td>
                 </tr>
                 <tr>
-                    <th>CreatedAt</th>
+                    <th>Date de création</th>
                     <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 </tr>
                 <tr>
-                    <th>UpdatedAt</th>
+                    <th>Date de mise à jour</th>
                     <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            <a href="{{ path('ticket_index') }}">back to list</a>
-
-            <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
+        <div class="card-footer d-flex flex-column gap-2">
+            <a href="{{ path('back_ticket_index') }}">
+                <button class="btn btn-secondary">
+                    Retourner à la liste
+                </button>
+            </a>
 
             {{ include('back/ticket/_delete_form.html.twig') }}
         </div>
     </div>
-    <h1>Ticket</h1>
-
-
-
-
 {% endblock %}

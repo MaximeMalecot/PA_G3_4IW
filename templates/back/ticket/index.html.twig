@@ -28,17 +28,17 @@
                 <button class="btn btn-primary" type="submit" value="Filtrer">Filtrer</button>
             </form>
             <hr>
-            <table class="table">
+            <table class="table table-responsive">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Description</th>
                         <th>Role voulu</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Created By</th>
-                        <th>Updated By</th>
+                        <th class="d-none d-lg-table-cell">Statut</th>
+                        <th class="d-none d-lg-table-cell">Date de création</th>
+                        <th class="d-none d-lg-table-cell">Date de mise à jour</th>
+                        <th class="d-none d-lg-table-cell">Créé par</th>
+                        <th class="d-none d-lg-table-cell">Mis à jour par</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -48,11 +48,11 @@
                         <td>{{ ticket.id }}</td>
                         <td>{{ ticket.description }}</td>
                         <td>{{ ticket.roleWanted }}</td>
-                        <td>{{ ticket.status }}</td>
-                        <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                        <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                        <td>{{ ticket.createdBy.email }}</td>
-                        <td>{{ ticket.updatedBy.email }}</td>
+                        <td class="d-none d-lg-table-cell">{{ ticket.status }}</td>
+                        <td class="d-none d-lg-table-cell">{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td class="d-none d-lg-table-cell">{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td class="d-none d-lg-table-cell">{{ ticket.createdBy.email }}</td>
+                        <td class="d-none d-lg-table-cell">{{ ticket.updatedBy.email }}</td>
                         <td>
                             {% if ticket.status == "CREATED" %}
                                 {{ include('back/ticket/_accept_form.html.twig') }}
@@ -62,13 +62,12 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="100">no tickets found</td>
+                        <td colspan="100">Aucun ticket trouvé</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="card-footer"></div>
     </div>
 
 {% endblock %}
@@ -76,7 +75,6 @@
     {{ parent() }}
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded',  function() {
-            var select = document.querySelectorAll("select");
             {{roleWanted}}.selected = 'selected';
             {{status}}.selected = 'selected';
         });

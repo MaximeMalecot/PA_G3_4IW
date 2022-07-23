@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_tournament_lock', {'id': tournament.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('lock' ~ tournament.id) }}">
-    <button class="btn btn-warning w-100 my-2">Lock</button>
+    <button class="btn btn-warning w-100 my-2">Fermer</button>
 </form>
