@@ -13,16 +13,16 @@
                 <label class="form-label" for="roleWanted">Filtrer</label>
                 <select class="form-select mb-2" id="roleWanted" name="roleWanted">
                     <option value="Role" id="Role">---</option>
-                    <option value="Adjudicate" id="Adjudicate">Adjudicate</option>
-                    <option value="Fighter" id="Fighter">Fighter</option>
+                    <option value="Adjudicate" id="Adjudicate">Arbitre</option>
+                    <option value="Fighter" id="Fighter">Combattant</option>
                 </select>
-                <label class="form-label" for="status">Status</label>
+                <label class="form-label" for="status">Statut</label>
                 <select class="form-select mb-2" id="status" name="status">
                     <option value="Status" id="Status">---</option>
-                    <option value="CREATED" id="CREATED">Créer</option>
-                    <option value="ACCEPTED" id="ACCEPTED">Accepter</option>
-                    <option value="ENDED" id="ENDED">Finis</option>
-                    <option value="REFUSED" id="REFUSED">Refuser</option>
+                    <option value="CREATED" id="CREATED">Créé</option>
+                    <option value="ACCEPTED" id="ACCEPTED">Accepté</option>
+                    <option value="ENDED" id="ENDED">Fini</option>
+                    <option value="REFUSED" id="REFUSED">Refusé</option>
                 </select>
                 <input type="hidden" name="_token" value="{{ csrf_token('ticketFilter') }}">
                 <button class="btn btn-primary" type="submit" value="Filtrer">Filtrer</button>
