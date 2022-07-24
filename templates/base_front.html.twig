@@ -79,7 +79,7 @@
                             {% endif %}
 
                             {% if ( is_granted('ROLE_ADMIN') == false and is_granted('ROLE_ADJUDICATE') == false) %}
-                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_payment_index') }}">Mes crédits</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="{{ path('front_payment_index') }}">Crédits</a></li>
                             {% endif %}
                         {# 
                             {% if is_granted('ROLE_FIGHTER') and app.user.trials is not empty %}

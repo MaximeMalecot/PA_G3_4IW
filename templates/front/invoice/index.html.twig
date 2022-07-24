@@ -4,8 +4,8 @@
 
 {% block body %}
 
-<div class="container">
-<div class="d-flex ">
+<div class="container pt-4">
+<div class="d-flex mb-4">
         <h1 class="flex-shrink-0">Factures</h1>
         <p class="flex-grow-1 ms-2 m-auto fs-5">- Toutes mes factures<p>
     </div>
@@ -14,7 +14,7 @@
         <table id="table_invoice">
             <thead>
                 <tr>
-                    <th>Crédit</th>
+                    <th>Crédits</th>
                     <th>Prix</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -24,10 +24,10 @@
             {% for invoice in invoices %}
                 <tr>
                     <th>{{ invoice.creditAmount }}</th>
-                    <th>{{ invoice.price }} $</th>
+                    <th>{{ invoice.price }} €   </th>
                     <th>{{ invoice.createdAt|date('d-m-Y H:i:s') }}</th>
                     <th>
-                        <a href="{{ path('invoice_show', { 'id': invoice.id }) }}" class="btn btn-danger">Voir la facture</a>
+                        <a href="{{ path('invoice_show', { 'id': invoice.id }) }}" class="btn btn-bettle">Voir la facture</a>
                     </th>
 
                 </tr>

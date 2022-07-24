@@ -39,15 +39,21 @@
         <div class="d-flex justify-content-left mb-7 mt-5">
             <div class="card card-profile shadow-sm ">
                 <div class="card-body">
-                   
-                {% if app.user == user %}
-                    <div class="credit">
-                        <label class="credit-label">Credits:</label> 
-                        <label>{{user.credits}}</label>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        {% if app.user == user %}
+                            <div class="credit">
+                                <label class="credit-label">Credits:</label> 
+                                <label>{{user.credits}}</label>
+                            </div>
+                            
+                        {% endif %}
+                            <label>{{user.nickname}}</label>
                     </div>
-                {% endif %}
-                    <label>{{user.nickname}}</label>
-
+                    <div>
+                        <a href="{{ path('invoice_user', { 'id': user.id }) }}" class="btn btn-bettle">Vos factures</a>
+                    </div>
+                </div>
                     <h4 class="pt-3">Modifier vos informations</h4>
                     <div class="pb-3">
                         {{ include('front/user/_form.html.twig', {'button_label': 'Modifier'}) }}
