@@ -5,10 +5,15 @@
 {% block body %}
 <style>
 
-    .tl-info {
-        font-weight:bold;
-        font-size:20px;
-    }
+        .tl-info {
+            font-weight:bold;
+            font-size:20px;
+        }
+        
+        .aucun-tournois {
+            color:#D20A0A;
+            font-weight:bold;
+        }
     
 </style>
 
@@ -32,7 +37,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
     <div class="mt-4 d-flex flex-wrap justify-content-around">
-    {% if tournaments is defined %}
+    {% if tournaments is defined and tournaments is not empty %}
    
         {% for tournament in tournaments %}
         <div class="card mr-4 mt-4 me-4 shadow-sm" style="width: 18rem;">
@@ -78,7 +83,9 @@
         </div>
 
         {% endfor %}
-        {% endif %}
+    {% else %}
+        <p class="aucun-tournois">Aucun combat en attente.</p> 
+    {% endif %}
     </div>
     
 </div>

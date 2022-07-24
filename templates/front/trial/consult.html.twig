@@ -7,7 +7,6 @@
     .block {
         display: flex;
         overflow-x: scroll;
-
     }
 
     .challenge {
@@ -17,6 +16,21 @@
     .tl-info {
         font-weight:bold;
         font-size:20px;
+    }
+
+    .aucun-combat {
+        color:#D20A0A;
+        font-weight:bold;
+    }
+
+    .aucun-challenge {
+        color:#D20A0A;
+        font-weight:bold;
+    }
+
+    .aucun-autre {
+        color:#D20A0A;
+        font-weight:bold;
     }
 </style>
 {% endblock %}
@@ -38,9 +52,9 @@
                             <div class="card mr-4 mt-4 me-4 shadow-sm " style="width:18rem;">
                                 <div class="card-body">
                                     <div class="tl-info">ARBITRE</div>
-                                    <p>{{ trial.adjudicate.nickname ?? "null" }}</p>
+                                    <p>{{ trial.adjudicate.nickname ?? "En attente" }}</p>
                                     <div class="tl-info">COMBATTANTS</div>
-                                    <p>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</p>
+                                    <p>{{ trial.fighters[0].nickname ?? "En attente" }} vs {{ trial.fighters[1].nickname ?? "En attente" }}</p>
                                     <div class="tl-info">DATE</div>
                                     <p>{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
                                     <div class="tl-info">ACTION</div>
@@ -55,6 +69,8 @@
                                  </div>
                             </div>
                         {% endfor %}
+                    {% else %}
+                        <p class="aucun-combat">Aucun combat en attente.</p>
                     {% endif %}
                 </div>
             </div>
@@ -69,9 +85,9 @@
                             <div class="card mr-4 mt-4 me-4 shadow-sm " style="width:18rem;">
                                 <div class="card-body">
                                     <div class="tl-info">ARBITRE</div>
-                                    <p>{{ trial.adjudicate.nickname ?? "null" }}</p>
+                                    <p>{{ trial.adjudicate.nickname ?? "En attente" }}</p>
                                     <div class="tl-info">COMBATTANTS</div>
-                                    <p>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</p>
+                                    <p>{{ trial.fighters[0].nickname ?? "En attente" }} vs {{ trial.fighters[1].nickname ?? "En attente" }}</p>
                                     <div class="tl-info">DATE</div>
                                     <p>{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
                                     <div class="tl-info">ACTION</div>
@@ -85,9 +101,9 @@
                                 </div>
                             </div>
                         {% endfor %}
+                    {% else %}
+                        <p class="aucun-combat">Aucun combat en attente.</p>
                     {% endif %}
-                    
-                    
                     </div>
                 </div>
             </div>
@@ -101,9 +117,9 @@
                             <div class="card mr-4 mt-4 me-4 shadow-sm " style="width:18rem;">
                                 <div class="card-body">
                                         <div class="tl-info">ARBITRE</div>
-                                        <p>{{ trial.adjudicate.nickname ?? "null" }}</p>
+                                        <p>{{ trial.adjudicate.nickname ?? "En attente" }}</p>
                                         <div class="tl-info">COMBATTANTS</div>
-                                        <p>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</p>
+                                        <p>{{ trial.fighters[0].nickname ?? "En attente" }} vs {{ trial.fighters[1].nickname ?? "En attente" }}</p>
                                         <div class="tl-info">DATE</div>
                                         <p>{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
                                         <div class="tl-info">ACTION</div>
@@ -116,6 +132,8 @@
                                 </div>
                             </div>
                         {% endfor %}
+                    {% else %}
+                        <p class="aucun-combat">Aucun combat en attente.</p>
                     {% endif %}
                 </div>
             </div>
