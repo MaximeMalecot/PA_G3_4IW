@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('front_tournament_quit', {'id': tournament.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('quit' ~ tournament.id) }}">
-    <button class="btn btn-bettle">Quit</button>
+    <button class="btn btn-bettle">Quitter</button>
 </form>
