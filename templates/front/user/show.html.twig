@@ -67,10 +67,17 @@
     <img src="{{ asset('img/competitor.png') }}"  alt="logo" style="width:100%;">
     {% if app.user %}     
     {% endif %}
-    <div class="banner-text mx-5 gap-2">
-        <div><h2 class="nickname">{{ user.nickname }}</h2></div>
+    <div class="banner-text mx-5 gap-2 d-flex">
+        <div class="d-flex flex-column justify-content-center"><h2 class="nickname">{{ user.nickname }}</h2></div>
         <div>
-            <a href="#" class="btn btn-challenge">Défier</a>
+         
+            {% if is_granted('ROLE_FIGHTER')%} 
+                <p class="mx-2">
+                    {% if canChallenge(app.user, user) %}
+                        {{ include('front/user/_challenge_form2.html.twig') }}
+                    {% endif %}
+                </p>
+            {% endif %}
         </div>
     </div>
 </div>

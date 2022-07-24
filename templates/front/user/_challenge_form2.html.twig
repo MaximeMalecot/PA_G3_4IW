@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('front_user_challenge', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to challenge this fighter?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('challenge' ~ user.id) }}">
+    <button class="btn btn-challenge">Défier</button>
+</form>
