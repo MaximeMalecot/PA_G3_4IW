@@ -2,24 +2,37 @@
 
 {% block title %}Les combats{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .block {
+        display: flex;
+        overflow-x: scroll;
+
+    }
+
+    .challenge {
+        display: flex;
+    }
 </style>
+{% endblock %}
 
-<div class="example-wrapper">
+{% block body %}
 
-    <div class="example-wrapper">
+<div class="container pt-4">
+    <div class="d-flex mb-4">
+        <h1 class="flex-shrink-0">Matchs</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Mes matchs à venir<p>
+    </div>
+    <div class="">
         <h1>Les combats en attente</h1>
         <table id="nextTrials" name="nextTrials">
             <thead>
                 <tr>
-                    <th>arbitre</th>
-                    <th>combattants</th>
-                    <th>date</th>
-                    <th>status</th>
-                    <th>actions</th>
+                    <th>Arbitre</th>
+                    <th>Combattants</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="nextTrials_data">
@@ -43,48 +56,48 @@
             </tbody>
         </table>
     </div>
-    <div class="example-wrapper">
+    
         <h1>Les challenges en attente</h1>
-        <table id="nextChallenges" name="nextChallenges">
-            <thead>
-                <tr>
-                    <th>arbitre</th>
-                    <th>combattants</th>
-                    <th>date</th>
-                    <th>status</th>
-                    <th>actions</th>
-                </tr>
-            </thead>
-            <tbody id="nextChallenges_data">
-            {% if nextChallenges is defined and nextChallenges is not empty %}
+        <div class="block">
+           
+            <div>
+                <div class="challenge">
+
+                {% if nextChallenges is defined and nextChallenges is not empty %}
                 {% for trial in nextChallenges %}
-                    <tr>
-                        <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
-                        <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
-                        <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
-                        <th>{{ trial.status }}</th>
-                        <th>
+                <div class="card mr-4 mt-4 me-4 shadow-sm " style="width:18rem;">
+                    <div class="card-body">
+                        <p>{{ trial.adjudicate.nickname ?? "null" }}</p>
+                        <p>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</p>
+                        <p>{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
+                        <p>{{ trial.status }}</p>
+                        <p>
                             {% if trial.status == "CREATED" and trial.createdBy.id != app.user.id %}
                                 {{ include('front/trial/_accept_challenge_form.html.twig') }}
                                 {{ include('front/trial/_reject_challenge_form.html.twig') }}
                             {% endif %}
-                        </th>
-                    </tr>
+                        </p>
+                    </div>
+                </div>
                 {% endfor %}
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-    <div class="example-wrapper">
+                {% endif %}
+                   
+                </div>
+            </div>
+        </div>
+   
+
+    
+    <div class="">
     <h1>Les autres combats</h1>
         <table id="others" name="previous">
             <thead>
                 <tr>
-                    <th>arbitre</th>
-                    <th>combattants</th>
-                    <th>date</th>
-                    <th>status</th>
-                    <th>actions</th>
+                    <th>Arbitre</th>
+                    <th>Combattants</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="others_data">
@@ -107,4 +120,12 @@
         </table>
     </div>
 </div>
+<script>
+
+$(document).ready( function () {
+    $('#nextTrials').DataTable();
+    $('#nextChallenges').DataTable();
+    $('#others').DataTable();
+} );
+</script>
 {% endblock %}
