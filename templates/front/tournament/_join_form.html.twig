@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('front_tournament_join', {'id': tournament.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('join' ~ tournament.id) }}">
-    <button class="btn btn-bettle">Join</button>
+    <button class="btn btn-bettle">Joindre</button>
 </form>

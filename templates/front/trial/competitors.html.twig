@@ -18,7 +18,7 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Nickname</th>
+                <th>Pseudo</th>
                 <th></th>
             </tr>
         </thead>
@@ -27,7 +27,7 @@
             <tr>
                 <td>{{ fighter.id }}</td>
                 <td>{{ fighter.nickname }}</td>
-                <td><a href="{{ path('trial_challenge', {'id': fighter.id}) }}">defie</a></td>
+                <td><a href="{{ path('trial_challenge', {'id': fighter.id}) }}">Défier</a></td>
             </tr>
         {% else %}
             <tr>

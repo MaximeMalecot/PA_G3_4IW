@@ -32,7 +32,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['class' => 'mx-2'],
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions.',
                     ]),
                 ],
             ])

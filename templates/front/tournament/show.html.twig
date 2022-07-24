@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Tournament {{ tournament.name }}{% endblock %}
+{% block title %}Tournois {{ tournament.name }}{% endblock %}
 
 {% block body %}
 
@@ -10,10 +10,10 @@
 </style>
 
 <div class="example-wrapper">
-    <b>Name:</b></br>
+    <b>Nom:</b></br>
     {{ tournament.name }}</br>
     {% if tournament.winner %}
-    <b>Winner:</b></br>
+    <b>Gagnant:</b></br>
     {{ tournament.winner }}</br>
     {% endif %}
     <b>Arbitre du tournoi:</b></br> 
