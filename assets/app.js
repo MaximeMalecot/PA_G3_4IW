@@ -9,10 +9,3 @@
 import './styles/app.css';
 
 // If you need Materialize's JS features you can import them here
-import M from "materialize-css";
-window.M = M;
-
-document.addEventListener('DOMContentLoaded', function() {
-    const selects = document.querySelectorAll('select');
-    M.FormSelect.init(selects, null, {});
-});
