@@ -3,12 +3,6 @@
 {% block title %}Trial {{trial.id}} {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
     <h1>Trial</h1>
 
     <table class="table">
@@ -18,33 +12,33 @@
                 <td>{{ trial.id }}</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>Statut</th>
                 <td>{{ trial.status }}</td>
             </tr>
             <tr>
-                <th>BetStatus</th>
+                <th>Statut du pari</th>
                 <td>{{ trial.betStatus }}</td>
             </tr>
             <tr>
-                <th>DateStart</th>
+                <th>Date de début</th>
                 <td>{{ trial.dateStart ? trial.dateStart|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>DateEnd</th>
+                <th>Date de fin</th>
                 <td>{{ trial.dateEnd ? trial.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
+                <th>Créé le</th>
                 <td>{{ trial.createdAt ? trial.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>UpdatedAt</th>
+                <th>Mis à jour le</th>
                 <td>{{ trial.updatedAt ? trial.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('back_trial_index') }}">back to list</a>
+    <a href="{{ path('back_trial_index') }}">Retour à la liste</a>
 
     {% if trial.status == "DATE_REFUSED" or trial.status == "CREATED"%}
         {{ include('back/trial/_modify_date_form.html.twig') }}

@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_tournament_trial_start', {'tournament': tournament.id,'trial': startTrial.id}) }}" onsubmit="return confirm('Are you sure you want to start this trial?');">
     <input type="hidden" name="_token" value="{{ csrf_token('startTrial' ~ startTrial.id) }}">
-    <button class="btn">Start</button>
+    <button class="btn btn-success my-2">Démarrer</button>
 </form>

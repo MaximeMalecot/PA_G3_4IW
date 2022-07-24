@@ -1,16 +1,18 @@
 <form method="post" action="{{ path('back_tournament_trial_end', {'tournament': tournament.id,'trial': endTrial.id}) }}">
-    <select id="fighter" name="fighter" required>
+    <label for="fighter" class="form-label">Combattant</label>
+    <select class="form-select" id="fighter" name="fighter" required>
         <option value="default" disabled selected>---</option>
         {% for fighter in endTrial.fighters %}
             <option value={{fighter.id}}>{{fighter.nickname}}</option>
         {% endfor %}
     </select>
-    <select id="victoryType" name="victoryType" required>
+    <label for="victoryType" class="form-label">Type de victoire</label>
+    <select id="victoryType" name="victoryType" class="form-select" required>
         <option value="default" disabled selected>---</option>
         {% for type in victoryTypes %}
             <option value={{type}}>{{type}}</option>
         {% endfor %}
     </select>
     <input type="hidden" name="_token" value="{{ csrf_token('endTrial' ~ endTrial.id) }}">
-    <button type="submit" class="btn">END</button>
+    <button type="submit" class="btn btn-primary">Mettre fin au tournoi</button>
 </form>

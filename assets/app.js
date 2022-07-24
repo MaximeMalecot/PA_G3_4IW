@@ -6,13 +6,15 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
+import './styles/app.scss';
 
-// If you need Materialize's JS features you can import them here
-import M from "materialize-css";
-window.M = M;
+import {Toast, Tooltip} from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const selects = document.querySelectorAll('select');
-    M.FormSelect.init(selects, null, {});
+    const toastElList = document.querySelectorAll('.toast');
+    const toastList = [...toastElList].map(toastEl => new Toast(toastEl, {}));
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+
+    toastList.forEach(toast => toast.show());
 });
