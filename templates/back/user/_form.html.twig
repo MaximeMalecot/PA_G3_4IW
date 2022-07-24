@@ -16,8 +16,8 @@
         {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
     </div>
     <div class="mb-2">
-        {{ form_label(form.twitch_channel, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.twitch_channel, {'attr': {'class': 'form-control'}}) }}
+        {{ form_label(form.twitchChannel ?? form.twitch_channel, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.twitchChannel ?? form.twitch_channel, {'attr': {'class': 'form-control'}}) }}
     </div>
     <button type="submit" class="btn btn-primary mb-2">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}
