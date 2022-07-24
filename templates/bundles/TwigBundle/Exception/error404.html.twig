@@ -1,7 +1,16 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}LOST?{% endblock %}
+{% block title %}ERREUR 404{% endblock %}
 
 {% block body %}
-    error 404
+    <div class="d-flex align-items-center justify-content-center">
+            <div class="text-center">
+                <h1 class="display-1 fw-bold">404</h1>
+                <p class="fs-3"> <span class="text-danger">Oups!</span> Page non trouvée.</p>
+                <p class="lead">
+                    La page que vous cherchez n'existe pas.
+                  </p>
+                <a href="/" class="btn btn-bettle">Retour sur la page d'accueil</a>
+            </div>
+        </div>
 {% endblock %}
