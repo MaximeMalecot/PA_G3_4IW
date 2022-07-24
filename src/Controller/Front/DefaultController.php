@@ -13,7 +13,9 @@ class DefaultController extends AbstractController
     {
 
         if ($this->getUser()){
-            return $this->redirectToRoute('user_edit', ["id" => $this->getUser()->getId()]);
+            return $this->render('front/default/dashboard.html.twig', [
+                'controller_name' => 'FRONT',
+            ]);
         }
         return $this->render('front/default/index.html.twig', [
             'controller_name' => 'FRONT',

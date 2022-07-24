@@ -3,6 +3,7 @@
 {% block title %}User{% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
 <style>
         .banner{
             position:relative;
@@ -16,7 +17,7 @@
 
         .banner-btn{
             position:absolute;
-            margin-left:20px%;
+            margin-left:20px;
         }
 
         .nickname{
