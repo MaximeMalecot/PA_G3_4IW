@@ -11,13 +11,13 @@
     </div>
 
     {% if invoices is defined and invoices is not empty %}
-        <table id="table_invoice">
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Crédits</th>
-                    <th>Prix</th>
-                    <th>Date</th>
-                    <th>Action</th>
+                    <th scope="col">Crédits</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,10 +38,4 @@
         <p>Pas de facture trouvée</p>
     {% endif %}
 </div>
-<script>
-
-$(document).ready( function () {
-    $('#table_invoice').DataTable();
-} );
-</script>
 {% endblock %}

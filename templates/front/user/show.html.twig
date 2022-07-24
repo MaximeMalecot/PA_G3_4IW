@@ -16,10 +16,7 @@
 
         .banner-btn{
             position:absolute;
-            top:0;
-            right:0;
-            margin-right:5%;
-            margin-top:3%;
+            margin-left:20px%;
         }
 
         .nickname{
@@ -69,12 +66,12 @@
 <div class="banner">
     <img src="{{ asset('img/competitor.png') }}"  alt="logo" style="width:100%;">
     {% if app.user %}     
-    <div class="banner-btn">
-       <a href="#" class="btn btn-challenge">Défier</a>
-    </div>
     {% endif %}
-    <div class="banner-text mx-5">
-        <h2 class="nickname">{{ user.nickname }}</h2>
+    <div class="banner-text mx-5 gap-2">
+        <div><h2 class="nickname">{{ user.nickname }}</h2></div>
+        <div>
+            <a href="#" class="btn btn-challenge">Défier</a>
+        </div>
     </div>
 </div>
 
@@ -109,9 +106,7 @@
                             </div>
                           
                 </div>
-                <a class="btn btn-bettle" href="{{ path('front_user_edit', {'id': user.id}) }}">Modifier</a>
-
-                {{ include('front/user/_delete_form.html.twig') }}
+                
             </div>
         
         </div>

@@ -31,11 +31,11 @@
         </select>
         <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
-    <div class="mt-4 d-flex flex-wrap ">
+    <div class="mt-4 d-flex flex-wrap justify-content-around">
     {% if tournaments is defined %}
    
         {% for tournament in tournaments %}
-        <div class="card mr-4 mt-4 me-4 shadow-sm " style="width: 18rem;">
+        <div class="card mr-4 mt-4 me-4 shadow-sm" style="width: 18rem;">
             <div class="card-body">
 
             <div class="block">

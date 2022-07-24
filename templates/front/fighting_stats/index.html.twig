@@ -59,7 +59,7 @@
                                     {% set fighter = stat.getTarget() %}
                                     {{ include('front/user/_challenge_form.html.twig') }}
                                 {% elseif app.user.id != stat.getTarget().id %}
-                                    Challenge already waiting
+                                    Challenge en attente
                                 {% endif %}
                            
                         {% endif %}
