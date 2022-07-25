@@ -65,7 +65,8 @@
                     <div class="tl-info">DATE DEBUT</div>
                     <p class="info">{{ tournament.dateStart|date('d-m-Y H:i:s') }}</p>
                 </div>
-               
+
+                <a href="{{path('front_tournament_show', {'id': tournament.id}) }}"><button class="btn btn-bettle mb-2">Consulter</button></a>
                 
                 {% if app.user %}
                             {% if canQuit(tournament, app.user) %}

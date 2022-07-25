@@ -64,7 +64,8 @@
                     <div class="tl-info">DATE DEBUT</div>
                     <p class="info">{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
                 </div>
-               
+
+                <a href="{{path('front_trial_show', {'id': trial.id}) }}"><button class="btn btn-bettle">Consulter</button></a>
                 
                 {% if app.user and canBetTrial(trial, app.user) %}
                     <p>{{ include('front/trial/_bet_form.html.twig') }}</p>
