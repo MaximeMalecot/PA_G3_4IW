@@ -25,11 +25,11 @@
         .banner{
             position:relative;
             height:620px;
-        }
-
-        .banner img{
-            width:100%;
-            height:620px;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url({{ asset('img/accueil.png') }});
+            background-blend-mode: darken;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
         .banner-text{
@@ -78,7 +78,6 @@
 {% block body %}
 
 <div class="banner">
-    <img class="banner-img" src="{{ asset('img/accueil.png') }}"  alt="logo" style="width:100%;">
     <div class="banner-text">
         <h1 class="banner-title">VENEZ VOUS AFFRONTER EN DIRECT</h1>
         <a href="/register" class="btn btn-bettle">Inscrivez-vous</a> 
@@ -93,7 +92,7 @@
 
             <small>
                 Bettle vous permet d’affronter le compétiteur de votre choix 
-                que ce soit en simple match ou encore en tournois.
+                que ce soit en simple match ou encore en tournoi.
 
                 Arrivez à la tête du classement grâce à vos performances !
             </small>
@@ -165,7 +164,7 @@
 
         <h4>Défier les adversaires de votre choix</h4>
         <small>
-            Vous pourrer lors de tournois ou de challenges.
+            Vous pourrez lors de tournois ou de challenges vous mesurer à n'importe quel combattant, le tout encadré par un arbitre.
         </small>
     </div> 
     </div>
