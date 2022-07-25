@@ -1,0 +1,35 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Combat en cours !{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="example-wrapper">
+    {% if trial.status == "STARTED" and trial.adjudicate == app.user %}
+        {{ include('front/trial/_end_trial_form.html.twig') }}
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded',  function() {
+        let form = document.querySelector('form');
+        if(form){
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(form.fighter.value === "default" || form.victoryType.value === "default"){
+                    alert("Select a possible value in form");
+                    return;
+                }
+                form.submit();
+            })
+        }
+    });
+</script>
+{% endblock %}

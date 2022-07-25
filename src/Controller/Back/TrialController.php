@@ -24,7 +24,7 @@ class TrialController extends AbstractController
     #[Route('/', name: 'trial_index', methods: ['GET'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        $status = in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : "AWAITING";
+        $status = in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : "CREATED";
         return $this->render('back/trial/index.html.twig', [
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
             'status' => $status
@@ -43,7 +43,7 @@ class TrialController extends AbstractController
         $trial->setStatus("STARTED");
         $entityManager->flush();
         $this->addFlash('success', 'Trial started, don\'t forget to end it after your stream');
-        return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('back_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/end/{id}', name: 'trial_end', methods: ['POST'])]
@@ -122,8 +122,14 @@ class TrialController extends AbstractController
     #[Route('/{id}', name: 'trial_show', methods: ['GET'])]
     public function show(Trial $trial): Response
     {
+        if($trial->getStatus() === "STARTED"){
+            return $this->render('back/trial/handle.html.twig', [
+                'trial' => $trial,
+                'victoryTypes' => Trial::ENUM_VICTORY,
+            ]);
+        }
         return $this->render('back/trial/show.html.twig', [
-            'trial' => $trial,
+            'trial' => $trial
         ]);
     }
 
