@@ -28,11 +28,12 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('payment_credit', ["credit" => $form->get('credits')->getData()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('front/payment/index.html.twig', [
+        return $this->renderForm('Front/payment/index.html.twig', [
             'form' => $form,
             'amounts' => Invoice::ENUM_PAYMENT,
         ]);
     }
+
 
     #[Route('/success', name: 'payment_success', methods: ['GET'])]
     public function success(): Response

@@ -3,14 +3,15 @@
 {% block title %}Crédits{% endblock %}
 
 {% block body %}
-<div class="container pt-4 ">
-    <div class="d-flex mb-4">
-        <h1 class="flex-shrink-0">Crédits</h1>
-        <p class="flex-grow-1 ms-2 m-auto fs-5">- Acheter des crédits<p>
-    </div>
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="example-wrapper">
+    <h1 class="name-page">Acheter des crédits</h1>
     <div>
         {{ include('front/payment/_form.html.twig') }}
-        <div class="container-credit justify-content-between">
+        <div class="container-credit">
             {% for paymentAmout in amounts %}
                 <div class="cat-credit">
                     <div class="block">
@@ -21,7 +22,7 @@
                             <label for="price">{{paymentAmout / 10 }}€</label>
                         </div>
                         <div class="btn-credit">
-                            <a href='/payment/{{paymentAmout}}' class="btn btn-bettle">Acheter</a>
+                            <a href='/payment/{{paymentAmout}}' class="btn btn-danger">Acheter</a>
                         </div>
                     </div>
                 </div>

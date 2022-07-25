@@ -1,51 +1,45 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Combattants{% endblock %}
+{% block title %}Fighters{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-<style>
-        .description{
-            text-align:justify;
-        }
-
-</style>
-{% endblock %}
 {% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
 
+<div class="example-wrapper">
+    <h1>Les combattants du site !</h1>
 
-<div class="container mt-5">
-    <div class="d-flex ">
-        <h1 class="flex-shrink-0">Compétiteurs</h1>
-        <p class="flex-grow-1 ms-2 m-auto fs-5">- Tous nos compétiteurs<p>
-    </div>
-
-   
-        
-    <div class="mt-4 d-flex flex-wrap ">
+    <table>
+        <thead>
+            <tr>
+                <th>Nickname</th>
+                <th>Description</th>
+                <th>Stats</th>
+                {% if is_granted('ROLE_FIGHTER') %}
+                    <th>Challenge</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
         {% for fighter in fighters %}
-        <div class="card m-2 shadow-sm" style="width: 18rem;">
-            <div class="card-body">
-                <h4 class="card-title">{{ fighter.nickname }}</h4>
-                <h6 class="card-subtitle mb-2 text-muted">Description</h6>
-                <p class="card-text description">{{ fighter.description }}</p>
-
-                <div class="d-flex">
-                <a class="card-link btn btn-bettle" href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a>
+            <tr>
+                <th>{{ fighter.nickname }}</th>
+                <th>{{ fighter.description }}</th>
+                <th><a href="{{ path('front_user_show', {'id': fighter.id}) }}">Profile</a></th>
                 {% if is_granted('ROLE_FIGHTER')%} 
-                <p class="mx-2">
+                    <th>
                         {% if canChallenge(app.user, fighter) %}
                             {{ include('front/user/_challenge_form.html.twig') }}
                         {% elseif app.user.id != fighter.id %}
-                           Challenge en attente
+                            Challenge already waiting
                         {% endif %}
-                </p>
+                    </th>
                 {% endif %}
-                </div>
-            </div>
-        </div>
-
+            </tr>
         {% endfor %}
-    </div>
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -10,7 +10,7 @@
 <div class="example-wrapper">
     <h1>{{ tournament.name }}</h1></br>
     <b>Arbitre du tournoi:</b></br> 
-    {{ tournament.createdBy.nickname ?? "Aucun arbitre"}}</br>
+    {{ tournament.createdBy.nickname ?? "null"}}</br>
     {% if tournament.status == "STARTED" %}
         <div>
         {% for trial in trials %}

@@ -34,14 +34,13 @@ class BetType extends AbstractType
                 'choice_value'=>'id',
                 'multiple' => false,
                 'expanded' => false,
-                'label' => 'Combattant',
+                'label' => 'Fighter',
                 'invalid_message' => 'Le combattant est invalide ou n\'existe pas.',
                 'required' => true,
                 'choices' => match ($options['bet_type']) {
                     'trial' => $options['entity']->getFighters(),
                     'tournament' => $options['entity']->getParticipantFromRole("ROLE_FIGHTER"),
-                },
-                'attr' => ['class' => 'form-control mb-3']
+                }
             ]);
         
         if($options['bet_type'] === 'trial'){
@@ -53,7 +52,6 @@ class BetType extends AbstractType
                 ],
                 'label' => 'Type de victoire',
                 'required' => true,
-                'attr' => ['class' => 'form-control mb-3']
             ]);
         }
 
@@ -68,9 +66,8 @@ class BetType extends AbstractType
                 'max' => $this->security->getUser()->getCredits(),
                 'step' => 1,
             ],
-            'attr' => ['class' => 'form-control mb-3']
         ])
-        ->add('save', SubmitType::class, ['label' => "Parier",   'attr' => ['class' => 'btn btn-bettle']]);
+        ->add('save', SubmitType::class, ['label' => "Parier"]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
