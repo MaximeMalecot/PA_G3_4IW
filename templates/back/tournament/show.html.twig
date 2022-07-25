@@ -45,25 +45,29 @@
                 {% if fighters is not empty %}
                     <li class="tournament-bracket__item">
                         <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
-                            {% if fighters[0] is defined %}
-                                <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
-                            {% else %}
-                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
-                            {% endif %}
-                            <span class="fw-bold w-auto">VS</span>
-                            {% if fighters[1] is defined %}
-                                <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[1] ? "text-bg-success" : "" }}">{{fighters[1].nickname}}</p>
+                            <div class="d-flex flex-row flex-md-column align-items-center w-100">
+                                {% if fighters[0] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
                                 {% else %}
                                     <p class="tournament-bracket__fighter m-0 text-muted">...</p>
-                            {% endif %}
+                                {% endif %}
+                                <span class="fw-bold w-auto">VS</span>
+                                {% if fighters[1] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[1] ? "text-bg-success" : "" }}">{{fighters[1].nickname}}</p>
+                                    {% else %}
+                                        <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </li>
                 {% else %}
                         <li class="tournament-bracket__item">
                             <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
-                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
-                                <span class="fw-bold w-auto">VS</span>
-                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                <div class="d-flex flex-row flex-md-column align-items-center w-100">
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                    <span class="fw-bold w-auto">VS</span>
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                </div>
                             </div>
                         </li>
                 {% endif %}

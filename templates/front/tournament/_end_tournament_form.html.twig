@@ -1,11 +1,13 @@
 <form method="post" action="{{ path('back_trial_end', {'id': trial.id}) }}">
-    <select id="fighter" name="fighter" required>
+    <label for="fighter" class="form-label">Combattant</label>
+    <select id="fighter" name="fighter" class="form-select" required>
         <option value="default" disabled selected>---</option>
         {% for fighter in trial.fighters %}
             <option value={{fighter.id}}>{{fighter.nickname}}</option>
         {% endfor %}
     </select>
-    <select id="victoryType" name="victoryType" required>
+    <label for="victoryType">Type de victoire</label>
+    <select id="victoryType" name="victoryType" class="form-select" required>
         <option value="default" disabled selected>---</option>
         {% for type in victoryTypes %}
             <option value={{type}}>{{type}}</option>
