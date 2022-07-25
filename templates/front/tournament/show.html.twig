@@ -58,7 +58,7 @@
                                     <p class="tournament-bracket__fighter m-0 text-muted">...</p>
                                 {% endif %}
                             </div>
-                            {% if fighters[0] is defined and fighters[1] is defined %}
+                            {% if fighters[0] is defined and fighters[1] is defined and canBetTrial(trial, app.user) %}
                                 {{ include('front/trial/_bet_form.html.twig') }}
                             {% endif %}
                         </div>

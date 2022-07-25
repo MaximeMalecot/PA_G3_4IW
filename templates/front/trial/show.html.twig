@@ -2,44 +2,72 @@
 
 {% block title %}Combat en cours !{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+{{ parent() }}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    #twitch-embed {
+        background-color: #adb5bd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        min-width: 340px;
+        width: 100%;
+    }
 </style>
-<div class="example-wrapper">
-    <h1>Trial</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trial.id }}</td>
-            </tr>
-            {% if trial.adjudicate is defined and trial.adjudicate is not null %}
-            <tr>
-                <th>Adjudicate</th>
-                <td>{{ trial.adjudicate.nickname }}</td>
-            </tr>
-            {% endif %}
-            {% if trial.fighters is defined and trial.fighters is not empty and trial.fighters|length > 1 %}
-            <tr>
-                <th>Fighters</th>
-                <td>{{ trial.fighters[0] }} vs {{ trial.fighters[1] }}</td>
-            </tr>
-            {% endif %}
-            <tr>
-                <th>Status</th>
-                <td>{{ trial.status }}</td>
-            </tr>
-            <tr>
-                <th>BetStatus</th>
-                <td>{{ trial.betStatus }}</td>
-            </tr>
-        </tbody>
-    </table>
-    {% if app.user and canBetTrial(trial, app.user) %}
-        <th>{{ include('front/trial/_bet_form.html.twig') }}</th>
-    {% endif %}
-    <a href="{{ path('front_trial_index') }}">back to list</a>
 {% endblock %}
+{% block body %}
+<div class="container">
+    {% if trial.fighters is defined and trial.fighters is not empty and trial.fighters|length > 1 %}
+    <div class="border border-2 rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3 bg-white my-3">
+        <i class="bi bi-trophy-fill fs-1"></i>
+        <h1 class="fs-4 m-0 text-center text-decoration-underline">{{ trial.fighters[0] }} vs {{ trial.fighters[1] }}</h1>
+        <i class="bi bi-trophy-fill fs-1"></i>
+    </div>
+    {% endif %}
+    {% if trial.adjudicate is defined and trial.adjudicate is not null %}
+        <div class="row">
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Arbitre du combat</p>
+                <p class="m-0">{{ trial.adjudicate.nickname ?? "Arbitre non trouvé"}}</p>
+            </div>
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Date de début du combat</p>
+                <p class="m-0">{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
+            </div>
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Statut</p>
+                <p class="m-0">{{ trial.status }}</p>
+            </div>
+        </div>
+    {% endif %}
+    {% if canBetTrial(trial, app.user) %}
+        <div class="d-flex align-items-stretch justify-content-center w-100 mt-3">
+            {{ include('front/trial/_bet_form.html.twig') }}
+        </div>
+    {% endif %}
+    <hr>
+    <div id="twitch-embed">
+        {% if trial.adjudicate.twitchChannel is not defined or trial.adjudicate.twitchChannel is empty %}
+            <p class="m-0">Ce combat ne propose pas pour le moment une retransmission sur Twitch. Veuillez revenir plus tard.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    {% if trial.adjudicate.twitchChannel is defined and trial.adjudicate.twitchChannel is not empty %}
+        <script src="https://embed.twitch.tv/embed/v1.js" defer></script>
+        <script type="text/javascript" defer>
+            document.addEventListener("DOMContentLoaded", function() {
+                new Twitch.Embed("twitch-embed", {
+                    width: "100%",
+                    height: 500,
+                    channel: "{{ trial.adjudicate.twitchChannel }}",
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
