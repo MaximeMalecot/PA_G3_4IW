@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Combat en cours !{% endblock %}
+{% block title %}Combat : {{ trial.fighters[0] }} vs {{ trial.fighters[1] }}{% endblock %}
 
 {% block stylesheets %}
 {{ parent() }}

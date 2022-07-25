@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_trial_refuse_challenge', {'id': trial.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('refuseChallengeBack' ~ trial.id) }}">
-    <button class="btn">Refuser</button>
+    <button class="btn btn-secondary w-100">Refuser</button>
 </form>

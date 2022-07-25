@@ -1,4 +1,5 @@
 <form method="post" action="{{ path('back_trial_end', {'id': trial.id}) }}">
+    <p class="fw-bold fs-5">Mettre fin au combat</p>
     <label for="fighter" class="form-label">Combattant</label>
     <select id="fighter" name="fighter" class="form-select" required>
         <option value="default" disabled selected>---</option>
@@ -14,5 +15,5 @@
         {% endfor %}
     </select>
     <input type="hidden" name="_token" value="{{ csrf_token('endTrial' ~ trial.id) }}">
-    <button type="submit" class="btn btn-bettle">Fin</button>
+    <button type="submit" class="btn btn-bettle mt-3">Fin</button>
 </form>

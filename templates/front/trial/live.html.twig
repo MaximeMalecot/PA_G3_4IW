@@ -2,28 +2,63 @@
 
 {% block title %}Combat en cours !{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .stream-placeholder{
+            background-color: #adb5bd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            min-width: 340px;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-<div class="example-wrapper">
+<div class="container">
+    {% if trial.fighters is defined and trial.fighters is not empty and trial.fighters|length > 1 %}
+        <div class="border border-2 rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3 bg-white my-3">
+            <i class="bi bi-trophy-fill fs-1"></i>
+            <h1 class="fs-4 m-0 text-center text-decoration-underline">{{ trial.fighters[0] }} vs {{ trial.fighters[1] }}</h1>
+            <i class="bi bi-trophy-fill fs-1"></i>
+        </div>
+    {% endif %}
+    {% if trial.adjudicate is defined and trial.adjudicate is not null %}
+        <div class="row">
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Arbitre du combat</p>
+                <p class="m-0">{{ trial.adjudicate.nickname ?? "Arbitre non trouvé"}}</p>
+            </div>
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Date de début du combat</p>
+                <p class="m-0">{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
+            </div>
+            <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+                <p class="fw-bold mb-1">Statut</p>
+                <p class="m-0">{{ trial.status }}</p>
+            </div>
+        </div>
+        {% if trial.status == "STARTED"%}
+            <hr>
+            {{ include('front/trial/_end_trial_form.html.twig') }}
+        {% endif %}
+        <hr>
+    {% endif %}
+
     {% if trial.status == "STARTED" %}
-        <div>  
+        <div class="stream-placeholder">
             <iframe
                 src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent=localhost"
-                height="400px"
-                width="300px"
+                height="500"
+                width="100%"
                 allowfullscreen>
             </iframe>
 
         </div>
     {% endif %}
-
-    {% if trial.status == "STARTED" and trial.adjudicate == app.user %}
-        {{ include('front/trial/_end_trial_form.html.twig') }}
-    {% endif %}
-
 </div>
 {% endblock %}
 

@@ -26,7 +26,12 @@ class TournamentController extends AbstractController
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
         if($this->getUser()){
-            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "STARTED";
+            if ($this->isGranted("ROLE_FIGHTER")) {
+                $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "CREATED";
+            }
+            else {
+                $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "STARTED";
+            }
         } else {
             $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED"]) ? $request->query->get('status') : "STARTED";
         }
