@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('back_tournament_trial_end', {'tournament': tournament.id,'trial': endTrial.id}) }}">
+<form method="post" action="{{ path('back_tournament_trial_end', {'tournament': tournament.id,'trial': endTrial.id}) }}" class="d-flex flex-column gap-3">
     <label for="fighter" class="form-label">Combattant</label>
     <select class="form-select" id="fighter" name="fighter" required>
         <option value="default" disabled selected>---</option>
