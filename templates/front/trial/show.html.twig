@@ -41,7 +41,7 @@
             </div>
         </div>
     {% endif %}
-    {% if canBetTrial(trial, app.user) %}
+    {% if app.user is not null and canBetTrial(trial, app.user) %}
         <div class="d-flex align-items-stretch justify-content-center w-100 mt-3">
             {{ include('front/trial/_bet_form.html.twig') }}
         </div>
