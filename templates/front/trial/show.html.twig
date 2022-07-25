@@ -47,17 +47,19 @@
         </div>
     {% endif %}
     <hr>
-    <div id="twitch-embed">
-        {% if trial.adjudicate.twitchChannel is not defined or trial.adjudicate.twitchChannel is empty %}
-            <p class="m-0">Ce combat ne propose pas pour le moment une retransmission sur Twitch. Veuillez revenir plus tard.</p>
-        {% endif %}
-    </div>
+    {% if trial.status is same as "STARTED" %}
+        <div id="twitch-embed">
+            {% if trial.adjudicate.twitchChannel is not defined or trial.adjudicate.twitchChannel is empty %}
+                <p class="m-0">Ce combat ne propose pas pour le moment une retransmission sur Twitch. Veuillez revenir plus tard.</p>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-    {% if trial.adjudicate.twitchChannel is defined and trial.adjudicate.twitchChannel is not empty %}
+    {% if trial.adjudicate.twitchChannel is defined and trial.adjudicate.twitchChannel is not empty and trial.status is same as "STARTED" %}
         <script src="https://embed.twitch.tv/embed/v1.js" defer></script>
         <script type="text/javascript" defer>
             document.addEventListener("DOMContentLoaded", function() {
