@@ -19,7 +19,7 @@ class TicketController extends AbstractController
     {
         $options = [];
         if ($request->isMethod('POST') && !$this->isCsrfTokenValid('ticketFilter', $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->render('back/ticket/index.html.twig', [
                 'tickets' => $ticketRepository->findBy($options),
                 'status' => $status ?? "Status",

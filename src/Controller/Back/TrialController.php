@@ -36,13 +36,13 @@ class TrialController extends AbstractController
     public function start(Request $request,Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if(!$this->isCsrfTokenValid('start'.$trial->getId(), $request->request->get('_token'))){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
         $trial->setBetStatus(0);
         $trial->setStatus("STARTED");
         $entityManager->flush();
-        $this->addFlash('green', 'Trial started, don\'t forget to end it after your stream');
+        $this->addFlash('success', 'Trial started, don\'t forget to end it after your stream');
         return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
     }
 
@@ -51,15 +51,15 @@ class TrialController extends AbstractController
     public function end(Request $request,Trial $trial, EntityManagerInterface $entityManager, TrialService $ts): Response
     {
         if(!$this->isCsrfTokenValid('endTrial'.$trial->getId(), $request->request->get('_token'))){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
         }
         if(!$request->request->get('victoryType') || !$request->request->get('fighter')){
-            $this->addFlash('red', "Missing parameters, send confirm form");
+            $this->addFlash('danger', "Missing parameters, send confirm form");
             return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
         }
         $ts->endTrial($trial, $entityManager->getRepository(User::class)->findOneBy(['id' => $request->request->get('fighter')]),$request->request->get('victoryType') );
-        $this->addFlash('green', "Ranking modified and trial ended");
+        $this->addFlash('success', "Ranking modified and trial ended");
         return $this->redirectToRoute('back_default', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -68,13 +68,13 @@ class TrialController extends AbstractController
     public function acceptChallenge(Request $request, Trial $trial,EntityManagerInterface $entityManager): Response
     {
         if(!$this->isCsrfTokenValid('acceptChallengeBack'.$trial->getId(), $request->request->get('_token'))){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
         $trial->setStatus("VALIDATED");
         $trial->setAdjudicate($this->getUser());
         $entityManager->flush();
-        $this->addFlash('green', "Modify the date to continue process");
+        $this->addFlash('success', "Modify the date to continue process");
         return $this->redirectToRoute('back_trial_modify_date', ["id"=>$trial->getId()], Response::HTTP_SEE_OTHER);
     }
 
@@ -83,7 +83,7 @@ class TrialController extends AbstractController
     public function refuseChallenge(Request $request, Trial $trial,TrialRepository $trialRepository, EntityManagerInterface $entityManager): Response
     {
         if(!$this->isCsrfTokenValid('refuseChallengeBack'.$trial->getId(), $request->request->get('_token'))){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
         $trial->setStatus("REFUSED");
@@ -98,7 +98,7 @@ class TrialController extends AbstractController
         $fighters = $userRepository->findByRole("ROLE_FIGHTER");
         if ($request->isMethod('POST')) {
             if(!$this->isCsrfTokenValid('newTrial', $request->request->get('_token')) || !$request->request->get('fighter1') || !$request->request->get('fighter2') || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
-                $this->addFlash('red', "SecurityError");
+                $this->addFlash('danger', "SecurityError");
                 return $this->render('back/trial/new.html.twig',[
                     'fighters' => $fighters
                 ]);
@@ -138,13 +138,13 @@ class TrialController extends AbstractController
                 ]);
             }
             if(!$this->isCsrfTokenValid('editTrial'.$trial->getId(), $request->request->get('_token')) || !$request->request->get('dateStart') || !$request->request->get('timeStart')){
-                $this->addFlash('red', "SecurityError");
+                $this->addFlash('danger', "SecurityError");
                 return $this->render('back/trial/edit.html.twig', [
                     'trial' => $trial,
                 ]);
             }
             if(!in_array($trial->getStatus(), ["DATE_REFUSED","VALIDATED"])){
-                $this->addFlash('red', "Trying to modify a conform trial");
+                $this->addFlash('danger', "Trying to modify a conform trial");
                 return $this->render('back/trial/edit.html.twig', [
                     'trial' => $trial,
                 ]);
@@ -153,7 +153,7 @@ class TrialController extends AbstractController
             $trial->setDateStart($dateStart);
             $trial->setStatus("CREATED");
             $entityManager->flush();
-            $this->addFlash('green', "trial modified");
+            $this->addFlash('success', "trial modified");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
 

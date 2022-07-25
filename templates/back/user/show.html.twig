@@ -1,57 +1,64 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Bettle - {{ user.nickname }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{{ user.nickname }}</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Rôles</th>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Vérifié</th>
+                    <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
+                </tr>
+                <tr>
+                    <th>Surnom</th>
+                    <td>{{ user.nickname }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ user.description }}</td>
+                </tr>
+                <tr>
+                    <th>Chaîne Twitch</th>
+                    <td>{{ user.twitchChannel }}</td>
+                </tr>
+                <tr>
+                    <th>Crédits</th>
+                    <td>{{ user.credits }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ path('back_user_index') }}">
+                    <button class="btn btn-secondary w-100">Retour à la liste</button>
+                </a>
 
-<div class="example-wrapper">
-    <h1>User</h1>
+                <a href="{{ path('back_user_edit', {'id': user.id}) }}">
+                    <button class="btn btn-primary w-100">Modifier</button>
+                </a>
+                {{ include('back/user/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Nickname</th>
-                <td>{{ user.nickname }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ user.description }}</td>
-            </tr>
-            <tr>
-                <th>Twitch_channel</th>
-                <td>{{ user.twitchChannel }}</td>
-            </tr>
-            <tr>
-                <th>Credits</th>
-                <td>{{ user.credits }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('back_user_index') }}">back to list</a>
 
-    <a href="{{ path('back_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('back/user/_delete_form.html.twig') }}
-</div>
 {% endblock %}

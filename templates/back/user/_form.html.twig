@@ -1,4 +1,23 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="mb-2">
+        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-2">
+        {{ form_label(form.roles, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.roles,{'attr': {'class': 'form-select'}}) }}
+    </div>
+    <div class="mb-2">
+        {{ form_label(form.nickname, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nickname, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-2">
+        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-2">
+        {{ form_label(form.twitchChannel ?? form.twitch_channel, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.twitchChannel ?? form.twitch_channel, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}

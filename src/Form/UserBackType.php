@@ -25,6 +25,7 @@ class UserBackType extends AbstractType
             ])
             ->add('nickname')
             ->add('description')
+            ->add('twitchChannel')
         ;
 
         $builder->get('roles')
