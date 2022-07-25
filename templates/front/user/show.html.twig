@@ -2,36 +2,123 @@
 
 {% block title %}User{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    {{ parent() }}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        .banner{
+            position:relative;
+        }
+
+        .banner-text{
+            position:absolute;
+            bottom:0;
+            margin-bottom:5%;
+        }
+
+        .banner-btn{
+            position:absolute;
+            margin-left:20px;
+        }
+
+        .nickname{
+            color:white;
+        }
+
+        .btn-challenge{
+            background-color:transparent;
+            color:white;
+            border:2px solid white;
+            width:100px;
+        }
+
+        .btn-challenge:hover{
+         
+            color:black;
+            background-color:white;
+         
+        }
+
+        .profile-img{
+            border-radius:3px;
+        }
+
+        .profile-tl{
+            font-weight:bold;
+            font-size:45px;
+            margin-bottom:50px;
+        }
+
+        .tl-info{ 
+            font-weight:bold;
+            font-size:20px;
+            margin:20px 0px;
+
+        }
+
+        .info{
+            font-size:15px;
+            margin:30px 0px;
+        }
+
 </style>
+{% endblock %}
+{% block body %}
 
-<div class="example-wrapper">
-    <h1>User</h1>
+<div class="banner">
+    <img src="{{ asset('img/competitor.png') }}"  alt="logo" style="width:100%;">
+    {% if app.user %}     
+    {% endif %}
+    <div class="banner-text mx-5 gap-2 d-flex">
+        <div class="d-flex flex-column justify-content-center"><h2 class="nickname">{{ user.nickname }}</h2></div>
+        <div>
+         
+            {% if is_granted('ROLE_FIGHTER')%} 
+                <p class="mx-2">
+                    {% if canChallenge(app.user, user) %}
+                        {{ include('front/user/_challenge_form2.html.twig') }}
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Nickname</th>
-                <td>{{ user.nickname }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ user.description }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('front_user_index') }}">back to list</a>
+<div class="container pt-5 pb-3">
+    <h2 class="profile-tl text-center">LA BIOGRAPHIE</h2>
 
-    <a href="{{ path('front_user_edit', {'id': user.id}) }}">edit</a>
 
-    {{ include('front/user/_delete_form.html.twig') }}
+    <div class="container section1">
+        <div class="row">
+            <div class="col col-md-6">
+                <img class="profile-img" src="{{ asset('img/profile.jpg') }}"  alt="user" style="width:80%">
+            </div>  
+            
+            <div class="col col-md-6 align-self-center">
+           
+
+                <div class="info">
+                            <div>
+                                <div class="tl-info">EMAIL</div>
+                                <div class="info">{{ user.email }}</div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="tl-info">PSEUDO</div>
+                                <div class="info">{{ user.nickname }}</div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="tl-info">DESCRIPTION</div>
+                                <div class="info">{{ user.description }}</div>
+                            </div>
+                          
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+   
 </div>
 {% endblock %}

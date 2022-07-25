@@ -4,27 +4,30 @@
 
 {% block body %}
 
-<div class="container">
-    <h1>User {{ user.nickname }}</h1>
+<div class="container pt-4">
+<div class="d-flex mb-4">
+        <h1 class="flex-shrink-0">Factures</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Toutes mes factures<p>
+    </div>
 
     {% if invoices is defined and invoices is not empty %}
-        <table id="table_invoice">
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Crédit</th>
-                    <th>Prix</th>
-                    <th>Date</th>
-                    <th>Action</th>
+                    <th scope="col">Crédits</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
             {% for invoice in invoices %}
                 <tr>
                     <th>{{ invoice.creditAmount }}</th>
-                    <th>{{ invoice.price }} $</th>
+                    <th>{{ invoice.price }} €   </th>
                     <th>{{ invoice.createdAt|date('d-m-Y H:i:s') }}</th>
                     <th>
-                        <a href="{{ path('invoice_show', { 'id': invoice.id }) }}" class="btn btn-danger">Voir la facture</a>
+                        <a href="{{ path('invoice_show', { 'id': invoice.id }) }}" class="btn btn-bettle">Voir la facture</a>
                     </th>
 
                 </tr>
@@ -35,10 +38,4 @@
         <p>Pas de facture trouvée</p>
     {% endif %}
 </div>
-<script>
-
-$(document).ready( function () {
-    $('#table_invoice').DataTable();
-} );
-</script>
 {% endblock %}

@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('front_trial_bet', {'id': trial.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('bet' ~ trial.id) }}">
-    <button class="btn">Bet</button>
+    <button class="btn btn-bettle">Parier</button>
 </form>

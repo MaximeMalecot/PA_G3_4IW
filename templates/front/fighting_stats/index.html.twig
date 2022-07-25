@@ -2,43 +2,74 @@
 
 {% block title %}Classement{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-user{
+            width:100%;
+            
+        }
+
+        .pseudo{
+            text-decoration:none;
+            color:black;
+        }
+
+        .title{
+           font-size:24px !important;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-<div class="example-wrapper">
-    <h1 class="name-page">Classement</h1>
-    <table>
-        <tr>
-            <th>rank</th>
-            <th>user</th>
-            <th>points</th>
-            <th>victories</th>
-            <th>defeats</th>
-            {% if is_granted('ROLE_FIGHTER') %}
-                <th>action</th>
-            {% endif %}
-        </tr>
+
+<div class="container pt-4">
+        <div class="d-flex ">
+            <h1 class="flex-shrink-0">Classement</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Notre classement<p>
+        </div>
+
         {% for stat in fs %}
-            <tr>
-                <td>{{ stat.rank }}</td>
-                <td><a href="{{ path('front_user_show', {'id': stat.getTarget().id}) }}">{{ stat.getTarget().nickname }}</a></td>{# emmene au profil du fighter#}
-                <td>{{ stat.rankingPoints }}</td>
-                <td>{{ stat.victories }}</td>
-                <td>{{ stat.defeats }}</td>
-                {% if is_granted('ROLE_FIGHTER') %}
-                    <th>
-                        {% if canChallenge(app.user, stat.getTarget()) %}
-                            {% set fighter = stat.getTarget() %}
-                            {{ include('front/user/_challenge_form.html.twig') }}
-                        {% elseif app.user.id != stat.getTarget().id %}
-                            Challenge already waiting
+        <div class="d-flex justify-content-left mb-7 mt-5">
+            <div class="card card-user ">
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col-md-2">
+                            <p class="title">Rang</p>
+                            <p>{{ stat.rank }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="title">Pseudo</p>
+                            <a class="pseudo" href="{{ path('front_user_show', {'id': stat.getTarget().id}) }}">{{ stat.getTarget().nickname }}</a>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="title">Points</p>
+                            <p>{{ stat.rankingPoints }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="title">Victoires</p>
+                            <p>{{ stat.victories }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="title">Défaites</p>
+                            <p>{{ stat.defeats }}</p>
+                        </div>
+                        <div class="col-md-2">{% if is_granted('ROLE_FIGHTER') %}
+                            
+                                {% if canChallenge(app.user, stat.getTarget()) %}
+                                    {% set fighter = stat.getTarget() %}
+                                    {{ include('front/user/_challenge_form.html.twig') }}
+                                {% elseif app.user.id != stat.getTarget().id %}
+                                    Challenge en attente
+                                {% endif %}
+                           
                         {% endif %}
-                    </th>
-                {% endif %}
-            </tr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </table>
-</div>
+    </div>
+
 {% endblock %}

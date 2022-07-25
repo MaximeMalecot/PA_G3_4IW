@@ -27,6 +27,8 @@ class UserPwdType extends AbstractType
                     'max' => 4096,
                 ]),
             ],
+            'label' => 'Mot de passe',
+            'attr' => ['class' => 'form-control mb-3']
             ])
         ;
     }
