@@ -5,7 +5,7 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
-    #twitch-embed {
+    .stream-placeholder{
         background-color: #adb5bd;
         display: flex;
         align-items: center;
@@ -48,11 +48,15 @@
     {% endif %}
     <hr>
     {% if trial.status is same as "STARTED" %}
-        <div id="twitch-embed">
+        <div id="twitch-embed" class="stream-placeholder">
             {% if trial.adjudicate.twitchChannel is not defined or trial.adjudicate.twitchChannel is empty %}
                 <p class="m-0">Ce combat ne propose pas pour le moment une retransmission sur Twitch. Veuillez revenir plus tard.</p>
             {% endif %}
         </div>
+        {% else %}
+            <div class="stream-placeholder">
+                <p class="m-0">Ce combat n'a pas encore commencé et ne peut donc être transmis. Veuillez revenir plus tard.</p>
+            </div>
     {% endif %}
 </div>
 {% endblock %}
