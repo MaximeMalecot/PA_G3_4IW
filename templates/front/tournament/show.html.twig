@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="container-xl d-flex flex-column gap-3 mt-5">
-        <div class="border border-2 rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3">
+        <div class="border border-2 rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3 bg-white">
             <i class="bi bi-trophy-fill fs-1"></i>
             <h1 class="fs-4 m-0 text-center text-decoration-underline">{{ tournament.name }}</h1>
             <i class="bi bi-trophy-fill fs-1"></i>
@@ -45,16 +45,21 @@
                 {% if fighters is not empty %}
                     <li class="tournament-bracket__item">
                         <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
-                            {% if fighters[0] is defined %}
-                                <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
-                            {% else %}
-                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
-                            {% endif %}
-                            <span class="fw-bold w-auto">VS</span>
-                            {% if fighters[1] is defined %}
-                                <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[1] ? "text-bg-success" : "" }}">{{fighters[1].nickname}}</p>
-                            {% else %}
-                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                            <div class="d-flex flex-row flex-lg-column align-items-center w-100">
+                                {% if fighters[0] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
+                                {% else %}
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                {% endif %}
+                                <span class="fw-bold w-auto">VS</span>
+                                {% if fighters[1] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[1] ? "text-bg-success" : "" }}">{{fighters[1].nickname}}</p>
+                                {% else %}
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                {% endif %}
+                            </div>
+                            {% if fighters[0] is defined and fighters[1] is defined %}
+                                {{ include('front/trial/_bet_form.html.twig') }}
                             {% endif %}
                         </div>
                     </li>
