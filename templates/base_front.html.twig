@@ -76,7 +76,7 @@
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     {% if app.user %}
                         {% if ( is_granted('ROLE_ADMIN') or is_granted('ROLE_ADJUDICATE')) %}
-                            <li class="nav-item"><a class="nav-link active" href="{{ path('back_default') }}">administration</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="{{ path('back_default') }}">Administration</a></li>
                         {% else %}
                             {% if is_granted('ROLE_FIGHTER') %}
                                 <li class="nav-item"><a class="nav-link active" href="{{ path('front_trial_consult') }}">Mes matchs</a></li>
