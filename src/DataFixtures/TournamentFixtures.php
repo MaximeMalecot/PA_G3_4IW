@@ -59,7 +59,7 @@ class TournamentFixtures extends Fixture implements DependentFixtureInterface
             ->setDateStart($date)
             ->setStatus("CREATED")
             ->setCreatedBy($adjudicateMain);
-        for($i=0; $i<4; $i++){
+        for($i=0; $i<3; $i++){
             if($i < 2){
                 $object->addParticipant($this->userRepository->findOneBy(["email" => "adjudicate".$i."@adjudicate.com"]));
             }

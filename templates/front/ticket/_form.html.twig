@@ -1,4 +1,11 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Create') }}</button>
+    <div class="mb-2">
+        {{ form_label(form.roleWanted, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.roleWanted, {'attr': {'class': 'form-select'}}) }}
+    </div>
+    <div class="mb-2">
+        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <button type="submit" class="btn btn-bettle">{{ button_label|default('Créer') }}</button>
 {{ form_end(form) }}

@@ -1,16 +1,35 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}New Ticket{% endblock %}
+{% block title %}Demande{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card-ticket{
+            width:80%;
+            padding-bottom:5%;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-    <h1>Create new Ticket</h1>
+<div class="container pt-4">
+        <div class="d-flex ">
+            <h1 class="flex-shrink-0">Demande de statut</h1>
+            <p class="flex-grow-1 ms-2 m-auto fs-5"><p>
+        </div>
 
-    {{ include('front/ticket/_form.html.twig') }}
+        <div class="d-flex justify-content-left mb-7 mt-5">
+            <div class="card card-ticket shadow-sm ">
+                <div class="card-body">
+                    {{ include('front/ticket/_form.html.twig') }}
+                    <a class="btn btn-bettle mt-2" href="{{ path('ticket_index') }}">Retour</a>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('ticket_index') }}">back to list</a>
+      
+</div>
+   
 {% endblock %}

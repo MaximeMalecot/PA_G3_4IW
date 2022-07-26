@@ -1,51 +1,95 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Tournament {{ tournament.name }}{% endblock %}
+{% block title %}Tournoi: {{ tournament.name }}{% endblock %}
 
 {% block body %}
 
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>HANDLE</h1>
-    <b>Name:</b></br>
-    {{ tournament.name }}</br>
-    <b>Match:</b>
-    {% if trials is defined and trials is not empty %}
-        <div>
-        {% set index = 1 %}
-        {% for trial in trials %}
-            <div>
-            {% if trial.tournamentStep > index %}
-            </div>
-                <br/>
-                {% set index = trial.tournamentStep %}
-            {% endif %}
-            {% set fighters = trial.fighters.getValues %}
-            {% if fighters is not empty %}
-                [
-                {% if fighters[0] %}
-                    {{fighters[0].nickname}}
-                {% endif %}
-                {% if fighters.1 is defined %}
-                    &nbsp;vs&nbsp;{{fighters[1].nickname}}
-                {% endif %}
-                ]
-            {% else %}
-                [ INCOMING ]
-            {% endif %}
-        {% endfor %}
+<div class="container-xl d-flex flex-column gap-2">
+    <div class="border rounded-3 p-4 d-flex align-items-center justify-content-evenly gap-3">
+        <i class="bi bi-trophy-fill fs-1"></i>
+        <h1 class="fs-4 m-0 text-center text-decoration-underline">{{ tournament.name }}</h1>
+        <i class="bi bi-trophy-fill fs-1"></i>
+    </div>
+    <div class="row">
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Arbitre du tournoi</p>
+            <p class="m-0">{{ tournament.createdBy.nickname ?? "Arbitre non trouvé" }}</p>
         </div>
-    {% endif %}
-    {% if startTrial is defined %}
-        {{ include('back/tournament/_start_trial_form.html.twig') }}
-    {% endif %}
-    {% if endTrial is defined %}
-        {{ include('back/tournament/_end_trial_form.html.twig') }}
-    {% endif %}
-    
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Date de début du tournoi</p>
+            <p class="m-0">{{ tournament.dateStart|date('d-m-Y H:i:s') }}</p>
+        </div>
+        <div class="col-md-4 p-0 d-flex flex-column align-items-center justify-content-center">
+            <p class="fw-bold mb-1">Nombres de combattants</p>
+            <p class="m-0">{{ getNbFromRole(tournament, 'ROLE_FIGHTER') }} / {{ tournament.nbMaxParticipants }}</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        {% if startTrial is defined %}
+            <div class="col-auto">
+                {{ include('back/tournament/_start_trial_form.html.twig') }}
+            </div>
+        {% endif %}
+        {% if endTrial is defined %}
+            <div class="col-auto">
+                {{ include('back/tournament/_end_trial_form.html.twig') }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+<hr>
+<div class="container-xl">
+    {% if trials is defined and trials is not empty %}
+    <div class="tournament-bracket">
+        {% set index = 1 %}
+        <div class="round-{{ index }} tournament-bracket__round">
+            <p class="fst-italic fs-6 text-muted fw-bold text-center text-lg-start">Round {{ index }}</p>
+            <ul class="tournament-bracket__list">
+                {% for trial in trials %}
+                {% if trial.tournamentStep > index %}
+        </div>
+        {% set index = trial.tournamentStep %}
+        <div class="round-{{ index }} tournament-bracket__round">
+            <p class="fst-italic fs-6 text-muted fw-bold text-center text-lg-start">Round {{ index }}</p>
+            <ul class="tournament-bracket__list">
+                {% endif %}
+                {% set fighters = trial.fighters.getValues %}
+                {% if fighters is not empty %}
+                    <li class="tournament-bracket__item">
+                        <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
+                            <div class="d-flex flex-row flex-md-column align-items-center w-100">
+                                {% if fighters[0] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[0] ? "text-bg-success" : "" }}">{{fighters[0].nickname}}</p>
+                                {% else %}
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                {% endif %}
+                                <span class="fw-bold w-auto">VS</span>
+                                {% if fighters[1] is defined %}
+                                    <p class="tournament-bracket__fighter m-0 {{ trial.winner is same as fighters[1] ? "text-bg-success" : "" }}">{{fighters[1].nickname}}</p>
+                                {% else %}
+                                    <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="tournament-bracket__item">
+                        <div class="tournament-bracket__match" data-bs-toggle="tooltip" data-bs-title="Arbitré par {{ trial.adjudicate.nickname ?? "aucun arbitre" }}">
+                            <div class="d-flex flex-row flex-md-column align-items-center w-100">
+                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                                <span class="fw-bold w-auto">VS</span>
+                                <p class="tournament-bracket__fighter m-0 text-muted">...</p>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+            <div class="alert alert-danger">
+                <p>Aucun combat n'a été trouvé.</p>
+            </div>
+        {% endif %}
 </div>
 {% endblock %}

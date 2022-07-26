@@ -32,7 +32,7 @@ class UserController extends AbstractController
     public function show(Request $request,User $user): Response
     {
         if(!$this->isCsrfTokenValid('show'.$user->getId(), $request->request->get('_token'))){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('back/user/show.html.twig', [
@@ -48,7 +48,7 @@ class UserController extends AbstractController
         $form = in_array("ROLE_ADJUDICATE", $user->getRoles()) ? $this->createForm(UserAdjudicateType::class, $user) : $this->createForm(UserBackType::class, $user);
         $form->handleRequest($request);
         if(!$this->isCsrfTokenValid('edit'.$user->getId(), $request->request->get('_token')) && !$form->isSubmitted()){
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -87,7 +87,7 @@ class UserController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $this->addFlash('green', "Le user {$user->getNickname()} à bien été édité.");
+            $this->addFlash('success', "Le user {$user->getNickname()} à bien été édité.");
 
             return $this->redirectToRoute('back_user_edit', [
                 'id' => $user->getId()

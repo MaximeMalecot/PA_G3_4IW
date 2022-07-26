@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('back_ticket_refuse', {'id': ticket.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('refuse' ~ ticket.id) }}">
-    <button class="btn">Refuse</button>
+    <button class="btn btn-danger my-2">Refuse</button>
 </form>

@@ -78,12 +78,6 @@ class BetService
             if (count($winningBets) === 0) {
                 return;
             }
-            $ratioWinningPoints = ($betters-count($winningBets) / count($winningBets));
-            foreach ($winningBets as $winningBet) {
-                $winningBet->getBetter()->setCredits($winningBet->getBetter()->getCredits() + ($winningBet->getAmount() * $ratioWinningPoints));
-            }
-            $this->em->flush();
-            return;
         }
         if($tournament !== null){
             $winningBets = $this->betRepository->findTournamentWinners($tournament);
@@ -91,12 +85,14 @@ class BetService
             if (count($winningBets) === 0) {
                 return;
             }
-            $ratioWinningPoints = ($betters / count($winningBets));
+        }
+        if($trial !== null || $tournament !== null){
+            $ratioWinningPoints = $betters > count($winningBets) ? ($betters / count($winningBets)) : 1;
             foreach ($winningBets as $winningBet) {
                 $winningBet->getBetter()->setCredits($winningBet->getBetter()->getCredits() + ($winningBet->getAmount() * $ratioWinningPoints));
             }
             $this->em->flush();
             return;
+            }
         }
-    }
 }

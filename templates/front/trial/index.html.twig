@@ -2,48 +2,83 @@
 
 {% block title %}Les combats{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    {{ parent() }}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+       .tl-info{ 
+        font-weight:bold;
+        font-size:20px;
+        }
 
-<div class="example-wrapper">
-    <h1>Les combats</h1>
+        .info{
+            font-size:18px;
+            
+        }
+
+        .aucun-combat {
+            color:#D20A0A;
+            font-weight:bold;
+        }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container mt-5">
+    <div class="d-flex ">
+        <h1 class="flex-shrink-0">Matchs</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Tous nos matchs<p>
+    </div>
+
+
     <form id="filter" action="{{ path('front_trial_index') }}" method="POST">
-        <label for="status">Status</label>
-        <select id="status" name="status">
+        <label for="status">Statut</label>
+        <select class="form-control" id="status" name="status">
             <option value="AWAITING" id="AWAITING" {{ status is same as "AWAITING" ? "selected" : "" }}>EN ATTENTE</option>
             <option value="STARTED" id="STARTED">EN COURS</option>
             <option value="ENDED" id="ENDED">FINIS</option>
         </select>
     </form>
-    <table>
-        <thead>
-            <tr>
-                <th>id/lien</th>
-                <th>arbitre</th>
-                <th>combattants</th>
-                <th>date</th>
-                <th>action</th>
-            </tr>
-        </thead>
-        <tbody id="trial_data">
-        {% if trials is defined and trials is not empty %}
-            {% for trial in trials %}
-                <tr>
-                    <th><a href="{{path('front_trial_show', {'id': trial.id}) }}">{{ trial.id }}</a></th>
-                    <th>{{ trial.adjudicate.nickname ?? "null" }}</th>
-                    <th>{{ trial.fighters[0].nickname ?? "null" }} vs {{ trial.fighters[1].nickname ?? "null" }}</th>
-                    <th>{{ trial.dateStart|date('d-m-Y H:i:s') }}</th>
-                    {% if app.user and canBetTrial(trial, app.user) %}
-                        <th>{{ include('front/trial/_bet_form.html.twig') }}</th>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        {% endif %}
-        </tbody>
-    </table>
+   
+    <div class="mt-4 d-flex flex-wrap justify-content-around">
+    {% if trials is defined and trials is not empty %}
+        {% for trial in trials %}
+        <div class="card mr-4 mt-4 me-4 shadow-sm " style="width: 18rem;">
+            <div class="card-body">
+                <!-- <h2 class="card-title"><a href="{{path('front_trial_show', {'id': trial.id}) }}">{{ trial.id }}</a></h2> -->
+                <div class="block">
+                    <div class="tl-info">ARBITRE</div>
+                    <div class="info">{{ trial.adjudicate.nickname ?? "En attente" }}</div>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <div class="tl-info">COMBATTANTS</div>
+                    <h4 class="info">{{ trial.fighters[0].nickname ?? "En attente" }} vs {{ trial.fighters[1].nickname ?? "En attente" }}</h4>
+                </div>
+                <hr>
+              
+                <div class="block">
+                    <div class="tl-info">DATE DEBUT</div>
+                    <p class="info">{{ trial.dateStart|date('d-m-Y H:i:s') }}</p>
+                </div>
+
+                <a href="{{path('front_trial_show', {'id': trial.id}) }}"><button class="btn btn-bettle">Consulter</button></a>
+                
+                {% if app.user and canBetTrial(trial, app.user) %}
+                    <p>{{ include('front/trial/_bet_form.html.twig') }}</p>
+                {% endif %}
+              
+            </div>
+        </div>
+
+        {% endfor %}
+    {% else %}
+        <p class="aucun-combat">Aucun combat en attente.</p> 
+    {% endif %}
+    </div>
 </div>
 {% endblock %}
 

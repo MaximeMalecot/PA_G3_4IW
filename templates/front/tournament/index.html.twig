@@ -3,16 +3,30 @@
 {% block title %}Les tournois{% endblock %}
 
 {% block body %}
+    {{ parent() }}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        .tl-info {
+            font-weight:bold;
+            font-size:20px;
+        }
+        
+        .aucun-tournois {
+            color:#D20A0A;
+            font-weight:bold;
+        }
+    
 </style>
 
-<div class="example-wrapper">
-    <h1>Les tournois</h1>
+<div class="container mt-5">
+    <div class="d-flex ">
+        <h1 class="flex-shrink-0">Tournois</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Tous nos tournois<p>
+    </div>
+
+
     <label for="filter">Status</label>
     <form id="filter" action="{{ path('front_tournament_index') }}" method="POST">
-        <select id="status" name="status">
+        <select class="form-control" id="status" name="status">
             {% if is_granted('ROLE_FIGHTER') or is_granted('ROLE_ADJUDICATE') %}
                 <option value="CREATED" id="CREATED">CREER</option>
             {% endif %}
@@ -22,26 +36,39 @@
         </select>
         <input type="hidden" name="_token" value="{{ csrf_token('tournamentFilter') }}">
     </form>
-    {% if tournaments is defined %}
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Arbitre</th>
-                <th>Nombre de combattants</th>
-                <th>date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tournament in tournaments %}
-                <tr>
-                        <th><a href="{{ path('front_tournament_show', {'id': tournament.id}) }}">{{ tournament.name }}</a></th>
-                        <th>{{ tournament.createdBy.nickname ?? "null" }}</th>
-                        <th>{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</th>
-                        <th>{{ tournament.dateStart|date('d-m-Y H:i:s') }}</th>
-                        <th>
-                        {% if app.user %}
+    <div class="mt-4 d-flex flex-wrap justify-content-around">
+    {% if tournaments is defined and tournaments is not empty %}
+   
+        {% for tournament in tournaments %}
+        <div class="card mr-4 mt-4 me-4 shadow-sm" style="width: 18rem;">
+            <div class="card-body">
+
+            <div class="block">
+                    <div class="tl-info">NOM DU TOURNOI</div>
+                    <div class="info">{{ tournament.name }}</div>
+                </div>
+                <hr>
+                
+                <div class="block">
+                    <div class="tl-info">ARBITRE</div>
+                    <div class="info">{{ tournament.createdBy.nickname ?? "null" }}</div>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <div class="tl-info">NOMBRE DE COMBATTANTS</div>
+                    <div class="info">{{ getNbFromRole(tournament, 'ROLE_FIGHTER')}} / {{tournament.nbMaxParticipants}}</div>
+                </div>
+                <hr>
+              
+                <div class="block">
+                    <div class="tl-info">DATE DEBUT</div>
+                    <p class="info">{{ tournament.dateStart|date('d-m-Y H:i:s') }}</p>
+                </div>
+
+                <a href="{{path('front_tournament_show', {'id': tournament.id}) }}"><button class="btn btn-bettle mb-2">Consulter</button></a>
+                
+                {% if app.user %}
                             {% if canQuit(tournament, app.user) %}
                                 {{ include('front/tournament/_quit_form.html.twig') }}
                             {% endif %}
@@ -51,13 +78,17 @@
                             {% if canBetTournament(tournament, app.user)%}
                                 {{ include('front/tournament/_bet_form.html.twig') }}
                             {% endif %}
-                        {% endif %}
-                        </th>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endif %}
+              
+            </div>
+        </div>
+
+        {% endfor %}
+    {% else %}
+        <p class="aucun-tournois">Aucun combat en attente.</p> 
     {% endif %}
+    </div>
+    
 </div>
 {% endblock %}
 {% block javascripts %}

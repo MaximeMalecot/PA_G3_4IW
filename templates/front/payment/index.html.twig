@@ -1,0 +1,83 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Crédits{% endblock %}
+
+{% block body %}
+<div class="container pt-4 ">
+    <div class="d-flex mb-4">
+        <h1 class="flex-shrink-0">Crédits</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Acheter des crédits<p>
+    </div>
+    <div>
+        {{ include('front/payment/_form.html.twig') }}
+        <div class="container-credit justify-content-between">
+            {% for paymentAmout in amounts %}
+                <div class="cat-credit">
+                    <div class="block">
+                    <div class="card-title">
+                            <label for="credit">{{paymentAmout}} crédits</label>
+                        </div>
+                        <div class="card-text">
+                            <label for="price">{{paymentAmout / 10 }}€</label>
+                        </div>
+                        <div class="btn-credit">
+                            <a href='/payment/{{paymentAmout}}' class="btn btn-bettle">Acheter</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets%}
+    {{ parent() }}
+<style>
+.container-credit {
+  
+   display:flex;
+   flex-direction:row;
+   flex-wrap: wrap;
+   
+}
+.cat-credit {
+    
+    background-color: #FFFFFF;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    color: #000000;
+    margin: 30px;
+    padding:25px;
+    border-radius: 8px;
+    width:25%;
+}
+h2{
+    font-size: 25px;
+}
+.name-page {
+    display: flex;
+    font-size: 50px;
+    font-weight: bold;
+    color: #fff;
+    margin:25px;
+}
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+.card-title {   
+    font-weight: bold;
+    color: #000;
+}
+.btn-credit{
+    margin-top: 20px;
+}
+label {
+    font-size: 19px;
+    color: #000;
+}
+</style>
+{% endblock %}

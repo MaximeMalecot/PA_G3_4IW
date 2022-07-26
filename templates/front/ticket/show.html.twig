@@ -21,21 +21,21 @@
                 <td>{{ ticket.description }}</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>Statut</th>
                 <td>{{ ticket.status }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
+                <th>Créé le</th>
                 <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>UpdatedAt</th>
+                <th>Mis à jour le</th>
                 <td>{{ ticket.updatedAt ? ticket.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('ticket_index') }}">back to list</a>
+    <a href="{{ path('ticket_index') }}">Retour à la liste</a>
 
     {{ include('front/ticket/_delete_form.html.twig') }}
 {% endblock %}

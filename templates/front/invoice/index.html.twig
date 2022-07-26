@@ -3,37 +3,39 @@
 {% block title %}Factures de {{ user.nickname }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>User {{ user.nickname }}</h1>
+<div class="container pt-4">
+<div class="d-flex mb-4">
+        <h1 class="flex-shrink-0">Factures</h1>
+        <p class="flex-grow-1 ms-2 m-auto fs-5">- Toutes mes factures<p>
+    </div>
 
-    {% if user.invoices is defined and user.invoices is not empty %}
-        <table>
+    {% if invoices is defined and invoices is not empty %}
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>credit</th>
-                    <th>price</th>
-                    <th>paypal_id</th>
-                    <th>date</th>
+                    <th scope="col">Crédits</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-            {% for invoice in user.invoices %}
+            {% for invoice in invoices %}
                 <tr>
                     <th>{{ invoice.creditAmount }}</th>
-                    <th>{{ invoice.price }} $</th>
-                    <th>{{ invoice.idPaypal }}</th>
+                    <th>{{ invoice.price }} €   </th>
                     <th>{{ invoice.createdAt|date('d-m-Y H:i:s') }}</th>
+                    <th>
+                        <a href="{{ path('invoice_show', { 'id': invoice.id }) }}" class="btn btn-bettle">Voir la facture</a>
+                    </th>
+
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p>Pas de facture trouvées</p>
+        <p>Pas de facture trouvée</p>
     {% endif %}
 </div>
 {% endblock %}

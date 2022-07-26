@@ -26,10 +26,16 @@ class TournamentController extends AbstractController
     #[Route('/', name: 'tournament_index', methods: ['GET'])]
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
-        $status = in_array($request->query->get('status'), Tournament::ENUM_STATUS) ? $request->query->get('status') : "AWAITING";
+        $options = [];
+        
+        $status = $request->query->get('status') != "Status" ? (in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : null ) : null;
+        if($status){
+            $options['status'] = $status;
+        }
+        
         return $this->render('back/tournament/index.html.twig', [
-            'tournaments' => $tournamentRepository->findBy(["status" => $status], ["dateStart" => "ASC"]),
-            'status' => $status
+            'tournaments' => $tournamentRepository->findBy($options, ["dateStart" => "ASC"]),
+            'status' => $status ?? "Status"
         ]);
     }
 
@@ -39,11 +45,11 @@ class TournamentController extends AbstractController
     {
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('newTournament', $request->request->get('_token')) || !$request->request->get('name') || !$request->request->get('nbMaxParticipants') || !$request->request->get('dateStart') || !$request->request->get('timeStart') || !$request->request->get('dateEnd')) {
-                $this->addFlash('red', "SecurityError");
+                $this->addFlash('danger', "SecurityError");
                 return $this->render('back/tournament/new.html.twig');
             }
             if ($request->request->get('nbMaxParticipants') <= 2) {
-                $this->addFlash('red', "Min number is 2, number must be pow of 2 (ex: 4 or 8)");
+                $this->addFlash('danger', "Min number is 2, number must be pow of 2 (ex: 4 or 8)");
                 return $this->render('back/tournament/new.html.twig');
             }
             if (is_float(log($request->request->get('nbMaxParticipants'), 2))) {
@@ -51,7 +57,7 @@ class TournamentController extends AbstractController
                 $int = floor($log);
                 $decimals = $log - $int;
                 if ($decimals != 0) {
-                    $this->addFlash('red', "Set max participants number to a natural exp of 2 (2,4,8,16,32,64,128,256,512,1024)");
+                    $this->addFlash('danger', "Set max participants number to a natural exp of 2 (2,4,8,16,32,64,128,256,512,1024)");
                     return $this->render('back/tournament/new.html.twig');
                 }
             }
@@ -104,7 +110,7 @@ class TournamentController extends AbstractController
     public function start(Request $request, Tournament $tournament, EntityManagerInterface $em): Response
     {
         if (!$this->isCsrfTokenValid('start' . $tournament->getId(), $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
         $tournament->setStatus("STARTED");
@@ -119,13 +125,13 @@ class TournamentController extends AbstractController
     public function startTrial(Request $request, Tournament $tournament, Trial $trial, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('startTrial' . $trial->getId(), $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('back_trial_index', [], Response::HTTP_SEE_OTHER);
         }
         $trial->setBetStatus(0);
         $trial->setStatus("STARTED");
         $entityManager->flush();
-        $this->addFlash('green', 'Trial started, don\'t forget to end it to continue tournament');
+        $this->addFlash('success', 'Trial started, don\'t forget to end it to continue tournament');
         return $this->redirectToRoute('back_tournament_show', ['id' => $tournament->getId()], Response::HTTP_SEE_OTHER);
     }
 
@@ -134,11 +140,11 @@ class TournamentController extends AbstractController
     public function endTrial(Request $request, Tournament $tournament, Trial $trial, EntityManagerInterface $entityManager, TrialRepository $trialRepository, TrialService $ts, BetService $betService): Response
     {
         if (!$this->isCsrfTokenValid('endTrial' . $trial->getId(), $request->request->get('_token'))) {
-            $this->addFlash('red', "SecurityError");
+            $this->addFlash('danger', "SecurityError");
             return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
         }
         if (!$request->request->get('victoryType') || !$request->request->get('fighter')) {
-            $this->addFlash('red', "Missing parameters, send confirm form");
+            $this->addFlash('danger', "Missing parameters, send confirm form");
             return $this->redirectToRoute('front_trial_show', ["id" => $trial->getId()], Response::HTTP_SEE_OTHER);
         }
         $trials = $trialRepository->findStepOpenedTrialsForTournament($tournament);
@@ -149,7 +155,7 @@ class TournamentController extends AbstractController
             if (!$next) {
                 $tournament->setWinner($winner);
                 $tournament->setStatus("ENDED");
-                $this->addFlash('green', "Tournament finished");
+                $this->addFlash('success', "Tournament finished");
                 $betService->closeBets(tournament: $tournament);
             }
         }
@@ -160,7 +166,7 @@ class TournamentController extends AbstractController
         }
         $entityManager->flush();
         $ts->endTrial($trial, $winner, $request->request->get('victoryType'));
-        $this->addFlash('green', "Trial ended");
+        $this->addFlash('success', "Trial ended");
         return $this->redirectToRoute('back_tournament_show', ['id' => $tournament->getId()], Response::HTTP_SEE_OTHER);
     }
 
@@ -171,7 +177,7 @@ class TournamentController extends AbstractController
         if ($this->isCsrfTokenValid('join' . $tournament->getId(), $request->request->get('_token'))) {
             $tournament->addParticipant($this->getUser());
             $em->flush();
-            $this->addFlash('green', "Tournament joined");
+            $this->addFlash('success', "Tournament joined");
             return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('back_tournament_index', [], Response::HTTP_SEE_OTHER);
@@ -184,7 +190,7 @@ class TournamentController extends AbstractController
         if ($this->isCsrfTokenValid('quit' . $tournament->getId(), $request->request->get('_token'))) {
             $tournament->removeParticipant($this->getUser());
             $em->flush();
-            $this->addFlash('green', "Tournament left");
+            $this->addFlash('success', "Tournament left");
             return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('back_tournament_index', [], Response::HTTP_SEE_OTHER);
@@ -198,17 +204,17 @@ class TournamentController extends AbstractController
             count($tournament->getParticipantFromRole("ROLE_ADJUDICATE")) !== $tournament->getNbMaxParticipants() / 2 &&
             count($tournament->getParticipantFromRole("ROLE_FIGHTER")) <= ($tournament->getNbMaxParticipants() / 2)
         ) {
-            $this->addFlash('red', "Missing participants");
+            $this->addFlash('danger', "Missing participants");
             return $this->redirectToRoute('back_tournament_index', ['status' => "CREATED"], Response::HTTP_SEE_OTHER);
         }
         if ($this->isCsrfTokenValid('lock' . $tournament->getId(), $request->request->get('_token'))) {
             $ts->createTrialsForTournament($tournament);
             $tournament->setStatus("AWAITING");
             $em->flush();
-            $this->addFlash('green', "Tournament initialized");
+            $this->addFlash('success', "Tournament initialized");
             return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
         }
-        $this->addFlash('red', "Security error");
+        $this->addFlash('danger', "Security error");
         return $this->redirectToRoute('back_tournament_index', ['status' => "AWAITING"], Response::HTTP_SEE_OTHER);
     }
 
