@@ -26,10 +26,16 @@ class TournamentController extends AbstractController
     #[Route('/', name: 'tournament_index', methods: ['GET'])]
     public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
-        $status = in_array($request->query->get('status'), Tournament::ENUM_STATUS) ? $request->query->get('status') : "CREATED";
+        $options = [];
+        
+        $status = $request->query->get('status') != "Status" ? (in_array($request->query->get('status'),Trial::ENUM_STATUS) ? $request->query->get('status') : null ) : null;
+        if($status){
+            $options['status'] = $status;
+        }
+        
         return $this->render('back/tournament/index.html.twig', [
-            'tournaments' => $tournamentRepository->findBy(["status" => $status], ["dateStart" => "ASC"]),
-            'status' => $status
+            'tournaments' => $tournamentRepository->findBy($options, ["dateStart" => "ASC"]),
+            'status' => $status ?? "Status"
         ]);
     }
 

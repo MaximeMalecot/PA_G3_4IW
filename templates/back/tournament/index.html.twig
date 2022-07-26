@@ -11,8 +11,9 @@
         <form id="filter">
             <label for="status" class="form-label">Status</label>
             <select id="status" name="status" class="form-select">
+                <option value="Status" id="Status">---</option>
                 <option value="CREATED" id="CREATED">CREER</option>
-                <option value="AWAITING" id="AWAITING" {{ status is defined  ? '' : 'selected' }}>EN ATTENTE</option>
+                <option value="AWAITING" id="AWAITING">EN ATTENTE</option>
                 <option value="STARTED" id="STARTED">EN COURS</option>
                 <option value="ENDED" id="ENDED">FINIS</option>
             </select>
