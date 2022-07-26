@@ -14,10 +14,10 @@
     {% if tournament.status == "STARTED" %}
         <div>
         {% for trial in trials %}
-            {% if trial.status == "STARTED" %}
+            {% if trial.status == "STARTED" and trial.adjudicate == app.user %}
             <div>  
                 <iframe
-                    src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent=localhost"
+                    src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent={{dns}}"
                     height="400px"
                     width="300px"
                     allowfullscreen>

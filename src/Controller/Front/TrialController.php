@@ -144,6 +144,7 @@ class TrialController extends AbstractController
             return $this->render('front/trial/live.html.twig', [
                 'trial' => $trial,
                 'victoryTypes' => Trial::ENUM_VICTORY,
+                'dns'=> $_ENV['SERVER_DNS']
             ]);
         }
         return $this->render('front/trial/show.html.twig', [
