@@ -87,6 +87,7 @@ class TournamentController extends AbstractController
                     'tournament' => $tournament,
                     'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament], ['tournamentStep' => 'ASC']),
                     'startTrial' => $startTrial,
+                    'dns'=> $_ENV['SERVER_DNS']
                 ]);
             }
             $endTrial = $trialRepository->findOneBy(["tournament" => $tournament->getId(), "adjudicate" => $this->getUser()->getId(), "tournamentStep" => $tournament->getStep(), "status" => "STARTED"]);
@@ -96,6 +97,7 @@ class TournamentController extends AbstractController
                     'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament], ['tournamentStep' => 'ASC']),
                     'endTrial' => $endTrial,
                     'victoryTypes' => Trial::ENUM_VICTORY,
+                    'dns'=> $_ENV['SERVER_DNS']
                 ]);
             }
         }

@@ -41,7 +41,7 @@
                 <p class="m-0">{{ trial.status }}</p>
             </div>
         </div>
-        {% if trial.status == "STARTED"%}
+        {% if trial.status == "STARTED" and trial.adjudicate == app.user %}
             <hr>
             {{ include('front/trial/_end_trial_form.html.twig') }}
         {% endif %}
@@ -51,7 +51,7 @@
     {% if trial.status == "STARTED" %}
         <div class="stream-placeholder">
             <iframe
-                src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent=localhost"
+                src="https://player.twitch.tv/?channel={{trial.adjudicate.twitchChannel}}&parent={{dns}}"
                 height="500"
                 width="100%"
                 allowfullscreen>

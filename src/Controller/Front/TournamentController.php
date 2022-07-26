@@ -78,7 +78,8 @@ class TournamentController extends AbstractController
             if(count($startedTrial) > 0){
                 return $this->render('front/tournament/live.html.twig', [
                     'tournament' => $tournament,
-                    'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament, 'tournamentStep' => $tournament->getStep()], ['tournamentStep' => 'ASC'])
+                    'trials' => $em->getRepository(Trial::class)->findBy(['tournament' => $tournament, 'tournamentStep' => $tournament->getStep()], ['tournamentStep' => 'ASC']),
+                    'dns'=> $_ENV['SERVER_DNS']
                 ]);
             }
         }

@@ -103,7 +103,6 @@ class PaymentController extends AbstractController
         $session = new Session();
 
         \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
-        $YOUR_DOMAIN = "http://{$request->getHost()}:{$request->getPort()}";
         $checkout_session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
@@ -118,8 +117,8 @@ class PaymentController extends AbstractController
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => "{$YOUR_DOMAIN}/payment/success",
-            'cancel_url' => "{$YOUR_DOMAIN}/payment/cancel",
+            'success_url' => "http://{$_ENV['SERVER_DNS']}/payment/success",
+            'cancel_url' => "http://{$_ENV['SERVER_DNS']}/payment/cancel",
         ]);
 
         $session->set('credit', $credit);
