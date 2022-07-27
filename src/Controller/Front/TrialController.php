@@ -23,11 +23,12 @@ class TrialController extends AbstractController
     #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
-        if ($this->getUser() && $this->isGranted("ROLE_FIGHTER")) {
-            $status = in_array($request->query->get('status'),["AWAITING","STARTED","ENDED"]) ? $request->query->get('status') : "STARTED";
+
+        if ($this->isGranted("ROLE_FIGHTER")) {
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "CREATED";
         }
         else {
-            $status = in_array($request->query->get('status'),["AWAITING","STARTED","ENDED"]) ? $request->query->get('status') : "AWAITING";
+            $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "STARTED";
         }
         return $this->render('front/trial/index.html.twig', [
             'trials' => $trialRepository->findBy(["status" => $status, "tournament" => NULL], ["dateStart" => "ASC"]),
