@@ -23,6 +23,7 @@ class TrialController extends AbstractController
     #[Route('/', name: 'trial_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TrialRepository $trialRepository): Response
     {
+
         if ($this->isGranted("ROLE_FIGHTER")) {
             $status = in_array($request->query->get('status'),["STARTED", "AWAITING", "ENDED", "CREATED"]) ? $request->query->get('status') : "CREATED";
         }
